@@ -8,12 +8,8 @@
 #include "EventHandler.hpp"
 
 int main(int, char const**) {
-    auto seed = (unsigned)time(0);
-    srand(seed);
-
     Game *game = new Game;
     int exitCode = game->run();
     delete game;
-    
     return exitCode;
 }

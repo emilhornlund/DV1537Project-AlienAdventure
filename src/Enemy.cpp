@@ -11,7 +11,7 @@
 #include "AnimationFrame.hpp"
 #include "ResourceHandler.hpp"
 
-#include <iostream>
+#include <random>
 
 const std::string ALIVE_SEQUENCE_ID = "Alive";
 const std::string DEAD_SEQUENCE_ID = "Dead";
@@ -227,6 +227,7 @@ void Enemy::setupAnimation() {
 }
 
 void Enemy::handleMovement(const float dt) {
+    auto rand = std::bind(std::uniform_int_distribution<>(0,1),std::default_random_engine(std::random_device{}()));
     sf::Vector2f velocity = this->getVelocity();
     sf::Vector2f position = this->getPosition();
     if (this->alive) {

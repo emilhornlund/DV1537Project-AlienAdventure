@@ -6,6 +6,7 @@
 
 #include <cmath>
 #include <tic.h>
+#include <random>
 
 #include "AnimationHandler.hpp"
 #include "AnimationSequence.hpp"
@@ -572,7 +573,8 @@ void Player::updateCameraAndBackground() {
 
 void Player::restore(const bool respawn) {
     if (!respawn) {
-        this->currentCharacter = (rand() % 5);
+        auto rand = std::bind(std::uniform_int_distribution<>(0,5),std::default_random_engine(std::random_device{}()));
+        this->currentCharacter = rand() % 5;
     }
     this->setupAnimations();
 

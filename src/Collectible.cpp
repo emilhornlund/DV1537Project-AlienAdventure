@@ -10,6 +10,8 @@
 #include "Game.hpp"
 #include "ResourceHandler.hpp"
 
+#include <random>
+
 const std::string COIN_SEQUENCE_ID = "Coin";
 const std::string LIFE_SEQUENCE_ID = "Life";
 
@@ -117,6 +119,8 @@ void Collectible::update(const float dt) {
     float minY, maxY;
     minY = (float)this->spawnArea.top;
     maxY = (float)(this->spawnArea.top + this->spawnArea.height - this->spawnArea.height / 1.5);
+
+    auto rand = std::bind(std::uniform_int_distribution<>(0,20),std::default_random_engine(std::random_device{}()));
 
     if (velocity.y == 0) {
         velocity.y = (rand() % 20 < 10) ? FLOATING_VELOCITY : -FLOATING_VELOCITY;
