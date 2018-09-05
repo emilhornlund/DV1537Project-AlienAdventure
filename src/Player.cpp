@@ -677,7 +677,7 @@ void Player::update(const float dt) {
         this->handleCollision();
     }
 
-    if (this->getGame()->getState() == GameState::Playing) {
+    if (this->getGame()->getState() == Game::GameState::Playing) {
         if (this->isVictorious() && this->isAlive()) {
             if (this->getVelocity().y == 0) {
                 this->state = PlayerState::Walking;
@@ -688,7 +688,7 @@ void Player::update(const float dt) {
             }
             this->timeSinceGameOver += dt;
             if (this->timeSinceGameOver >= 0.5) {
-                this->getGame()->setState(GameState::GameOver);
+                this->getGame()->setState(Game::GameState::GameOver);
             }
         }
         else if (!this->isAlive() && !this->isVictorious()) {
@@ -698,7 +698,7 @@ void Player::update(const float dt) {
             }
             this->timeSinceGameOver += dt;
             if (this->timeSinceGameOver >= 1) {
-                this->getGame()->setState(GameState::Respawn);
+                this->getGame()->setState(Game::GameState::Respawn);
             }
         }
     }

@@ -132,27 +132,27 @@ void LevelHandler::load() {
         spawnArea.width = this->readNextInt(inFile);
         spawnArea.height = this->readNextInt(inFile);
 
-        EnemyType type;
+        Enemy::EnemyType type;
         if (typeString == "SlimePurple") {
-            type = EnemyType::SlimePurple;
+            type = Enemy::EnemyType::SlimePurple;
         } else if (typeString == "SlimeGreen") {
-            type = EnemyType::SlimeGreen;
+            type = Enemy::EnemyType::SlimeGreen;
         } else if (typeString == "SlimeBlue") {
-            type = EnemyType::SlimeBlue;
+            type = Enemy::EnemyType::SlimeBlue;
         } else if (typeString == "Bee") {
-            type = EnemyType::Bee;
+            type = Enemy::EnemyType::Bee;
         } else if (typeString == "BeeBlack") {
-            type = EnemyType::BeeBlack;
+            type = Enemy::EnemyType::BeeBlack;
         } else if (typeString == "Snail") {
-            type = EnemyType::Snail;
+            type = Enemy::EnemyType::Snail;
         } else if (typeString == "SnailMushroom") {
-            type = EnemyType::SnailMushroom;
+            type = Enemy::EnemyType::SnailMushroom;
         } else if (typeString == "WormGreen") {
-            type = EnemyType::WormGreen;
+            type = Enemy::EnemyType::WormGreen;
         } else if (typeString == "WormPink") {
-            type = EnemyType::WormPink;
+            type = Enemy::EnemyType::WormPink;
         } else {
-            type = EnemyType::SlimeGreen;
+            throw std::runtime_error("Unknown enemy type: " + typeString);
         }
 
         Enemy* enemy = new Enemy(this->game, spawnArea, type);
@@ -169,12 +169,12 @@ void LevelHandler::load() {
         spawnArea.height = this->readNextInt(inFile);
 
         Collectible::CollectibleType type;
-        if (typeString == "GoldCoin") {
+        if (typeString == "CoinGold") {
             type = Collectible::CollectibleType::GoldCoin;
         } else if (typeString == "Life") {
             type = Collectible::CollectibleType::Life;
         } else {
-            type = Collectible::CollectibleType::GoldCoin;
+            throw std::runtime_error("Unknown collectible type: " + typeString);
         }
 
         Collectible* collectible = new Collectible(this->game, spawnArea, type);

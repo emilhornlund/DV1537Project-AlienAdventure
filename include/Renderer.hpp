@@ -10,33 +10,33 @@
 #include <SFML/Graphics.hpp>
 #include "Core.hpp"
 
-class RenderItem {
-private:
-    unsigned int depth;
-
-    sf::Drawable* drawable;
-public:
-    RenderItem(sf::Drawable* drawable, unsigned int depth);
-
-    RenderItem(const RenderItem &original);
-
-    virtual RenderItem& operator=(const RenderItem &original);
-
-    virtual ~RenderItem();
-
-    unsigned int getDepth() const;
-
-    sf::Drawable* getDrawable() const;
-
-    bool operator>(const RenderItem& original) const;
-
-    bool operator<(const RenderItem& original) const;
-
-    virtual RenderItem* clone() const;
-};
-
 class Renderer {
 private:
+    class RenderItem {
+    private:
+        unsigned int depth;
+
+        sf::Drawable* drawable;
+    public:
+        RenderItem(sf::Drawable* drawable, unsigned int depth);
+
+        RenderItem(const RenderItem &original);
+
+        virtual RenderItem& operator=(const RenderItem &original);
+
+        virtual ~RenderItem();
+
+        unsigned int getDepth() const;
+
+        sf::Drawable* getDrawable() const;
+
+        bool operator>(const RenderItem& original) const;
+
+        bool operator<(const RenderItem& original) const;
+
+        virtual RenderItem* clone() const;
+    };
+
     Game* game;
 
     unsigned int queueCapacity;

@@ -12,9 +12,24 @@
 #include "Core.hpp"
 #include "GameObject.hpp"
 
-enum EnemyType { SlimePurple = 1, SlimeGreen = 2, SlimeBlue = 3, FishGreen = 4, FishPink = 5, FishBlue = 6, Bee = 7, BeeBlack = 8, Snail = 9, SnailMushroom = 10, Mouse = 11, Frog = 13, WormGreen = 14, WormPink = 15 };
-
 class Enemy : public GameObject {
+public:
+    enum EnemyType {
+        SlimePurple = 1,
+        SlimeGreen = 2,
+        SlimeBlue = 3,
+        FishGreen = 4,
+        FishPink = 5,
+        FishBlue = 6,
+        Bee = 7,
+        BeeBlack = 8,
+        Snail = 9,
+        SnailMushroom = 10,
+        Mouse = 11,
+        Frog = 13,
+        WormGreen = 14,
+        WormPink = 15
+    };
 private:
     EnemyType type;
 

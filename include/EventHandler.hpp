@@ -10,15 +10,15 @@
 #include <SFML/Graphics.hpp>
 #include "Core.hpp"
 
-struct KeyStatus {
-    bool pressed, released, down;
-};
-
-struct WindowStatus {
-    bool closed, resized, lostFocus, gainedFocus, mouseInWindow, hasFocus;
-};
-
 class EventHandler {
+public:
+    struct KeyStatus {
+        bool pressed, released, down;
+    };
+
+    struct WindowStatus {
+        bool closed, resized, lostFocus, gainedFocus, mouseInWindow, hasFocus;
+    };
 private:
     sf::RenderWindow *window;
 
@@ -34,9 +34,9 @@ public:
 
     void updateEvents();
 
-    WindowStatus getWindowStatus() const;
+    const WindowStatus &getWindowStatus() const;
 
-    KeyStatus getKeyStatus(const sf::Keyboard::Key key) const;
+    const KeyStatus &getKeyStatus(const sf::Keyboard::Key key) const;
 };
 
 #endif /* EventHandler_h */

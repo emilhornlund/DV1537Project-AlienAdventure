@@ -12,9 +12,9 @@
 
 #include "Core.hpp"
 
-enum class GameState { Playing, Paused, Respawn, GameOver };
-
 class Game {
+public:
+    enum class GameState { Playing, Paused, Respawn, GameOver };
 private:
     bool running;
 

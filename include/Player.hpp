@@ -12,11 +12,11 @@
 #include "Core.hpp"
 #include "GameObject.hpp"
 
-enum class PlayerState { Stationary, Falling, Jumping, Walking };
-
-enum class PlayerDirection { Left, Right };
-
 class Player : public GameObject {
+public:
+    enum class PlayerState { Stationary, Falling, Jumping, Walking };
+
+    enum class PlayerDirection { Left, Right };
 private:
     PlayerState state;
 

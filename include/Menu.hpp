@@ -11,9 +11,9 @@
 #include <SFML/Audio.hpp>
 #include "Core.hpp"
 
-enum class MenuType { Pause, Respawn, GameOver };
-
 class Menu : public sf::Drawable, public sf::Transformable {
+public:
+    enum class MenuType { Pause, Respawn, GameOver };
 private:
     Game* game;
 

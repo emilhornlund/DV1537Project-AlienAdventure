@@ -76,10 +76,10 @@ void EventHandler::updateEvents() {
     }
 }
 
-WindowStatus EventHandler::getWindowStatus() const {
+const EventHandler::WindowStatus &EventHandler::getWindowStatus() const {
     return this->windowStatus;
 }
 
-KeyStatus EventHandler::getKeyStatus(const sf::Keyboard::Key key) const {
+const EventHandler::KeyStatus &EventHandler::getKeyStatus(const sf::Keyboard::Key key) const {
     return this->keyStatus[key];
 }

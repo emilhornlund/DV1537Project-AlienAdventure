@@ -40,13 +40,13 @@ Game::Game() {
 
     this->state = GameState::Playing;
 
-    this->pauseMenu = new Menu(this, MenuType::Pause);
+    this->pauseMenu = new Menu(this, Menu::MenuType::Pause);
     this->pauseMenu->setPosition({(float)(800 - this->pauseMenu->getSize().x)/2, (float)(600 - this->pauseMenu->getSize().y)/2});
 
-    this->respawnMenu = new Menu(this, MenuType::Respawn);
+    this->respawnMenu = new Menu(this, Menu::MenuType::Respawn);
     this->respawnMenu->setPosition({(float)(800 - this->respawnMenu->getSize().x)/2, (float)(600 - this->respawnMenu->getSize().y)/2});
 
-    this->gameOverMenu = new Menu(this, MenuType::GameOver);
+    this->gameOverMenu = new Menu(this, Menu::MenuType::GameOver);
     this->gameOverMenu->setPosition({(float)(800 - this->gameOverMenu->getSize().x)/2, (float)(600 - this->gameOverMenu->getSize().y)/2});
 
     //configure background music
@@ -212,7 +212,7 @@ void Game::setState(const GameState state) {
     this->state = state;
 }
 
-GameState Game::getState() const {
+Game::GameState Game::getState() const {
     return this->state;
 }
 

@@ -18,17 +18,17 @@
 
 #include <iostream>
 
-RenderItem::RenderItem(sf::Drawable* drawable, unsigned int depth) {
+Renderer::RenderItem::RenderItem(sf::Drawable* drawable, unsigned int depth) {
     this->drawable = drawable;
     this->depth = depth;
 }
 
-RenderItem::RenderItem(const RenderItem &original) {
+Renderer::RenderItem::RenderItem(const RenderItem &original) {
     this->drawable = original.drawable;
     this->depth = original.depth;
 }
 
-RenderItem& RenderItem::operator=(const RenderItem &original) {
+Renderer::RenderItem& Renderer::RenderItem::operator=(const Renderer::RenderItem &original) {
     if (this != &original) {
         this->drawable = original.getDrawable();
         this->depth = original.getDepth();
@@ -36,26 +36,26 @@ RenderItem& RenderItem::operator=(const RenderItem &original) {
     return *this;
 }
 
-RenderItem::~RenderItem() = default;;
+Renderer::RenderItem::~RenderItem() = default;;
 
-unsigned int RenderItem::getDepth() const {
+unsigned int Renderer::RenderItem::getDepth() const {
     return this->depth;
 }
 
-sf::Drawable* RenderItem::getDrawable() const {
+sf::Drawable* Renderer::RenderItem::getDrawable() const {
     return this->drawable;
 }
 
-bool RenderItem::operator>(const RenderItem& original) const {
+bool Renderer::RenderItem::operator>(const RenderItem& original) const {
     return this->depth > original.depth;
 }
 
-bool RenderItem::operator<(const RenderItem& original) const {
+bool Renderer::RenderItem::operator<(const RenderItem& original) const {
     return this->depth < original.depth;
 }
 
-RenderItem* RenderItem::clone() const {
-    return new RenderItem(*this);
+Renderer::RenderItem* Renderer::RenderItem::clone() const {
+    return new Renderer::RenderItem(*this);
 }
 
 Renderer::Renderer(Game *game, const sf::Vector2u windowSize, const std::string &title) {
@@ -67,6 +67,8 @@ Renderer::Renderer(Game *game, const sf::Vector2u windowSize, const std::string 
 
     sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(windowSize.x, windowSize.y, 32), title, sf::Style::Titlebar | sf::Style::Close);
     window->setKeyRepeatEnabled(true);
+    window->setMouseCursorVisible(false);
+    window->setVerticalSyncEnabled(true);
 
     std::string rpath = "./resources/Icon.png";
     if (!this->getGame()->getImageResourceHandler()->isLoaded(rpath))
@@ -184,13 +186,13 @@ void Renderer::render() {
     this->window->setView(this->window->getDefaultView());
     this->window->draw(*this->game->getHud());
 
-    if (this->game->getState() != GameState::Playing) {
+    if (this->game->getState() != Game::GameState::Playing) {
         this->window->setView(this->window->getDefaultView());
-        if (this->game->getState() == GameState::Paused) {
+        if (this->game->getState() == Game::GameState::Paused) {
             this->window->draw(*this->game->getPauseMenu());
-        } else if (this->game->getState() == GameState::Respawn) {
+        } else if (this->game->getState() == Game::GameState::Respawn) {
             this->window->draw(*this->game->getRespawnMenu());
-        } else if (this->game->getState() == GameState::GameOver) {
+        } else if (this->game->getState() == Game::GameState::GameOver) {
             this->window->draw(*this->game->getGameOverMenu());
         }
     }
