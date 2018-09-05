@@ -91,22 +91,19 @@ void Collectible::setCollected() {
 void Collectible::restore(const bool respawn) {
     if (!respawn) {
         this->collected = false;
-        std::string rpath = "./resources/Misc.png";
         switch (this->type) {
             case CollectibleType::GoldCoin: {
-                AnimationSequence *sequence = new AnimationSequence(this->getGame(), COIN_SEQUENCE_ID, rpath);
+                AnimationSequence *sequence = new AnimationSequence(this->getGame(), COIN_SEQUENCE_ID, "./resources/Misc.png");
                 sequence->addFrame(sf::IntRect(70 * 8, 70 * 2, 70, 70), 10);
                 this->getAnimationHandler()->addSequence(sequence);
                 this->getAnimationHandler()->switchSequence(COIN_SEQUENCE_ID);
-            }
-                break;
+            } break;
             case CollectibleType::Life: {
-                AnimationSequence *sequence = new AnimationSequence(this->getGame(), LIFE_SEQUENCE_ID, rpath);
+                AnimationSequence *sequence = new AnimationSequence(this->getGame(), LIFE_SEQUENCE_ID, "./resources/Hud.png");
                 sequence->addFrame(sf::IntRect(0, 48, 52, 48), 10);
                 this->getAnimationHandler()->addSequence(sequence);
                 this->getAnimationHandler()->switchSequence(LIFE_SEQUENCE_ID);
-            }
-                break;
+            } break;
         }
     }
 }
