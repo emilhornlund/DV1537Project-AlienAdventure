@@ -13,14 +13,14 @@ set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 set(CMAKE_CXX_STANDARD 11)
 
-file(GLOB SOURCES "src/*.cpp" "src/*.mm")
+file(GLOB SOURCES "src/*.cpp" "src/*.mm" "src/enemy/*.cpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 find_package(SFML 2 COMPONENTS audio graphics window system network)
 
 if (SFML_FOUND)
-    include_directories(${SFML_INCLUDE_DIR} "${PROJECT_SOURCE_DIR}/include")
+    include_directories(${SFML_INCLUDE_DIR} "${PROJECT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}/include/enemy")
     target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 endif()
 

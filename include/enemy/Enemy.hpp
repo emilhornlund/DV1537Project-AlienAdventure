@@ -13,26 +13,7 @@
 #include "GameObject.hpp"
 
 class Enemy : public GameObject {
-public:
-    enum EnemyType {
-        SlimePurple = 1,
-        SlimeGreen = 2,
-        SlimeBlue = 3,
-        FishGreen = 4,
-        FishPink = 5,
-        FishBlue = 6,
-        Bee = 7,
-        BeeBlack = 8,
-        Snail = 9,
-        SnailMushroom = 10,
-        Mouse = 11,
-        Frog = 13,
-        WormGreen = 14,
-        WormPink = 15
-    };
 private:
-    EnemyType type;
-
     sf::IntRect spawnArea;
 
     bool alive;
@@ -41,15 +22,11 @@ private:
 
     sf::Sound* sound;
 
-    void setupInitialPositionAndBoundingBoxes();
-
-    void setupAnimation();
-
     void handleMovement(const float dt);
 
     void handleAnimation(const float dt);
 public:
-    Enemy(Game *game, const sf::IntRect spawnArea, const EnemyType type = SlimeGreen);
+    Enemy(Game *game, const sf::IntRect spawnArea);
 
     Enemy(const Enemy &original);
 
@@ -57,7 +34,9 @@ public:
 
     virtual Enemy& operator=(const Enemy &original);
 
-    Enemy* clone() const override;
+    Enemy* clone() const override = 0;
+
+    virtual void configure() = 0;
 
     bool isAlive();
 

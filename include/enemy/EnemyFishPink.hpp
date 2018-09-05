@@ -1,0 +1,14 @@
+//
+// Created by Emil Hörnlund on 2018-09-05.
+//
+
+#ifndef ALIENADVENTURE_ENEMYFISHPINK_HPP
+#define ALIENADVENTURE_ENEMYFISHPINK_HPP
+
+
+class EnemyFishPink {
+
+};
+
+
+#endif //ALIENADVENTURE_ENEMYFISHPINK_HPP

@@ -7,16 +7,29 @@
 #include <fstream>
 #include <sstream>
 
-#include "LevelHandler.hpp"
-#include "ObjectHandler.hpp"
-#include "Game.hpp"
-#include "Player.hpp"
-#include "World.hpp"
+#include "Background.hpp"
 #include "CollectibleCoin.hpp"
 #include "CollectibleHealth.hpp"
-#include "Enemy.hpp"
-#include "Background.hpp"
+#include "EnemyBee.hpp"
+#include "EnemyBeeBlack.hpp"
+#include "EnemyFishBlue.hpp"
+#include "EnemyFishGreen.hpp"
+#include "EnemyFishPink.hpp"
+#include "EnemyFrog.hpp"
+#include "EnemyMouse.hpp"
+#include "EnemySlimeBlue.hpp"
+#include "EnemySlimeGreen.hpp"
+#include "EnemySlimePurple.hpp"
+#include "EnemySnail.hpp"
+#include "EnemySnailMushroom.hpp"
+#include "EnemyWormGreen.hpp"
+#include "EnemyWormPink.hpp"
+#include "Game.hpp"
+#include "LevelHandler.hpp"
+#include "ObjectHandler.hpp"
+#include "Player.hpp"
 #include "TileMap.hpp"
+#include "World.hpp"
 
 LevelHandler::LevelHandler(Game* game) {
     this->game = game;
@@ -121,7 +134,7 @@ void LevelHandler::load() {
     playerExitArea.width = this->readNextInt(inFile);
     playerExitArea.height = this->readNextInt(inFile);
 
-    Player* player = new Player(this->game, playerSpawnAreas, playerExitArea);
+    auto *player = new Player(this->game, playerSpawnAreas, playerExitArea);
     this->game->getObjectHandler()->addObject(player);
 
     int nrOfEnemies = this->readNextInt(inFile);
@@ -133,31 +146,36 @@ void LevelHandler::load() {
         spawnArea.width = this->readNextInt(inFile);
         spawnArea.height = this->readNextInt(inFile);
 
-        Enemy::EnemyType type;
-        if (typeString == "SlimePurple") {
-            type = Enemy::EnemyType::SlimePurple;
-        } else if (typeString == "SlimeGreen") {
-            type = Enemy::EnemyType::SlimeGreen;
-        } else if (typeString == "SlimeBlue") {
-            type = Enemy::EnemyType::SlimeBlue;
-        } else if (typeString == "Bee") {
-            type = Enemy::EnemyType::Bee;
+        if (typeString == "Bee") {
+            auto *enemy = new EnemyBee(this->game, spawnArea);
+            this->game->getObjectHandler()->addObject(enemy);
         } else if (typeString == "BeeBlack") {
-            type = Enemy::EnemyType::BeeBlack;
+            auto *enemy = new EnemyBeeBlack(this->game, spawnArea);
+            this->game->getObjectHandler()->addObject(enemy);
+        } else if (typeString == "SlimeBlue") {
+            auto *enemy = new EnemySlimeBlue(this->game, spawnArea);
+            this->game->getObjectHandler()->addObject(enemy);
+        } else if (typeString == "SlimeGreen") {
+            auto *enemy = new EnemySlimeGreen(this->game, spawnArea);
+            this->game->getObjectHandler()->addObject(enemy);
+        } else if (typeString == "SlimePurple") {
+            auto *enemy = new EnemySlimePurple(this->game, spawnArea);
+            this->game->getObjectHandler()->addObject(enemy);
         } else if (typeString == "Snail") {
-            type = Enemy::EnemyType::Snail;
+            auto *enemy = new EnemySnail(this->game, spawnArea);
+            this->game->getObjectHandler()->addObject(enemy);
         } else if (typeString == "SnailMushroom") {
-            type = Enemy::EnemyType::SnailMushroom;
+            auto *enemy = new EnemySnailMushroom(this->game, spawnArea);
+            this->game->getObjectHandler()->addObject(enemy);
         } else if (typeString == "WormGreen") {
-            type = Enemy::EnemyType::WormGreen;
+            auto *enemy = new EnemyWormGreen(this->game, spawnArea);
+            this->game->getObjectHandler()->addObject(enemy);
         } else if (typeString == "WormPink") {
-            type = Enemy::EnemyType::WormPink;
+            auto *enemy = new EnemyWormPink(this->game, spawnArea);
+            this->game->getObjectHandler()->addObject(enemy);
         } else {
             throw std::runtime_error("Unknown enemy type: " + typeString);
         }
-
-        Enemy* enemy = new Enemy(this->game, spawnArea, type);
-        this->game->getObjectHandler()->addObject(enemy);
     }
 
     int nrOfCollectables = this->readNextInt(inFile);
