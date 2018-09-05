@@ -9,7 +9,7 @@
 
 const sf::Vector2i Background::SIZE = { 560, 560 };
 
-Background::Background() {
+Background::Background(Game *game) : StaticFrame(game) {
     this->columnsCapacity = 0;
     this->columnsSize = 0;
     this->columns = new unsigned int[this->columnsCapacity];

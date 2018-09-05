@@ -8,10 +8,12 @@
 #include "AnimationSequence.hpp"
 #include "StaticFrame.hpp"
 
-AnimationHandler::AnimationHandler() {
+AnimationHandler::AnimationHandler(Game *game) {
+    this->game = game;
+
     this->staticFramesCapacity = 0;
     this->staticFramesSize = 0;
-    this->staticFrames = new StaticFrame*[this->staticFramesCapacity];
+    this->staticFrames = new StaticFrame *[this->staticFramesCapacity];
 
     this->sequencesCapacity = 0;
     this->sequencesSize = 0;
@@ -20,9 +22,11 @@ AnimationHandler::AnimationHandler() {
 }
 
 AnimationHandler::AnimationHandler(const AnimationHandler &original) {
+    this->game = original.getGame();
+
     this->staticFramesCapacity = original.staticFramesCapacity;
     this->staticFramesSize = original.staticFramesSize;
-    this->staticFrames = new StaticFrame*[this->staticFramesCapacity];
+    this->staticFrames = new StaticFrame *[this->staticFramesCapacity];
     for (int i = 0; i < this->staticFramesSize; i++) {
         this->staticFrames[i] = original.staticFrames[i]->clone();
     }
@@ -43,6 +47,8 @@ AnimationHandler::~AnimationHandler() {
 
 AnimationHandler& AnimationHandler::operator=(const AnimationHandler &original) {
     if (this != &original) {
+        this->game = original.getGame();
+
         for (int i = 0; i < this->staticFramesSize; i++) {
             delete this->staticFrames[i];
             this->staticFrames[i] = nullptr;
@@ -52,7 +58,7 @@ AnimationHandler& AnimationHandler::operator=(const AnimationHandler &original) 
 
         this->staticFramesCapacity = original.staticFramesCapacity;
         this->staticFramesSize = original.staticFramesSize;
-        this->staticFrames = new StaticFrame*[this->staticFramesCapacity];
+        this->staticFrames = new StaticFrame *[this->staticFramesCapacity];
 
         for (int i = 0; i < this->staticFramesSize; i++) {
             this->staticFrames[i] = original.staticFrames[i]->clone();
@@ -80,6 +86,10 @@ AnimationHandler* AnimationHandler::clone() const {
     return new AnimationHandler(*this);
 }
 
+Game* AnimationHandler::getGame() const {
+    return this->game;
+}
+
 int AnimationHandler::numberOfStaticFrames() const {
     return this->staticFramesSize;
 }
@@ -91,7 +101,7 @@ StaticFrame* AnimationHandler::getStaticFrame(const unsigned int index) const {
 void AnimationHandler::addStaticFrame(StaticFrame *frame) {
     if (this->staticFramesCapacity == this->staticFramesSize) {
         this->staticFramesCapacity += 5;
-        auto **tempStaticFrames = new StaticFrame*[this->staticFramesCapacity];
+        auto **tempStaticFrames = new StaticFrame *[this->staticFramesCapacity];
         for (int i = 0; i < this->staticFramesSize; i++) {
             tempStaticFrames[i] = this->staticFrames[i]->clone();
         }

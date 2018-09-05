@@ -12,6 +12,8 @@
 
 class Hud : public sf::Drawable, public sf::Transformable {
 private:
+    Game* game;
+
     sf::Texture* texture;
 
     sf::Sprite* coin;
@@ -38,13 +40,15 @@ private:
 
     void clearDigits();
 public:
-    Hud();
+    Hud(Game *game);
 
     Hud(const Hud &original);
 
     ~Hud() override;
 
     virtual Hud& operator=(const Hud &original);
+
+    Game* getGame() const;
 
     void restore();
 

@@ -14,6 +14,9 @@
 #include "Menu.hpp"
 #include "Renderer.hpp"
 #include "StaticFrame.hpp"
+#include "ResourceHandler.hpp"
+
+#include <iostream>
 
 RenderItem::RenderItem(sf::Drawable* drawable, unsigned int depth) {
     this->drawable = drawable;
@@ -66,11 +69,10 @@ Renderer::Renderer(Game *game, const sf::Vector2u windowSize, const std::string 
     window->setKeyRepeatEnabled(true);
 
     std::string rpath = "./resources/Icon.png";
-    sf::Image icon;
-    if (!icon.loadFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
-    window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+    if (!this->getGame()->getImageResourceHandler()->isLoaded(rpath))
+        this->getGame()->getImageResourceHandler()->load(rpath);
+    this->icon = &this->game->getImageResourceHandler()->get(rpath);
+    window->setIcon(this->icon->getSize().x, this->icon->getSize().y, this->icon->getPixelsPtr());
 
     this->view = new sf::View();
     this->view->reset(sf::FloatRect(0, 0, windowSize.x, windowSize.y));
@@ -86,6 +88,10 @@ Renderer::~Renderer() {
 
     delete this->view;
     this->view = nullptr;
+}
+
+Game* Renderer::getGame() const {
+    return this->game;
 }
 
 void Renderer::clearQueue() {

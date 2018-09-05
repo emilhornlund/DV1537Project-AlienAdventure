@@ -24,4 +24,19 @@ class StaticFrame;
 class TileMap;
 class World;
 
+namespace sf {
+    class Music;
+    class Texture;
+    class SoundBuffer;
+    class Image;
+}
+
+// Forward declaration and a few type definitions
+template <typename Resource>
+class ResourceHandler;
+typedef ResourceHandler<sf::Image> ImageResourceHandler;
+typedef ResourceHandler<sf::Music> MusicResourceHandler;
+typedef ResourceHandler<sf::SoundBuffer> SoundBufferResourceHandler;
+typedef ResourceHandler<sf::Texture> TextureResourceHandler;
+
 #endif //ALIENADVENTURE_CORE_HPP

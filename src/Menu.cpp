@@ -5,22 +5,25 @@
  */
 
 #include "Menu.hpp"
+#include "Game.hpp"
+#include "ResourceHandler.hpp"
 
 const sf::Vector2i BUTTON_SIZE = { 480, 64 };
 const float SPACE = 20;
 
-Menu::Menu(MenuType type) {
+Menu::Menu(Game *game, MenuType type) {
+    this->game = game;
+
     std::string rpath = "./resources/Menu.png";
-    this->texture = new sf::Texture;
-    if (!this->texture->loadFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
+    if (!this->getGame()->getTextureResourceHandler()->isLoaded(rpath))
+        this->getGame()->getTextureResourceHandler()->load(rpath);
+    this->texture = &this->getGame()->getTextureResourceHandler()->get(rpath);
 
     rpath = "./resources/Switch.wav";
-    this->switchBuffer = new sf::SoundBuffer;
-    if (!this->switchBuffer->loadFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
+    if (!this->getGame()->getSoundBufferResourceHandler()->isLoaded(rpath))
+        this->getGame()->getSoundBufferResourceHandler()->load(rpath);
+    this->switchBuffer = &this->getGame()->getSoundBufferResourceHandler()->get(rpath);
+
     this->switchSound = new sf::Sound;
     this->switchSound->setBuffer(*this->switchBuffer);
     this->switchSound->setVolume(100);
@@ -56,6 +59,8 @@ Menu::Menu(MenuType type) {
 }
 
 Menu::Menu(const Menu &original) {
+    this->game = original.game;
+
     this->type = original.type;
     this->texture = original.texture;
     this->switchBuffer = original.switchBuffer;
@@ -73,12 +78,6 @@ Menu::Menu(const Menu &original) {
 }
 
 Menu::~Menu() {
-    delete this->texture;
-    this->texture = nullptr;
-
-    delete this->switchBuffer;
-    this->switchBuffer = nullptr;
-
     delete this->switchSound;
     this->switchSound = nullptr;
 
@@ -92,6 +91,8 @@ Menu::~Menu() {
 
 Menu& Menu::operator=(const Menu &original) {
     if (this != &original) {
+        this->game = original.game;
+
         this->type = original.type;
 
         delete this->texture;
@@ -121,6 +122,10 @@ Menu& Menu::operator=(const Menu &original) {
         this->currentButton = original.currentButton;
     }
     return *this;
+}
+
+Game* Menu::getGame() const {
+    return this->game;
 }
 
 void Menu::updateSelection() {

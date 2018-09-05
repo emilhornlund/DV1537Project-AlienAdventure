@@ -7,6 +7,8 @@
 #include "Collectible.hpp"
 #include "AnimationHandler.hpp"
 #include "AnimationSequence.hpp"
+#include "Game.hpp"
+#include "ResourceHandler.hpp"
 
 const std::string COIN_SEQUENCE_ID = "Coin";
 const std::string LIFE_SEQUENCE_ID = "Life";
@@ -28,10 +30,10 @@ Collectible::Collectible(Game *game, const sf::IntRect spawnArea, const Collecti
             break;
     }
 
-    this->soundBuffer = new sf::SoundBuffer;
-    if (!this->soundBuffer->loadFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
+    if (!this->getGame()->getSoundBufferResourceHandler()->isLoaded(rpath))
+        this->getGame()->getSoundBufferResourceHandler()->load(rpath);
+    this->soundBuffer = &this->getGame()->getSoundBufferResourceHandler()->get(rpath);
+
     this->sound = new sf::Sound;
     this->sound->setBuffer(*this->soundBuffer);
 
@@ -50,9 +52,6 @@ Collectible::Collectible(const Collectible &original) : GameObject(original) {
 }
 
 Collectible::~Collectible() {
-    delete this->soundBuffer;
-    this->soundBuffer = nullptr;
-
     delete this->sound;
     this->sound = nullptr;
 }
@@ -95,14 +94,14 @@ void Collectible::restore(const bool respawn) {
         std::string rpath = "./resources/Misc.png";
         switch (this->type) {
             case CollectibleType::GoldCoin: {
-                AnimationSequence *sequence = new AnimationSequence(COIN_SEQUENCE_ID, rpath);
+                AnimationSequence *sequence = new AnimationSequence(this->getGame(), COIN_SEQUENCE_ID, rpath);
                 sequence->addFrame(sf::IntRect(70 * 8, 70 * 2, 70, 70), 10);
                 this->getAnimationHandler()->addSequence(sequence);
                 this->getAnimationHandler()->switchSequence(COIN_SEQUENCE_ID);
             }
                 break;
             case CollectibleType::Life: {
-                AnimationSequence *sequence = new AnimationSequence(LIFE_SEQUENCE_ID, rpath);
+                AnimationSequence *sequence = new AnimationSequence(this->getGame(), LIFE_SEQUENCE_ID, rpath);
                 sequence->addFrame(sf::IntRect(0, 48, 52, 48), 10);
                 this->getAnimationHandler()->addSequence(sequence);
                 this->getAnimationHandler()->switchSequence(LIFE_SEQUENCE_ID);

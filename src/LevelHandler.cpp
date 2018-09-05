@@ -55,7 +55,7 @@ void LevelHandler::load() {
     this->game->getObjectHandler()->addObject(world);
 
     int nrOfBackgrounds = this->readNextInt(inFile);
-    Background* background = new Background;
+    Background* background = new Background(this->game);
     for (int i = 0; i < nrOfBackgrounds; i++) {
         unsigned int column = this->readNextInt(inFile);
         unsigned int row = this->readNextInt(inFile);
@@ -89,7 +89,7 @@ void LevelHandler::load() {
             }
         }
 
-        TileMap* tileMap = new TileMap;
+        TileMap* tileMap = new TileMap(this->game); //TODO: fixa en getGame
         tileMap->setName(name);
         tileMap->setColumns(columns);
         tileMap->setRows(rows);

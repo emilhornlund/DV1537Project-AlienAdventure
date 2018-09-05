@@ -15,6 +15,8 @@ enum class MenuType { Pause, Respawn, GameOver };
 
 class Menu : public sf::Drawable, public sf::Transformable {
 private:
+    Game* game;
+
     MenuType type;
 
     sf::Texture* texture;
@@ -33,13 +35,15 @@ private:
 
     void updateSelection();
 public:
-    explicit Menu(MenuType type);
+    Menu(Game *game, MenuType type);
 
     Menu(const Menu &original);
 
     ~Menu() override;
 
     Menu& operator=(const Menu &original);
+
+    Game* getGame() const;
 
     sf::Vector2i getSize() const;
 

@@ -6,13 +6,17 @@
 
 #include "AnimationSequence.hpp"
 #include "AnimationFrame.hpp"
+#include "Game.hpp"
+#include "ResourceHandler.hpp"
 
-AnimationSequence::AnimationSequence(std::string id, std::string filename) {
+AnimationSequence::AnimationSequence(Game *game, std::string id, std::string filename) {
+    this->game = game;
+
     this->filename = filename;
-    this->spriteSheet = new sf::Texture;
-    if (!this->spriteSheet->loadFromFile(filename)) {
-        throw "Failed to load " + filename;
-    }
+
+    if (!this->getGame()->getTextureResourceHandler()->isLoaded(filename))
+        this->getGame()->getTextureResourceHandler()->load(filename);
+    this->spriteSheet = &this->getGame()->getTextureResourceHandler()->get(filename);
 
     this->identifier = id;
 
@@ -25,6 +29,8 @@ AnimationSequence::AnimationSequence(std::string id, std::string filename) {
 }
 
 AnimationSequence::AnimationSequence(const AnimationSequence &original) {
+    this->game = this->getGame();
+
     this->filename = original.filename;
     this->spriteSheet = new sf::Texture(*original.spriteSheet);
 
@@ -43,14 +49,13 @@ AnimationSequence::AnimationSequence(const AnimationSequence &original) {
 }
 
 AnimationSequence::~AnimationSequence() {
-    delete this->spriteSheet;
-    this->spriteSheet = nullptr;
-
     this->clearFrames();
 }
 
 AnimationSequence& AnimationSequence::operator=(const AnimationSequence &original) {
     if (this != &original) {
+        this->game = original.getGame();
+
         this->clearFrames();
 
         this->filename = original.filename;
@@ -75,6 +80,10 @@ AnimationSequence& AnimationSequence::operator=(const AnimationSequence &origina
 
 AnimationSequence* AnimationSequence::clone() const {
     return new AnimationSequence(*this);
+}
+
+Game* AnimationSequence::getGame() const {
+    return this->game;
 }
 
 void AnimationSequence::setIdentifier(const std::string &id) {

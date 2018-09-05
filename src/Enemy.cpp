@@ -9,6 +9,9 @@
 #include "AnimationHandler.hpp"
 #include "AnimationSequence.hpp"
 #include "AnimationFrame.hpp"
+#include "ResourceHandler.hpp"
+
+#include <iostream>
 
 const std::string ALIVE_SEQUENCE_ID = "Alive";
 const std::string DEAD_SEQUENCE_ID = "Dead";
@@ -22,10 +25,10 @@ Enemy::Enemy(Game *game, const sf::IntRect spawnArea, const EnemyType enemyType)
     this->type = enemyType;
 
     std::string rpath = "./resources/Enemy.wav";
-    this->soundBuffer = new sf::SoundBuffer;
-    if (!this->soundBuffer->loadFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
+    if (!this->getGame()->getSoundBufferResourceHandler()->isLoaded(rpath))
+        this->getGame()->getSoundBufferResourceHandler()->load(rpath);
+    this->soundBuffer = &this->getGame()->getSoundBufferResourceHandler()->get(rpath);
+
     this->sound = new sf::Sound;
     this->sound->setBuffer(*this->soundBuffer);
 }
@@ -41,9 +44,6 @@ Enemy::Enemy(const Enemy &original) : GameObject(original) {
 }
 
 Enemy::~Enemy() {
-    delete this->soundBuffer;
-    this->soundBuffer = nullptr;
-
     delete this->sound;
     this->sound = nullptr;
 }
@@ -118,103 +118,103 @@ void Enemy::setupAnimation() {
     switch (this->type) {
         case SlimePurple: {
             int posY = (int)spriteSize.y*(SlimePurple-1);
-            AnimationSequence *sequence = new AnimationSequence(ALIVE_SEQUENCE_ID, rpath);
+            AnimationSequence *sequence = new AnimationSequence(this->getGame(), ALIVE_SEQUENCE_ID, rpath);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*0, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*1, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*2, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             this->getAnimationHandler()->addSequence(sequence);
 
-            AnimationSequence *sequenceDead = new AnimationSequence(DEAD_SEQUENCE_ID, rpath);
+            AnimationSequence *sequenceDead = new AnimationSequence(this->getGame(), DEAD_SEQUENCE_ID, rpath);
             sequenceDead->addFrame(sf::IntRect((int)spriteSize.x*3, posY, (int)spriteSize.x, (int)spriteSize.y), 10);
             this->getAnimationHandler()->addSequence(sequenceDead);
         } break;
         case SlimeGreen: {
             int posY = (int)spriteSize.y*(SlimeGreen-1);
-            AnimationSequence *sequence = new AnimationSequence(ALIVE_SEQUENCE_ID, rpath);
+            AnimationSequence *sequence = new AnimationSequence(this->getGame(), ALIVE_SEQUENCE_ID, rpath);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*0, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*1, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*2, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             this->getAnimationHandler()->addSequence(sequence);
 
-            AnimationSequence *sequenceDead = new AnimationSequence(DEAD_SEQUENCE_ID, rpath);
+            AnimationSequence *sequenceDead = new AnimationSequence(this->getGame(), DEAD_SEQUENCE_ID, rpath);
             sequenceDead->addFrame(sf::IntRect((int)spriteSize.x*3, posY, (int)spriteSize.x, (int)spriteSize.y), 10);
             this->getAnimationHandler()->addSequence(sequenceDead);
         } break;
         case SlimeBlue: {
             int posY = (int)spriteSize.y*(SlimeBlue-1);
-            AnimationSequence *sequence = new AnimationSequence(ALIVE_SEQUENCE_ID, rpath);
+            AnimationSequence *sequence = new AnimationSequence(this->getGame(), ALIVE_SEQUENCE_ID, rpath);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*0, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*1, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*2, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             this->getAnimationHandler()->addSequence(sequence);
 
-            AnimationSequence *sequenceDead = new AnimationSequence(DEAD_SEQUENCE_ID, rpath);
+            AnimationSequence *sequenceDead = new AnimationSequence(this->getGame(), DEAD_SEQUENCE_ID, rpath);
             sequenceDead->addFrame(sf::IntRect((int)spriteSize.x*3, posY, (int)spriteSize.x, (int)spriteSize.y), 10);
             this->getAnimationHandler()->addSequence(sequenceDead);
         } break;
         case Bee: {
             int posY = (int)spriteSize.y*(Bee-1);
-            AnimationSequence *sequence = new AnimationSequence(ALIVE_SEQUENCE_ID, rpath);
+            AnimationSequence *sequence = new AnimationSequence(this->getGame(), ALIVE_SEQUENCE_ID, rpath);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*0, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*1, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             this->getAnimationHandler()->addSequence(sequence);
 
-            AnimationSequence *sequenceDead = new AnimationSequence(DEAD_SEQUENCE_ID, rpath);
+            AnimationSequence *sequenceDead = new AnimationSequence(this->getGame(), DEAD_SEQUENCE_ID, rpath);
             sequenceDead->addFrame(sf::IntRect((int)spriteSize.x*2, posY, (int)spriteSize.x, (int)spriteSize.y), 10);
             this->getAnimationHandler()->addSequence(sequenceDead);
         } break;
         case BeeBlack: {
             int posY = (int)spriteSize.y*(BeeBlack-1);
-            AnimationSequence *sequence = new AnimationSequence(ALIVE_SEQUENCE_ID, rpath);
+            AnimationSequence *sequence = new AnimationSequence(this->getGame(), ALIVE_SEQUENCE_ID, rpath);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*0, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*1, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             this->getAnimationHandler()->addSequence(sequence);
 
-            AnimationSequence *sequenceDead = new AnimationSequence(DEAD_SEQUENCE_ID, rpath);
+            AnimationSequence *sequenceDead = new AnimationSequence(this->getGame(), DEAD_SEQUENCE_ID, rpath);
             sequenceDead->addFrame(sf::IntRect((int)spriteSize.x*2, posY, (int)spriteSize.x, (int)spriteSize.y), 10);
             this->getAnimationHandler()->addSequence(sequenceDead);
         } break;
         case Snail: {
             int posY = (int)spriteSize.y*(Snail-1);
-            AnimationSequence *sequence = new AnimationSequence(ALIVE_SEQUENCE_ID, rpath);
+            AnimationSequence *sequence = new AnimationSequence(this->getGame(), ALIVE_SEQUENCE_ID, rpath);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*0, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*1, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             this->getAnimationHandler()->addSequence(sequence);
 
-            AnimationSequence *sequenceDead = new AnimationSequence(DEAD_SEQUENCE_ID, rpath);
+            AnimationSequence *sequenceDead = new AnimationSequence(this->getGame(), DEAD_SEQUENCE_ID, rpath);
             sequenceDead->addFrame(sf::IntRect((int)spriteSize.x*2, posY, (int)spriteSize.x, (int)spriteSize.y), 10);
             this->getAnimationHandler()->addSequence(sequenceDead);
         } break;
         case SnailMushroom: {
             int posY = (int)spriteSize.y*(SnailMushroom-1);
-            AnimationSequence *sequence = new AnimationSequence(ALIVE_SEQUENCE_ID, rpath);
+            AnimationSequence *sequence = new AnimationSequence(this->getGame(), ALIVE_SEQUENCE_ID, rpath);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*0, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*1, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             this->getAnimationHandler()->addSequence(sequence);
 
-            AnimationSequence *sequenceDead = new AnimationSequence(DEAD_SEQUENCE_ID, rpath);
+            AnimationSequence *sequenceDead = new AnimationSequence(this->getGame(), DEAD_SEQUENCE_ID, rpath);
             sequenceDead->addFrame(sf::IntRect((int)spriteSize.x*2, posY, (int)spriteSize.x, (int)spriteSize.y), 10);
             this->getAnimationHandler()->addSequence(sequenceDead);
         } break;
         case WormGreen: {
             int posY = (int)spriteSize.y*(WormGreen-1);
-            AnimationSequence *sequence = new AnimationSequence(ALIVE_SEQUENCE_ID, rpath);
+            AnimationSequence *sequence = new AnimationSequence(this->getGame(), ALIVE_SEQUENCE_ID, rpath);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*0, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*1, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             this->getAnimationHandler()->addSequence(sequence);
 
-            AnimationSequence *sequenceDead = new AnimationSequence(DEAD_SEQUENCE_ID, rpath);
+            AnimationSequence *sequenceDead = new AnimationSequence(this->getGame(), DEAD_SEQUENCE_ID, rpath);
             sequenceDead->addFrame(sf::IntRect((int)spriteSize.x*2, posY, (int)spriteSize.x, (int)spriteSize.y), 10);
             this->getAnimationHandler()->addSequence(sequenceDead);
         } break;
         case WormPink: {
             int posY = (int)spriteSize.y*(WormPink-1);
-            AnimationSequence *sequence = new AnimationSequence(ALIVE_SEQUENCE_ID, rpath);
+            AnimationSequence *sequence = new AnimationSequence(this->getGame(), ALIVE_SEQUENCE_ID, rpath);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*0, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             sequence->addFrame(sf::IntRect((int)spriteSize.x*1, posY, (int)spriteSize.x, (int)spriteSize.y), 0.3);
             this->getAnimationHandler()->addSequence(sequence);
 
-            AnimationSequence *sequenceDead = new AnimationSequence(DEAD_SEQUENCE_ID, rpath);
+            AnimationSequence *sequenceDead = new AnimationSequence(this->getGame(), DEAD_SEQUENCE_ID, rpath);
             sequenceDead->addFrame(sf::IntRect((int)spriteSize.x*2, posY, (int)spriteSize.x, (int)spriteSize.y), 10);
             this->getAnimationHandler()->addSequence(sequenceDead);
         } break;

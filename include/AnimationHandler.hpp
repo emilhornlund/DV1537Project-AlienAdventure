@@ -12,6 +12,8 @@
 
 class AnimationHandler {
 private:
+    Game* game;
+
     unsigned int staticFramesCapacity;
 
     unsigned int staticFramesSize;
@@ -26,7 +28,7 @@ private:
 
     AnimationSequence** sequences;
 public:
-    AnimationHandler();
+    explicit AnimationHandler(Game *game);
 
     AnimationHandler(const AnimationHandler &original);
 
@@ -35,6 +37,8 @@ public:
     virtual AnimationHandler& operator=(const AnimationHandler &original);
 
     virtual AnimationHandler* clone() const;
+
+    Game* getGame() const;
 
     int numberOfStaticFrames() const;
 

@@ -28,7 +28,7 @@ private:
 public:
     static const sf::Vector2i SIZE;
 
-    Background();
+    Background(Game *game);
 
     Background(const Background &original);
 

@@ -5,16 +5,19 @@
  */
 
 #include "Hud.hpp"
+#include "Game.hpp"
+#include "ResourceHandler.hpp"
 
 const sf::Vector2i SIZE = { 52, 48 };
 const float SPACE = 10;
 
-Hud::Hud() {
+Hud::Hud(Game *game) {
+    this->game = game;
+
     std::string rpath = "./resources/Hud.png";
-    this->texture = new sf::Texture;
-    if (!this->texture->loadFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
+    if (!this->getGame()->getTextureResourceHandler()->isLoaded(rpath))
+        this->getGame()->getTextureResourceHandler()->load(rpath);
+    this->texture = &this->getGame()->getTextureResourceHandler()->get(rpath);
 
     this->lifesCapacity = 0;
     this->lifesSize = 0;
@@ -29,6 +32,8 @@ Hud::Hud() {
 }
 
 Hud::Hud(const Hud &original) {
+    this->game = original.game;
+
     this->texture = original.texture;
     this->coin = original.coin;
     this->multiplier = original.multiplier;
@@ -49,7 +54,6 @@ Hud::Hud(const Hud &original) {
 }
 
 Hud::~Hud() {
-    delete this->texture;
     delete this->coin;
     delete this->multiplier;
     this->clearLifes();
@@ -58,6 +62,8 @@ Hud::~Hud() {
 
 Hud& Hud::operator=(const Hud &original) {
     if (this != &original) {
+        this->game = original.game;
+
         delete this->texture;
         delete this->coin;
         this->clearLifes();
@@ -82,6 +88,10 @@ Hud& Hud::operator=(const Hud &original) {
         }
     }
     return *this;
+}
+
+Game* Hud::getGame() const {
+    return this->game;
 }
 
 void Hud::clearLifes() {

@@ -18,6 +18,7 @@
 #include "ObjectHandler.hpp"
 #include "Player.hpp"
 #include "Renderer.hpp"
+#include "ResourceHandler.hpp"
 #include "World.hpp"
 
 const std::string STATIONARY_LEFT_SEQUENCE_ID = "StationaryLeft";
@@ -84,32 +85,14 @@ Player::Player(const Player &original) : GameObject(original) {
 }
 
 Player::~Player() {
-    delete this->jumpSoundBuffer;
-    this->jumpSoundBuffer = nullptr;
-
     delete this->jumpSound;
     this->jumpSound = nullptr;
-
-    delete this->hurtSoundBuffer;
-    this->hurtSoundBuffer = nullptr;
 
     delete this->hurtSound;
     this->hurtSound = nullptr;
 
-    delete this->gameOverSoundBuffer;
-    this->gameOverSoundBuffer = nullptr;
-
     delete this->gameOverSound;
     this->gameOverSound = nullptr;
-
-    delete this->gameOverSoundBuffer;
-    this->gameOverSoundBuffer = nullptr;
-
-    delete this->gameOverSound;
-    this->gameOverSound = nullptr;
-
-    delete this->victoriousSoundBuffer;
-    this->victoriousSoundBuffer = nullptr;
 
     delete this->victoriousSound;
     this->victoriousSound = nullptr;
@@ -152,37 +135,33 @@ Player* Player::clone() const {
 
 void Player::setupSounds() {
     std::string rpath = "./resources/Jump.wav";
-    this->jumpSoundBuffer = new sf::SoundBuffer;
-    if (!this->jumpSoundBuffer->loadFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
+    if (!this->getGame()->getSoundBufferResourceHandler()->isLoaded(rpath))
+        this->getGame()->getSoundBufferResourceHandler()->load(rpath);
+    this->jumpSoundBuffer = &this->getGame()->getSoundBufferResourceHandler()->get(rpath);
     this->jumpSound = new sf::Sound;
     this->jumpSound->setBuffer(*this->jumpSoundBuffer);
     this->jumpSound->setVolume(70);
 
     rpath = "./resources/Hurt.wav";
-    this->hurtSoundBuffer = new sf::SoundBuffer;
-    if (!this->hurtSoundBuffer->loadFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
+    if (!this->getGame()->getSoundBufferResourceHandler()->isLoaded(rpath))
+        this->getGame()->getSoundBufferResourceHandler()->load(rpath);
+    this->hurtSoundBuffer = &this->getGame()->getSoundBufferResourceHandler()->get(rpath);
     this->hurtSound = new sf::Sound;
     this->hurtSound->setBuffer(*this->hurtSoundBuffer);
     this->hurtSound->setVolume(70);
 
     rpath = "./resources/GameOver.wav";
-    this->gameOverSoundBuffer = new sf::SoundBuffer;
-    if (!this->gameOverSoundBuffer->loadFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
+    if (!this->getGame()->getSoundBufferResourceHandler()->isLoaded(rpath))
+        this->getGame()->getSoundBufferResourceHandler()->load(rpath);
+    this->gameOverSoundBuffer = &this->getGame()->getSoundBufferResourceHandler()->get(rpath);
     this->gameOverSound = new sf::Sound;
     this->gameOverSound->setBuffer(*this->gameOverSoundBuffer);
     this->gameOverSound->setVolume(70);
 
     rpath = "./resources/Victorious.wav";
-    this->victoriousSoundBuffer = new sf::SoundBuffer;
-    if (!this->victoriousSoundBuffer->loadFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
+    if (!this->getGame()->getSoundBufferResourceHandler()->isLoaded(rpath))
+        this->getGame()->getSoundBufferResourceHandler()->load(rpath);
+    this->victoriousSoundBuffer = &this->getGame()->getSoundBufferResourceHandler()->get(rpath);
     this->victoriousSound = new sf::Sound;
     this->victoriousSound->setBuffer(*this->victoriousSoundBuffer);
     this->victoriousSound->setVolume(40);
@@ -196,46 +175,46 @@ void Player::setupAnimations() const {
     int posY = this->currentCharacter * (int)PLAYER_SIZE.y;
 
     // Stationary left
-    AnimationSequence *sequenceStationaryLeft = new AnimationSequence(STATIONARY_LEFT_SEQUENCE_ID, rpath);
+    AnimationSequence *sequenceStationaryLeft = new AnimationSequence(this->getGame(), STATIONARY_LEFT_SEQUENCE_ID, rpath);
     sequenceStationaryLeft->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 1, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 1, {-1, 1});
     sequenceStationaryLeft->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 0, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 1);
     getAnimationHandler()->addSequence(sequenceStationaryLeft);
 
     // Stationary right
-    AnimationSequence *sequenceStationaryRight = new AnimationSequence(STATIONARY_RIGHT_SEQUENCE_ID, rpath);
+    AnimationSequence *sequenceStationaryRight = new AnimationSequence(this->getGame(), STATIONARY_RIGHT_SEQUENCE_ID, rpath);
     sequenceStationaryRight->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 1, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 1);
     sequenceStationaryRight->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 0, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 1);
     getAnimationHandler()->addSequence(sequenceStationaryRight);
 
     // Walk Left
-    AnimationSequence *sequenceWalkLeft = new AnimationSequence(WALK_LEFT_SEQUENCE_ID, rpath);
+    AnimationSequence *sequenceWalkLeft = new AnimationSequence(this->getGame(), WALK_LEFT_SEQUENCE_ID, rpath);
     sequenceWalkLeft->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 5, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 0.3, {-1, 1});
     sequenceWalkLeft->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 6, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 0.3, {-1, 1});
     getAnimationHandler()->addSequence(sequenceWalkLeft);
 
     // Walk Right
-    AnimationSequence *sequenceWalkRight = new AnimationSequence(WALK_RIGHT_SEQUENCE_ID, rpath);
+    AnimationSequence *sequenceWalkRight = new AnimationSequence(this->getGame(), WALK_RIGHT_SEQUENCE_ID, rpath);
     sequenceWalkRight->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 5, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 0.3);
     sequenceWalkRight->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 6, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 0.3);
     getAnimationHandler()->addSequence(sequenceWalkRight);
 
     // Jump Left
-    AnimationSequence *sequenceJumpLeft = new AnimationSequence(JUMP_LEFT_SEQUENCE_ID, rpath);
+    AnimationSequence *sequenceJumpLeft = new AnimationSequence(this->getGame(), JUMP_LEFT_SEQUENCE_ID, rpath);
     sequenceJumpLeft->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 2, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 1, {-1, 1});
     getAnimationHandler()->addSequence(sequenceJumpLeft);
 
     // Jump Right
-    AnimationSequence *sequenceJumpRight = new AnimationSequence(JUMP_RIGHT_SEQUENCE_ID, rpath);
+    AnimationSequence *sequenceJumpRight = new AnimationSequence(this->getGame(), JUMP_RIGHT_SEQUENCE_ID, rpath);
     sequenceJumpRight->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 2, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 1);
     getAnimationHandler()->addSequence(sequenceJumpRight);
 
     // Hurt Left
-    AnimationSequence *sequenceHurtLeft = new AnimationSequence(HURT_LEFT_SEQUENCE_ID, rpath);
+    AnimationSequence *sequenceHurtLeft = new AnimationSequence(this->getGame(), HURT_LEFT_SEQUENCE_ID, rpath);
     sequenceHurtLeft->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 4, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 1, {-1, 1});
     getAnimationHandler()->addSequence(sequenceHurtLeft);
 
     // Hurt Right
-    AnimationSequence *sequenceHurtRight = new AnimationSequence(HURT_RIGHT_SEQUENCE_ID, rpath);
+    AnimationSequence *sequenceHurtRight = new AnimationSequence(this->getGame(), HURT_RIGHT_SEQUENCE_ID, rpath);
     sequenceHurtRight->addFrame(sf::IntRect((int)PLAYER_SIZE.x * 4, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y), 1);
     getAnimationHandler()->addSequence(sequenceHurtRight);
 }

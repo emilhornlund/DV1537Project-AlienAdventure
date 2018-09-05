@@ -14,7 +14,7 @@
 GameObject::GameObject(Game* game) {
     this->game = game;
 
-    this->animation = new AnimationHandler();
+    this->animation = new AnimationHandler(game);
     this->depth = 0;
     this->visible = true;
 }

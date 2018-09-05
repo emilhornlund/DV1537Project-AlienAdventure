@@ -12,11 +12,13 @@
 
 class StaticFrame : public sf::Drawable, public sf::Transformable {
 private:
+    Game* game;
+
     sf::Texture* texture;
 
     sf::Vector2f offset;
 public:
-    StaticFrame();
+    StaticFrame(Game *game);
 
     StaticFrame(const StaticFrame &original);
 
@@ -25,6 +27,8 @@ public:
     virtual StaticFrame& operator=(const StaticFrame &original);
 
     virtual StaticFrame* clone() const = 0;
+
+    Game* getGame() const;
 
     void setTexture(sf::Texture* texture);
 

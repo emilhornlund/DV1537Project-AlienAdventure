@@ -4,48 +4,61 @@
  * @author Emil Hörnlund
  */
 
-#include "Game.hpp"
-#include "Renderer.hpp"
+#include <Game.hpp>
+
 #include "EventHandler.hpp"
-#include "LevelHandler.hpp"
-#include "ObjectHandler.hpp"
+#include "Game.hpp"
 #include "Hud.hpp"
+#include "LevelHandler.hpp"
 #include "Menu.hpp"
+#include "ObjectHandler.hpp"
+#include "Renderer.hpp"
+#include "ResourceHandler.hpp"
 
 Game::Game() {
     this->running = true;
+
+    this->imageResourceHandler = new ImageResourceHandler;
+
+    this->musicResourceHandler = new MusicResourceHandler;
+
+    this->textureResourceHandler = new TextureResourceHandler;
+
+    this->soundBufferResourceHandler = new SoundBufferResourceHandler;
+
     this->render = new Renderer(this, {800, 600}, "Alien Adventure");
+
     this->eventHandler = new EventHandler(*(this->render->getRenderWindow()));
+
     this->objectHandler = new ObjectHandler(this);
+
     this->levelHandler = new LevelHandler(this);
 
-    this->hud = new Hud;
+    this->hud = new Hud(this);
 
     this->state = GameState::Playing;
 
-    this->pauseMenu = new Menu(MenuType::Pause);
+    this->pauseMenu = new Menu(this, MenuType::Pause);
     this->pauseMenu->setPosition({(float)(800 - this->pauseMenu->getSize().x)/2, (float)(600 - this->pauseMenu->getSize().y)/2});
 
-    this->respawnMenu = new Menu(MenuType::Respawn);
+    this->respawnMenu = new Menu(this, MenuType::Respawn);
     this->respawnMenu->setPosition({(float)(800 - this->respawnMenu->getSize().x)/2, (float)(600 - this->respawnMenu->getSize().y)/2});
 
-    this->gameOverMenu = new Menu(MenuType::GameOver);
+    this->gameOverMenu = new Menu(this, MenuType::GameOver);
     this->gameOverMenu->setPosition({(float)(800 - this->gameOverMenu->getSize().x)/2, (float)(600 - this->gameOverMenu->getSize().y)/2});
 
+    //configure background music
     std::string rpath = "./resources/Music.ogg";
-    this->backgroundMusic = new sf::Music;
-    if (!this->backgroundMusic->openFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
+    this->musicResourceHandler->open(rpath);
+    this->backgroundMusic = &this->musicResourceHandler->get(rpath);
     this->backgroundMusic->setLoop(true);
     this->backgroundMusic->setVolume(50);
     this->backgroundMusic->play();
 
+    //configure menu click sound
     rpath = "./resources/Click.wav";
-    this->clickSoundBuffer = new sf::SoundBuffer;
-    if (!this->clickSoundBuffer->loadFromFile(rpath)) {
-        throw "Failed to load " + rpath;
-    }
+    this->soundBufferResourceHandler->load(rpath);
+    this->clickSoundBuffer = &this->soundBufferResourceHandler->get(rpath);
     this->clickSound = new sf::Sound;
     this->clickSound->setBuffer(*this->clickSoundBuffer);
 
@@ -66,6 +79,18 @@ Game::~Game() {
     delete this->levelHandler;
     this->levelHandler = nullptr;
 
+    delete this->imageResourceHandler;
+    this->imageResourceHandler = nullptr;
+
+    delete this->musicResourceHandler;
+    this->musicResourceHandler = nullptr;
+
+    delete this->textureResourceHandler;
+    this->textureResourceHandler = nullptr;
+
+    delete this->soundBufferResourceHandler;
+    this->soundBufferResourceHandler = nullptr;
+
     delete this->hud;
     this->hud = nullptr;
 
@@ -77,12 +102,6 @@ Game::~Game() {
 
     delete this->gameOverMenu;
     this->gameOverMenu = nullptr;
-
-    delete this->backgroundMusic;
-    this->backgroundMusic = nullptr;
-
-    delete this->clickSoundBuffer;
-    this->clickSoundBuffer = nullptr;
 
     delete this->clickSound;
     this->clickSound = nullptr;
@@ -184,6 +203,22 @@ void Game::setState(const GameState state) {
 
 GameState Game::getState() const {
     return this->state;
+}
+
+ImageResourceHandler *Game::getImageResourceHandler() const {
+    return this->imageResourceHandler;
+}
+
+MusicResourceHandler *Game::getMusicResourceHandler() const {
+    return this->musicResourceHandler;
+}
+
+TextureResourceHandler *Game::getTextureResourceHandler() const {
+    return this->textureResourceHandler;
+}
+
+SoundBufferResourceHandler *Game::getSoundBufferResourceHandler() const {
+    return this->soundBufferResourceHandler;
 }
 
 Renderer* Game::getRenderer() const {

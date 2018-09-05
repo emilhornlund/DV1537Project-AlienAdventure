@@ -12,6 +12,8 @@
 
 class AnimationSequence {
 private:
+    Game* game;
+
     std::string filename;
 
     sf::Texture* spriteSheet;
@@ -28,7 +30,7 @@ private:
 
     AnimationFrame** frames;
 public:
-    AnimationSequence(std::string id, std::string filename);
+    AnimationSequence(Game *game, std::string id, std::string filename);
 
     AnimationSequence(const AnimationSequence &original);
 
@@ -37,6 +39,8 @@ public:
     virtual AnimationSequence& operator=(const AnimationSequence &original);
 
     virtual AnimationSequence* clone() const;
+
+    Game* getGame() const;
 
     void setIdentifier(const std::string &id);
 

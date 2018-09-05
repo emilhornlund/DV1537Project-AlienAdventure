@@ -6,7 +6,9 @@
 
 #include "TileMap.hpp"
 
-TileMap::TileMap() = default;
+TileMap::TileMap(Game *game) : StaticFrame(game) {
+
+}
 
 TileMap::TileMap(const TileMap &original) : StaticFrame(original) {
     this->name = original.getName();

@@ -26,6 +26,14 @@ private:
 
     GameState state;
 
+    ImageResourceHandler *imageResourceHandler;
+
+    MusicResourceHandler *musicResourceHandler;
+
+    TextureResourceHandler *textureResourceHandler;
+
+    SoundBufferResourceHandler *soundBufferResourceHandler;
+
     Renderer *render;
 
     EventHandler *eventHandler;
@@ -61,6 +69,14 @@ public:
     void setState(const GameState state);
 
     GameState getState() const;
+
+    ImageResourceHandler* getImageResourceHandler() const;
+
+    MusicResourceHandler* getMusicResourceHandler() const;
+
+    TextureResourceHandler* getTextureResourceHandler() const;
+
+    SoundBufferResourceHandler *getSoundBufferResourceHandler() const;
 
     Renderer* getRenderer() const;
 

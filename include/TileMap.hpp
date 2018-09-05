@@ -32,7 +32,7 @@ private:
 
     sf::VertexArray vertices;
 public:
-    TileMap();
+    TileMap(Game *game);
 
     TileMap(const TileMap &original);
 

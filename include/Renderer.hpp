@@ -47,6 +47,8 @@ private:
 
     sf::RenderWindow *window;
 
+    sf::Image *icon;
+
     sf::View *view;
 
     void clearQueue();
@@ -58,6 +60,8 @@ public:
     Renderer(Game *game, const sf::Vector2u windowSize, const std::string &title);
 
     ~Renderer();
+
+    Game* getGame() const;
 
     sf::RenderWindow* getRenderWindow();
 
