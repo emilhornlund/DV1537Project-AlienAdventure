@@ -14,13 +14,11 @@
 
 enum class GameState { Playing, Paused, Respawn, GameOver };
 
-/**
- * @class Game
- * @brief Utgångspunkt och själva hjärtat i applikationen
- */
 class Game {
 private:
     bool running;
+
+    int exitCode;
 
     sf::Clock gameClock;
 
@@ -55,14 +53,16 @@ private:
     sf::SoundBuffer* clickSoundBuffer;
 
     sf::Sound* clickSound;
+
+    void update();
+
+    void draw();
 public:
     Game();
 
     ~Game();
 
-    void update();
-
-    void draw();
+    int run();
 
     bool isRunning() const;
 

@@ -16,7 +16,9 @@
 #include "ResourceHandler.hpp"
 
 Game::Game() {
-    this->running = true;
+    this->running = false;
+
+    this->exitCode = 0;
 
     this->imageResourceHandler = new ImageResourceHandler;
 
@@ -105,6 +107,15 @@ Game::~Game() {
 
     delete this->clickSound;
     this->clickSound = nullptr;
+}
+
+int Game::run() {
+    this->running = true;
+    this->exitCode = EXIT_SUCCESS;
+    while (this->running && !this->getEventHandler()->getWindowStatus().closed) {
+        this->update();
+    }
+    return this->exitCode;
 }
 
 void Game::update() {

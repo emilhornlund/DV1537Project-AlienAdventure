@@ -12,12 +12,8 @@ int main(int, char const**) {
     srand(seed);
 
     Game *game = new Game;
-
-    while (game->isRunning() && !game->getEventHandler()->getWindowStatus().closed) {
-        game->update();
-    }
-    
+    int exitCode = game->run();
     delete game;
     
-    return EXIT_SUCCESS;
+    return exitCode;
 }
