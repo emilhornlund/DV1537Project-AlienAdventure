@@ -12,29 +12,14 @@
 
 #include <random>
 
-const std::string COIN_SEQUENCE_ID = "Coin";
-const std::string LIFE_SEQUENCE_ID = "Life";
-
 float FLOATING_VELOCITY = 20;
 
-Collectible::Collectible(Game *game, const sf::IntRect spawnArea, const Collectible::CollectibleType type) : GameObject(game) {
+Collectible::Collectible(Game *game, const sf::IntRect spawnArea, const std::string &soundFilePath) : GameObject(game) {
     this->spawnArea = spawnArea;
-    this->type = type;
-    this->setBoundingBox({ 10, 10, 50, 50 });
 
-    std::string rpath;
-    switch (this->type) {
-        case CollectibleType::GoldCoin:
-            rpath = "./resources/Coin.wav";
-            break;
-        case CollectibleType::Life:
-            rpath = "./resources/Health.wav";
-            break;
-    }
-
-    if (!this->getGame()->getSoundBufferResourceHandler()->isLoaded(rpath))
-        this->getGame()->getSoundBufferResourceHandler()->load(rpath);
-    this->soundBuffer = &this->getGame()->getSoundBufferResourceHandler()->get(rpath);
+    if (!this->getGame()->getSoundBufferResourceHandler()->isLoaded(soundFilePath))
+        this->getGame()->getSoundBufferResourceHandler()->load(soundFilePath);
+    this->soundBuffer = &this->getGame()->getSoundBufferResourceHandler()->get(soundFilePath);
 
     this->sound = new sf::Sound;
     this->sound->setBuffer(*this->soundBuffer);
@@ -44,7 +29,6 @@ Collectible::Collectible(Game *game, const sf::IntRect spawnArea, const Collecti
 }
 
 Collectible::Collectible(const Collectible &original) : GameObject(original) {
-    this->type = original.type;
     this->spawnArea = original.spawnArea;
     this->collected = original.collected;
 
@@ -60,7 +44,6 @@ Collectible::~Collectible() {
 
 Collectible& Collectible::operator=(const Collectible &original) {
     if (this != &original) {
-        this->type = original.type;
         this->spawnArea = original.spawnArea;
         this->collected = original.collected;
 
@@ -71,42 +54,15 @@ Collectible& Collectible::operator=(const Collectible &original) {
     return *this;
 }
 
-Collectible* Collectible::clone() const {
-    return new Collectible(*this);
-}
-
-Collectible::CollectibleType Collectible::getType() const {
-    return this->type;
-}
-
 bool Collectible::isCollected() const {
     return this->collected;
 }
 
-void Collectible::setCollected() {
-    this->collected = true;
-    this->getAnimationHandler()->clearSequences();
-
-    this->sound->play();
-}
-
-void Collectible::restore(const bool respawn) {
-    if (!respawn) {
-        this->collected = false;
-        switch (this->type) {
-            case CollectibleType::GoldCoin: {
-                AnimationSequence *sequence = new AnimationSequence(this->getGame(), COIN_SEQUENCE_ID, "./resources/Misc.png");
-                sequence->addFrame(sf::IntRect(70 * 8, 70 * 2, 70, 70), 10);
-                this->getAnimationHandler()->addSequence(sequence);
-                this->getAnimationHandler()->switchSequence(COIN_SEQUENCE_ID);
-            } break;
-            case CollectibleType::Life: {
-                AnimationSequence *sequence = new AnimationSequence(this->getGame(), LIFE_SEQUENCE_ID, "./resources/Hud.png");
-                sequence->addFrame(sf::IntRect(0, 48, 52, 48), 10);
-                this->getAnimationHandler()->addSequence(sequence);
-                this->getAnimationHandler()->switchSequence(LIFE_SEQUENCE_ID);
-            } break;
-        }
+void Collectible::setCollected(const bool collected) {
+    this->collected = collected;
+    if (collected) {
+        this->getAnimationHandler()->clearSequences();
+        this->sound->play();
     }
 }
 

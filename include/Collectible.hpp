@@ -13,11 +13,7 @@
 #include "GameObject.hpp"
 
 class Collectible : public GameObject {
-public:
-    enum class CollectibleType { GoldCoin, Life };
 private:
-    CollectibleType type;
-
     sf::IntRect spawnArea;
 
     bool collected;
@@ -26,23 +22,19 @@ private:
 
     sf::Sound* sound;
 public:
-    Collectible(Game *game, const sf::IntRect spawnArea, const Collectible::CollectibleType type = Collectible::CollectibleType::GoldCoin);
+    Collectible(Game *game, const sf::IntRect spawnArea, const std::string &soundFilePath);
 
     Collectible(const Collectible &original);
 
-    ~Collectible() override;
+    ~Collectible() override = 0;
 
     virtual Collectible& operator=(const Collectible &original);
 
-    Collectible* clone() const override;
-
-    Collectible::CollectibleType getType() const;
-
     bool isCollected() const;
 
-    void setCollected();
+    void setCollected(const bool collected);
 
-    void restore(const bool respawn) override;
+    void restore(const bool respawn) override = 0;
 
     void processEvents() override;
 

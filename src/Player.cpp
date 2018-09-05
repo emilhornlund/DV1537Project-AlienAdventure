@@ -10,7 +10,8 @@
 
 #include "AnimationHandler.hpp"
 #include "AnimationSequence.hpp"
-#include "Collectible.hpp"
+#include "CollectibleCoin.hpp"
+#include "CollectibleHealth.hpp"
 #include "Enemy.hpp"
 #include "EventHandler.hpp"
 #include "Game.hpp"
@@ -503,17 +504,17 @@ void Player::handleCollision() {
             distance.y = std::abs(collectiblePtr->getPosition().y - this->getPosition().y);
 
             if (std::abs(distance.x) < threshold.x && distance.y < threshold.y && !collectiblePtr->isCollected()) {
-                switch (collectiblePtr->getType()) {
-                    case Collectible::CollectibleType::GoldCoin: {
-                        this->coins += 1;
-                        this->getGame()->getHud()->setCoins(this->coins);
-                    } break;
-                    case Collectible::CollectibleType::Life: {
-                        this->health += 1;
-                        this->getGame()->getHud()->setHealth(this->health);
-                    } break;
+                auto *coin = dynamic_cast<CollectibleCoin*>(collectiblePtr);
+                if (coin != nullptr) {
+                    this->coins += 1;
+                    this->getGame()->getHud()->setCoins(this->coins);
                 }
-                collectiblePtr->setCollected();
+                auto *healthPtr = dynamic_cast<CollectibleHealth*>(collectiblePtr);
+                if (healthPtr != nullptr) {
+                    this->health += 1;
+                    this->getGame()->getHud()->setHealth(this->health);
+                }
+                collectiblePtr->setCollected(true);
             }
         }
     }

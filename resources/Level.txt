@@ -146,7 +146,7 @@ CoinGold
 350
 70
 70
-Life
+Health
 1260
 210
 70
@@ -256,7 +256,7 @@ CoinGold
 560
 70
 70
-Life
+Health
 3080
 210
 70

@@ -12,7 +12,8 @@
 #include "Game.hpp"
 #include "Player.hpp"
 #include "World.hpp"
-#include "Collectible.hpp"
+#include "CollectibleCoin.hpp"
+#include "CollectibleHealth.hpp"
 #include "Enemy.hpp"
 #include "Background.hpp"
 #include "TileMap.hpp"
@@ -168,17 +169,15 @@ void LevelHandler::load() {
         spawnArea.width = this->readNextInt(inFile);
         spawnArea.height = this->readNextInt(inFile);
 
-        Collectible::CollectibleType type;
         if (typeString == "CoinGold") {
-            type = Collectible::CollectibleType::GoldCoin;
-        } else if (typeString == "Life") {
-            type = Collectible::CollectibleType::Life;
+            auto coin = new CollectibleCoin(this->game, spawnArea);
+            this->game->getObjectHandler()->addObject(coin);
+        } else if (typeString == "Health") {
+            auto health = new CollectibleHealth(this->game, spawnArea);
+            this->game->getObjectHandler()->addObject(health);
         } else {
             throw std::runtime_error("Unknown collectible type: " + typeString);
         }
-
-        Collectible* collectible = new Collectible(this->game, spawnArea, type);
-        this->game->getObjectHandler()->addObject(collectible);
     }
 
     inFile.close();

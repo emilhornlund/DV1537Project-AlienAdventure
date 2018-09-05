@@ -10,6 +10,8 @@ class AnimationHandler;
 class AnimationSequence;
 class Background;
 class Collectible;
+class CollectibleCoin;
+class CollectibleHealth;
 class Enemy;
 class EventHandler;
 class Game;
