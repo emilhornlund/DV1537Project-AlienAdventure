@@ -81,6 +81,8 @@ public:
 
     SoundBufferResourceHandler *getSoundBufferResourceHandler() const;
 
+    PropertyHandler* getPropertyHandler() const;
+
     WindowHandler* getRenderer() const;
 
     EventHandler* getEventHandler() const;

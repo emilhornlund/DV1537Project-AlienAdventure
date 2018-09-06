@@ -26,9 +26,11 @@
 #include "EnemyWormGreen.hpp"
 #include "EnemyWormPink.hpp"
 #include "Game.hpp"
+#include "HealthBarObject.hpp"
 #include "LevelHandler.hpp"
 #include "ObjectHandler.hpp"
 #include "Player.hpp"
+#include "PropertyHandler.hpp"
 #include "TileMap.hpp"
 #include "WindowHandler.hpp"
 #include "World.hpp"
@@ -201,6 +203,11 @@ void LevelHandler::load() {
             throw std::runtime_error("Unknown collectible type: " + typeString);
         }
     }
+
+    auto *healthBarObject = new HealthBarObject(this->game);
+    this->game->getObjectHandler()->addObject(healthBarObject);
+
+    this->game->getPropertyHandler()->set<unsigned int>("health", 3);
 
     inFile.close();
 }

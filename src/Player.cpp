@@ -5,8 +5,8 @@
  */
 
 #include <cmath>
-#include <tic.h>
 #include <random>
+#include <tic.h>
 
 #include "AnimationHandler.hpp"
 #include "AnimationSequence.hpp"
@@ -20,6 +20,7 @@
 #include "LevelHandler.hpp"
 #include "ObjectHandler.hpp"
 #include "Player.hpp"
+#include "PropertyHandler.hpp"
 #include "ResourceHandler.hpp"
 #include "WindowHandler.hpp"
 #include "World.hpp"
@@ -421,7 +422,7 @@ void Player::handleCollision() {
                                     this->setVelocity(velocity);
 
                                     this->health -= 1;
-                                    this->getGame()->getHud()->setHealth(this->health);
+                                    this->getGame()->getPropertyHandler()->set<unsigned int>("health", this->health);
 
                                     this->hurtSound->play();
                                 } else {
@@ -486,7 +487,7 @@ void Player::handleCollision() {
                     velocity.y = -HURT_VELOCITY.y;
 
                     this->health -= 1;
-                    this->getGame()->getHud()->setHealth(this->health);
+                    this->getGame()->getPropertyHandler()->set<unsigned int>("health", this->health);
 
                     this->hurtSound->play();
                 }
@@ -513,7 +514,7 @@ void Player::handleCollision() {
                 auto *healthPtr = dynamic_cast<CollectibleHealth*>(collectiblePtr);
                 if (healthPtr != nullptr) {
                     this->health += 1;
-                    this->getGame()->getHud()->setHealth(this->health);
+                    this->getGame()->getPropertyHandler()->set<unsigned int>("health", this->health);
                 }
                 collectiblePtr->setCollected(true);
             }
@@ -606,7 +607,7 @@ void Player::restore(const bool respawn) {
     this->timeSinceHurt = 0;
 
     this->health = 3;
-    this->getGame()->getHud()->setHealth(this->health);
+    this->getGame()->getPropertyHandler()->set<unsigned int>("health", this->health);
 
     if (!respawn) {
         this->coins = 0;
@@ -697,7 +698,7 @@ void Player::update(const float dt) {
         }
         else if (!this->isAlive() && !this->isVictorious()) {
             if (this->timeSinceGameOver == 0) {
-                this->getGame()->getHud()->setHealth(0);
+                this->getGame()->getPropertyHandler()->set<unsigned int>("health", 0);
                 this->gameOverSound->play();
             }
             this->timeSinceGameOver += dt;

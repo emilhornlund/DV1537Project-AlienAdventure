@@ -48,8 +48,8 @@ public:
         std::map<const std::string, IProperty*>::iterator it;
         for (it = this->properties.begin(); it != this->properties.end(); it++) {
             delete (it->second);
-            this->properties.erase(it);
         }
+        this->properties.clear();
     }
 
     template<class T>
@@ -68,6 +68,10 @@ public:
         } else {
             static_cast<TProperty<T>*>(this->properties.at(id))->setValue(value);
         }
+    }
+
+    bool hasProperty(const std::string& id) {
+        return (this->properties.find(id) != this->properties.end());
     }
 };
 

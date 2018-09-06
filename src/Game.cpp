@@ -4,6 +4,8 @@
  * @author Emil Hörnlund
  */
 
+#include <Game.hpp>
+
 #include "Camera.hpp"
 #include "EventHandler.hpp"
 #include "Game.hpp"
@@ -11,9 +13,9 @@
 #include "LevelHandler.hpp"
 #include "Menu.hpp"
 #include "ObjectHandler.hpp"
+#include "PropertyHandler.hpp"
 #include "ResourceHandler.hpp"
 #include "WindowHandler.hpp"
-#include "PropertyHandler.hpp"
 
 const unsigned int WINDOW_WIDTH = 800;
 const unsigned int WINDOW_HEIGHT = 600;
@@ -247,6 +249,10 @@ TextureResourceHandler *Game::getTextureResourceHandler() const {
 
 SoundBufferResourceHandler *Game::getSoundBufferResourceHandler() const {
     return this->soundBufferResourceHandler;
+}
+
+PropertyHandler *Game::getPropertyHandler() const {
+    return this->propertyHandler;
 }
 
 WindowHandler* Game::getRenderer() const {
