@@ -36,6 +36,7 @@ class LevelHandler;
 class Menu;
 class ObjectHandler;
 class Player;
+class PropertyHandler;
 class StaticFrame;
 class TileMap;
 class WindowHandler;

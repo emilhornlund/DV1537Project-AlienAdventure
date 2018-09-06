@@ -13,6 +13,7 @@
 #include "ObjectHandler.hpp"
 #include "ResourceHandler.hpp"
 #include "WindowHandler.hpp"
+#include "PropertyHandler.hpp"
 
 const unsigned int WINDOW_WIDTH = 800;
 const unsigned int WINDOW_HEIGHT = 600;
@@ -30,6 +31,7 @@ Game::Game() {
     this->soundBufferResourceHandler = new SoundBufferResourceHandler;
 
     //initialize other handlers
+    this->propertyHandler = new PropertyHandler();
     this->windowHandler = new WindowHandler(this, WINDOW_WIDTH, WINDOW_HEIGHT, "Alien Adventure");
     this->eventHandler = new EventHandler(*(this->windowHandler->getRenderWindow()));
     this->objectHandler = new ObjectHandler(this);
@@ -87,6 +89,9 @@ Game::~Game() {
 
     delete this->soundBufferResourceHandler;
     this->soundBufferResourceHandler = nullptr;
+
+    delete this->propertyHandler;
+    this->propertyHandler = nullptr;
 
     delete this->hud;
     this->hud = nullptr;

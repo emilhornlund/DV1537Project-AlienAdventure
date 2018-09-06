@@ -23,6 +23,8 @@ private:
 
     GameState state;
 
+    PropertyHandler *propertyHandler;
+
     ImageResourceHandler *imageResourceHandler;
 
     MusicResourceHandler *musicResourceHandler;
