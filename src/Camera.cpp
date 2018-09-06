@@ -6,6 +6,9 @@
 
 #include "Camera.hpp"
 
+const float MAX_VELOCITY_X = 100.0;
+const float MAX_VELOCITY_Y = 100.0;
+
 Camera::Camera(const sf::FloatRect &rect) {
     this->view = new sf::View(rect);
 
@@ -64,7 +67,7 @@ void Camera::setCenter(const sf::Vector2f &center, bool force) {
             float d = fabs(this->targetPosition.x - this->view->getCenter().x);
             if (d > 0) {
                 this->moving.x = true;
-                this->velocity.x = std::max(d * 2, 50.f);
+                this->velocity.x = std::max(d * 2, MAX_VELOCITY_X);
             } else {
                 this->moving.x = false;
                 this->targetPosition.x = 0;
@@ -82,7 +85,7 @@ void Camera::setCenter(const sf::Vector2f &center, bool force) {
             float d = fabs(this->targetPosition.y - this->view->getCenter().y);
             if (d > 0) {
                 this->moving.y = true;
-                this->velocity.y = std::max(d * 2, 50.f);
+                this->velocity.y = std::max(d * 2, MAX_VELOCITY_Y);
             } else {
                 this->moving.y = false;
                 this->targetPosition.y = 0;
@@ -103,7 +106,7 @@ sf::View &Camera::getView() const {
 void Camera::update(const double &dt) {
     sf::Vector2f newCenter = this->view->getCenter();
 
-    if (this->moving.x != 0) {
+    if (this->moving.x) {
         if (this->view->getCenter().x < this->targetPosition.x) {
             newCenter.x += dt * this->velocity.x;
             if (newCenter.x > this->targetPosition.x) {
@@ -125,7 +128,7 @@ void Camera::update(const double &dt) {
         }
     }
 
-    if (this->moving.y != 0) {
+    if (this->moving.y) {
         if (this->view->getCenter().y < this->targetPosition.y) {
             newCenter.y += dt * this->velocity.y;
             if (newCenter.y > this->targetPosition.y) {

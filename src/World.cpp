@@ -13,7 +13,7 @@
 #include "AnimationHandler.hpp"
 #include "LevelHandler.hpp"
 
-World::World(Game *game, const sf::Vector2i worldSize, const sf::Vector2i tileSize) : GameObject(game) {
+World::World(Game *game, const sf::Vector2i worldSize, const sf::Vector2i tileSize) : GameObject(game, true) {
     this->worldSize = worldSize;
     this->tileSize = tileSize;
 

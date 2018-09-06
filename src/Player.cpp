@@ -48,7 +48,7 @@ const sf::Vector2f PLAYER_SIZE = {71, 99};
 
 const int SPAWN_DELAY = 1;
 
-Player::Player(Game *game, const std::vector<sf::IntRect> &spawnAreas, const sf::IntRect exitArea) : GameObject(game) {
+Player::Player(Game *game, const std::vector<sf::IntRect> &spawnAreas, const sf::IntRect exitArea) : GameObject(game, true) {
     this->setDepth(PLAYER_DEPTH);
     this->setBoundingBox({ 10, 10, 51, 89 });
     this->spawnAreas = spawnAreas;

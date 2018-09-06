@@ -14,7 +14,7 @@ ObjectHandler::ObjectHandler(Game* game) {
 
     this->objectsCapacity = 0;//50;
     this->objectsSize = 0;
-    this->objects = new GameObject*[this->objectsCapacity];
+    this->objects = new GameObject *[this->objectsCapacity];
 }
 
 ObjectHandler::ObjectHandler(const ObjectHandler &original) {
@@ -23,7 +23,7 @@ ObjectHandler::ObjectHandler(const ObjectHandler &original) {
     this->objectsCapacity = original.objectsCapacity;
     this->objectsSize = original.objectsSize;
 
-    this->objects = new GameObject*[this->objectsCapacity];
+    this->objects = new GameObject *[this->objectsCapacity];
     for (int i = 0; i < this->objectsSize; i++) {
         this->objects[i] = original.objects[i]->clone();
     }
@@ -41,7 +41,7 @@ ObjectHandler& ObjectHandler::operator=(const ObjectHandler &original) {
         this->objectsCapacity = original.objectsCapacity;
         this->objectsSize = original.objectsSize;
 
-        this->objects = new GameObject*[this->objectsCapacity];
+        this->objects = new GameObject *[this->objectsCapacity];
         for (int i = 0; i < this->objectsSize; i++) {
             this->objects[i] = original.objects[i]->clone();
         }
@@ -61,7 +61,7 @@ void ObjectHandler::clearObjects() {
 void ObjectHandler::addObject(GameObject *object) {
     if (this->objectsCapacity == this->objectsSize) {
         this->objectsCapacity += 5;
-        auto **tempObjects = new GameObject*[this->objectsCapacity];
+        auto **tempObjects = new GameObject *[this->objectsCapacity];
         for (int i = 0; i < this->objectsSize; i++) {
             tempObjects[i] = this->objects[i]->clone();
         }

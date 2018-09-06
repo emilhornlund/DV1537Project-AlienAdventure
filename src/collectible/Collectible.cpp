@@ -14,7 +14,8 @@
 
 float FLOATING_VELOCITY = 20;
 
-Collectible::Collectible(Game *game, const sf::IntRect spawnArea, const std::string &soundFilePath) : GameObject(game) {
+Collectible::Collectible(Game *game, const sf::IntRect spawnArea, const std::string &soundFilePath) : GameObject(game,
+                                                                                                                 true) {
     this->spawnArea = spawnArea;
 
     if (!this->getGame()->getSoundBufferResourceHandler()->isLoaded(soundFilePath))

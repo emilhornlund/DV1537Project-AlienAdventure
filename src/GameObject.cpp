@@ -4,6 +4,8 @@
  * @author Emil Hörnlund
  */
 
+#include <GameObject.hpp>
+
 #include "AnimationFrame.hpp"
 #include "AnimationHandler.hpp"
 #include "AnimationSequence.hpp"
@@ -11,12 +13,13 @@
 #include "GameObject.hpp"
 #include "StaticFrame.hpp"
 
-GameObject::GameObject(Game* game) {
+GameObject::GameObject(Game *game, const bool useCamera) {
     this->game = game;
 
     this->animation = new AnimationHandler(game);
     this->depth = 0;
     this->visible = true;
+    this->useCamera = useCamera;
 }
 
 GameObject::GameObject(const GameObject &original) {
@@ -24,6 +27,7 @@ GameObject::GameObject(const GameObject &original) {
     this->animation = original.animation->clone();
     this->depth = original.getDepth();
     this->visible = original.isVisible();
+    this->useCamera = original.isUsingCamera();
     this->position = original.getPosition();
     this->velocity = original.getVelocity();
     this->acceleration = original.getAcceleration();
@@ -39,6 +43,7 @@ GameObject& GameObject::operator=(const GameObject &original) {
 
         this->depth = original.getDepth();
         this->visible = original.isVisible();
+        this->useCamera = original.isUsingCamera();
         this->position = original.getPosition();
         this->velocity = original.getVelocity();
         this->acceleration = original.getAcceleration();
@@ -71,6 +76,10 @@ bool GameObject::isVisible() const {
 
 void GameObject::setVisible(const bool visible) {
     this->visible = visible;
+}
+
+bool GameObject::isUsingCamera() const {
+    return this->useCamera;
 }
 
 void GameObject::setPosition(const sf::Vector2f &position) {

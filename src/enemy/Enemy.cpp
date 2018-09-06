@@ -16,7 +16,7 @@
 
 const sf::Vector2f MAX_VELOCITY = {50, 100};
 
-Enemy::Enemy(Game *game, const sf::IntRect spawnArea) : GameObject(game) {
+Enemy::Enemy(Game *game, const sf::IntRect spawnArea) : GameObject(game, true) {
     this->spawnArea = spawnArea;
 
     std::string rpath = "./resources/Enemy.wav";

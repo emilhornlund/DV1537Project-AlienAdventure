@@ -17,8 +17,10 @@ private:
         unsigned int depth;
 
         sf::Drawable* drawable;
+
+        bool useCamera;
     public:
-        RenderItem(sf::Drawable* drawable, unsigned int depth);
+        RenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera);
 
         RenderItem(const RenderItem &original);
 
@@ -29,6 +31,8 @@ private:
         unsigned int getDepth() const;
 
         sf::Drawable* getDrawable() const;
+
+        bool isUsingCamera() const;
 
         bool operator>(const RenderItem& original) const;
 
@@ -53,7 +57,7 @@ private:
 
     void clearQueue();
 
-    void addRenderItem(sf::Drawable* drawable, unsigned int depth);
+    void addRenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera);
 
     void sortQueue();
 public:
@@ -70,11 +74,7 @@ public:
 
     Camera& getCamera() const;
 
-//    void updateCamera(const sf::Vector2f position);
-
     void render();
-
-    void fitViewToWindow();
 
     void clear(sf::Color color = sf::Color::Black);
 

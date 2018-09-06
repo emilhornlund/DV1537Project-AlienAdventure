@@ -18,6 +18,8 @@ private:
 
     int depth;
 
+    bool useCamera;
+
     bool visible;
 
     sf::Vector2f position;
@@ -40,7 +42,7 @@ public:
 
     static const int BACKGROUND_DEPTH = 5;
 
-    explicit GameObject(Game* game);
+    explicit GameObject(Game *game, const bool useCamera);
 
     GameObject(const GameObject &original);
 
@@ -65,6 +67,8 @@ public:
     bool isVisible() const;
 
     void setVisible(const bool visible);
+
+    bool isUsingCamera() const;
 
     void setPosition(const sf::Vector2f& position);
 

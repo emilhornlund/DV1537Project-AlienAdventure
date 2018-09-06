@@ -20,21 +20,23 @@
 #include <iostream>
 #include <WindowHandler.hpp>
 
-
-WindowHandler::RenderItem::RenderItem(sf::Drawable* drawable, unsigned int depth) {
+WindowHandler::RenderItem::RenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera) {
     this->drawable = drawable;
     this->depth = depth;
+    this->useCamera = useCamera;
 }
 
 WindowHandler::RenderItem::RenderItem(const RenderItem &original) {
     this->drawable = original.drawable;
     this->depth = original.depth;
+    this->useCamera = original.useCamera;
 }
 
 WindowHandler::RenderItem& WindowHandler::RenderItem::operator=(const WindowHandler::RenderItem &original) {
     if (this != &original) {
         this->drawable = original.getDrawable();
         this->depth = original.getDepth();
+        this->useCamera = original.useCamera;
     }
     return *this;
 }
@@ -47,6 +49,10 @@ unsigned int WindowHandler::RenderItem::getDepth() const {
 
 sf::Drawable* WindowHandler::RenderItem::getDrawable() const {
     return this->drawable;
+}
+
+bool WindowHandler::RenderItem::isUsingCamera() const {
+    return this->useCamera;
 }
 
 bool WindowHandler::RenderItem::operator>(const RenderItem& original) const {
@@ -67,7 +73,7 @@ WindowHandler::WindowHandler(Game *game, const unsigned int windowWidth, const u
 
     this->queueCapacity = 0;
     this->queueSize = 0;
-    this->queue = new RenderItem*[this->queueCapacity];
+    this->queue = new RenderItem *[this->queueCapacity];
 
     sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight, 32), title, sf::Style::Titlebar | sf::Style::Close);
     window->setKeyRepeatEnabled(true);
@@ -108,17 +114,17 @@ void WindowHandler::clearQueue() {
     this->queue = nullptr;
 }
 
-void WindowHandler::addRenderItem(sf::Drawable* drawable, unsigned int depth) {
+void WindowHandler::addRenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera) {
     if (this->queueCapacity == this->queueSize) {
         this->queueCapacity += 5;
-        auto **tempQueue = new RenderItem*[this->queueCapacity];
+        auto **tempQueue = new RenderItem *[this->queueCapacity];
         for (int i = 0; i < this->queueSize; i++) {
             tempQueue[i] = this->queue[i]->clone();
         }
         this->clearQueue();
         this->queue = tempQueue;
     }
-    this->queue[this->queueSize] = new RenderItem(drawable, depth);
+    this->queue[this->queueSize] = new RenderItem(drawable, depth, useCamera);
     this->queueSize++;
 }
 
@@ -150,44 +156,17 @@ Camera &WindowHandler::getCamera() const {
     return *this->camera;
 }
 
-//void WindowHandler::updateCamera(const sf::Vector2f position) {
-//    sf::Vector2u minCenter;
-//    minCenter.x = this->window->getSize().x/2;
-//    minCenter.y = this->window->getSize().y/2;
-//
-//    sf::Vector2u maxCenter;
-//    maxCenter.x = this->game->getLevelHandler()->getWorldSize().x - this->window->getSize().x/2;
-//    maxCenter.y = this->game->getLevelHandler()->getWorldSize().y - this->window->getSize().y/2;
-//
-//    sf::Vector2f cameraPosition = {0, 0};
-//
-//    if (position.x < minCenter.x) {
-//        cameraPosition.x = minCenter.x;
-//    } else if (position.x > maxCenter.x) {
-//        cameraPosition.x = maxCenter.x;
-//    } else {
-//        cameraPosition.x = position.x;
-//    }
-//
-//    if (position.y < minCenter.y) {
-//        cameraPosition.y = minCenter.y;
-//    } else if (position.y > maxCenter.y) {
-//        cameraPosition.y = maxCenter.y;
-//    } else {
-//        cameraPosition.y = position.y;
-//    }
-//
-//    this->getView()->setCenter(cameraPosition);
-//}
-
 void WindowHandler::render() {
     this->sortQueue();
 
-    this->window->setView(this->camera->getView());
-    this->fitViewToWindow();
-
     for (int i = 0; i < this->queueSize; i++) {
-        this->window->draw(*queue[i]->getDrawable());
+        auto &object = *queue[i];
+        if (object.isUsingCamera()) {
+            this->window->setView(this->camera->getView());
+        } else {
+            this->window->setView(this->window->getDefaultView());
+        }
+        this->window->draw(*object.getDrawable());
     }
 
     this->window->setView(this->window->getDefaultView());
@@ -217,11 +196,6 @@ void WindowHandler::render() {
     this->queueSize = 0;
 }
 
-void WindowHandler::fitViewToWindow() {
-//    sf::Vector2u size = this->window->getSize();
-//    this->view->setSize(sf::Vector2f(size.x, size.y));
-}
-
 void WindowHandler::clear(sf::Color color) {
     this->window->clear(color);
 }
@@ -234,7 +208,7 @@ void WindowHandler::draw(GameObject &object) {
             for (unsigned int i = 0; i < animation->numberOfStaticFrames(); i++) {
                 StaticFrame* frame = animation->getStaticFrame(i);
                 if (frame != nullptr) {
-                    this->addRenderItem(frame, (unsigned int)object.getDepth());
+                    this->addRenderItem(frame, (unsigned int)object.getDepth(), object.isUsingCamera());
                     updates++;
                 }
             }
@@ -243,7 +217,7 @@ void WindowHandler::draw(GameObject &object) {
         if (sequence != nullptr) {
             AnimationFrame* frame = sequence->getCurrentFrame();
             if (frame != nullptr) {
-                this->addRenderItem(frame, (unsigned int)object.getDepth());
+                this->addRenderItem(frame, (unsigned int)object.getDepth(), object.isUsingCamera());
                 updates++;
             }
         }
