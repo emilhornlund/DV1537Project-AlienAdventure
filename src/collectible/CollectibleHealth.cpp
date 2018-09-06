@@ -2,9 +2,9 @@
 // Created by Emil Hörnlund on 2018-09-05.
 //
 
-#include "CollectibleHealth.hpp"
+#include "collectible/CollectibleHealth.hpp"
 
-#include "CollectibleCoin.hpp"
+#include "collectible/CollectibleCoin.hpp"
 #include "AnimationHandler.hpp"
 #include "AnimationSequence.hpp"
 

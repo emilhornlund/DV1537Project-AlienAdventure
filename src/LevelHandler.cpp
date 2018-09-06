@@ -8,8 +8,8 @@
 #include <sstream>
 
 #include "Background.hpp"
-#include "CollectibleCoin.hpp"
-#include "CollectibleHealth.hpp"
+#include "collectible/CollectibleCoin.hpp"
+#include "collectible/CollectibleHealth.hpp"
 #include "EnemyBee.hpp"
 #include "EnemyBeeBlack.hpp"
 #include "EnemyFishBlue.hpp"

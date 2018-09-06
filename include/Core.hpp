@@ -35,9 +35,9 @@ class LevelHandler;
 class Menu;
 class ObjectHandler;
 class Player;
-class Renderer;
 class StaticFrame;
 class TileMap;
+class WindowHandler;
 class World;
 
 namespace sf {
@@ -45,6 +45,7 @@ namespace sf {
     class Texture;
     class SoundBuffer;
     class Image;
+    class Sound;
 }
 
 // Forward declaration and a few type definitions

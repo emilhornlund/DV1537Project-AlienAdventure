@@ -7,7 +7,7 @@
 #include "ObjectHandler.hpp"
 #include "GameObject.hpp"
 #include "Game.hpp"
-#include "Renderer.hpp"
+#include "WindowHandler.hpp"
 
 ObjectHandler::ObjectHandler(Game* game) {
     this->game = game;

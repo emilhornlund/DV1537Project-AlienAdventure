@@ -7,14 +7,13 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include <SFML/System/Clock.hpp>
 
 #include "Core.hpp"
 
 class Game {
 public:
-    enum class GameState { Playing, Paused, Respawn, GameOver };
+    enum class GameState { Uninitialized, Playing, Paused, Respawn, GameOver };
 private:
     bool running;
 
@@ -32,7 +31,7 @@ private:
 
     SoundBufferResourceHandler *soundBufferResourceHandler;
 
-    Renderer *render;
+    WindowHandler *windowHandler;
 
     EventHandler *eventHandler;
 
@@ -66,6 +65,8 @@ public:
 
     bool isRunning() const;
 
+    void quit(const int exitCode);
+
     void setState(const GameState state);
 
     GameState getState() const;
@@ -78,7 +79,7 @@ public:
 
     SoundBufferResourceHandler *getSoundBufferResourceHandler() const;
 
-    Renderer* getRenderer() const;
+    WindowHandler* getRenderer() const;
 
     EventHandler* getEventHandler() const;
 

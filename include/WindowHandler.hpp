@@ -10,7 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include "Core.hpp"
 
-class Renderer {
+class WindowHandler {
 private:
     class RenderItem {
     private:
@@ -57,9 +57,10 @@ private:
 
     void sortQueue();
 public:
-    Renderer(Game *game, const sf::Vector2u windowSize, const std::string &title);
+    WindowHandler(Game *game, const unsigned int windowWidth, const unsigned int windowHeight,
+                      const std::string &title);
 
-    ~Renderer();
+    ~WindowHandler();
 
     Game* getGame() const;
 

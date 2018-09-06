@@ -4,50 +4,48 @@
  * @author Emil Hörnlund
  */
 
-#include <Game.hpp>
-
 #include "EventHandler.hpp"
 #include "Game.hpp"
 #include "Hud.hpp"
 #include "LevelHandler.hpp"
 #include "Menu.hpp"
 #include "ObjectHandler.hpp"
-#include "Renderer.hpp"
+#include "WindowHandler.hpp"
 #include "ResourceHandler.hpp"
 
-Game::Game() {
-    this->running = false;
+const unsigned int WINDOW_WIDTH = 800;
+const unsigned int WINDOW_HEIGHT = 600;
 
+Game::Game() {
+    //signal the game as not yet running.
+    this->state = GameState::Uninitialized;
+    this->running = false;
     this->exitCode = 0;
 
+    //initialize resource handlers
     this->imageResourceHandler = new ImageResourceHandler;
-
     this->musicResourceHandler = new MusicResourceHandler;
-
     this->textureResourceHandler = new TextureResourceHandler;
-
     this->soundBufferResourceHandler = new SoundBufferResourceHandler;
 
-    this->render = new Renderer(this, {800, 600}, "Alien Adventure");
-
-    this->eventHandler = new EventHandler(*(this->render->getRenderWindow()));
-
+    //initialize other handlers
+    this->windowHandler = new WindowHandler(this, WINDOW_WIDTH, WINDOW_HEIGHT, "Alien Adventure");
+    this->eventHandler = new EventHandler(*(this->windowHandler->getRenderWindow()));
     this->objectHandler = new ObjectHandler(this);
-
     this->levelHandler = new LevelHandler(this);
 
+    //initialize the hud
     this->hud = new Hud(this);
 
-    this->state = GameState::Playing;
-
+    //initialize menus
     this->pauseMenu = new Menu(this, Menu::MenuType::Pause);
-    this->pauseMenu->setPosition({(float)(800 - this->pauseMenu->getSize().x)/2, (float)(600 - this->pauseMenu->getSize().y)/2});
-
     this->respawnMenu = new Menu(this, Menu::MenuType::Respawn);
-    this->respawnMenu->setPosition({(float)(800 - this->respawnMenu->getSize().x)/2, (float)(600 - this->respawnMenu->getSize().y)/2});
-
     this->gameOverMenu = new Menu(this, Menu::MenuType::GameOver);
-    this->gameOverMenu->setPosition({(float)(800 - this->gameOverMenu->getSize().x)/2, (float)(600 - this->gameOverMenu->getSize().y)/2});
+
+    //position the menus
+    this->pauseMenu->setPosition({(float)(WINDOW_WIDTH - this->pauseMenu->getSize().x)/2, (float)(WINDOW_HEIGHT - this->pauseMenu->getSize().y)/2});
+    this->respawnMenu->setPosition({(float)(WINDOW_WIDTH - this->respawnMenu->getSize().x)/2, (float)(WINDOW_HEIGHT - this->respawnMenu->getSize().y)/2});
+    this->gameOverMenu->setPosition({(float)(WINDOW_WIDTH - this->gameOverMenu->getSize().x)/2, (float)(WINDOW_HEIGHT - this->gameOverMenu->getSize().y)/2});
 
     //configure background music
     std::string rpath = "./resources/Music.ogg";
@@ -55,7 +53,6 @@ Game::Game() {
     this->backgroundMusic = &this->musicResourceHandler->get(rpath);
     this->backgroundMusic->setLoop(true);
     this->backgroundMusic->setVolume(50);
-    this->backgroundMusic->play();
 
     //configure menu click sound
     rpath = "./resources/Click.wav";
@@ -63,14 +60,11 @@ Game::Game() {
     this->clickSoundBuffer = &this->soundBufferResourceHandler->get(rpath);
     this->clickSound = new sf::Sound;
     this->clickSound->setBuffer(*this->clickSoundBuffer);
-
-    this->levelHandler->load();
-    this->objectHandler->restoreObjects(0);
 }
 
 Game::~Game() {
-    delete this->render;
-    this->render = nullptr;
+    delete this->windowHandler;
+    this->windowHandler = nullptr;
 
     delete this->eventHandler;
     this->eventHandler = nullptr;
@@ -110,8 +104,16 @@ Game::~Game() {
 }
 
 int Game::run() {
-    this->running = true;
+    this->backgroundMusic->play();
+
+    this->levelHandler->load();
+    this->objectHandler->restoreObjects(false);
+
+    this->setState(GameState::Playing);
+
     this->exitCode = EXIT_SUCCESS;
+    this->running = true;
+
     while (this->running && !this->getEventHandler()->getWindowStatus().closed) {
         this->update();
     }
@@ -122,13 +124,13 @@ void Game::update() {
     this->eventHandler->updateEvents();
 
     if (this->eventHandler->getWindowStatus().lostFocus) {
-        this->state = GameState::Paused;
+        this->setState(GameState::Paused);
     }
 
     switch (this->state) {
         case GameState::Playing:
             if (this->eventHandler->getKeyStatus(sf::Keyboard::Escape).pressed) {
-                this->state = GameState::Paused;
+                this->setState(GameState::Paused);
             }
             break;
         case GameState::Paused:
@@ -137,12 +139,12 @@ void Game::update() {
             } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Return).released) {
                 unsigned int index = this->pauseMenu->getSelection();
                 if (index == 0) {
-                    this->state = GameState::Playing;
+                    this->setState(GameState::Playing);
                 } else if (index == 1) {
-                    this->state = GameState::Playing;
-                    this->objectHandler->restoreObjects();
+                    this->setState(GameState::Playing);
+                    this->objectHandler->restoreObjects(false);
                 } else {
-                    this->running = false;
+                    this->quit(EXIT_SUCCESS);
                 }
             } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Down).pressed) {
                 this->pauseMenu->toggleNext();
@@ -156,13 +158,13 @@ void Game::update() {
             } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Return).released) {
                 unsigned int index = this->respawnMenu->getSelection();
                 if (index == 0) {
-                    this->state = GameState::Playing;
+                    this->setState(GameState::Playing);
                     this->objectHandler->restoreObjects(true);
                 } else if (index == 1) {
-                    this->state = GameState::Playing;
-                    this->objectHandler->restoreObjects();
+                    this->setState(GameState::Playing);
+                    this->objectHandler->restoreObjects(false);
                 } else {
-                    this->running = false;
+                    this->quit(EXIT_SUCCESS);
                 }
             } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Down).pressed) {
                 this->respawnMenu->toggleNext();
@@ -176,11 +178,11 @@ void Game::update() {
             } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Return).released) {
                 unsigned int index = this->gameOverMenu->getSelection();
                 if (index == 0) {
-                    this->state = GameState::Playing;
+                    this->setState(GameState::Playing);
                     this->hud->restore();
-                    this->objectHandler->restoreObjects();
+                    this->objectHandler->restoreObjects(false);
                 } else {
-                    this->running = false;
+                    this->quit(EXIT_SUCCESS);
                 }
             } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Down).pressed) {
                 this->gameOverMenu->toggleNext();
@@ -188,6 +190,8 @@ void Game::update() {
                 this->gameOverMenu->togglePrevious();
             }
             break;
+        case GameState::Uninitialized:
+            throw std::runtime_error("Game is not yet initialized");
     }
 
     sf::Time delta = this->gameClock.restart();
@@ -199,13 +203,18 @@ void Game::update() {
 }
 
 void Game::draw() {
-    this->render->clear(sf::Color(208, 244, 247));
+    this->windowHandler->clear(sf::Color(208, 244, 247));
     this->objectHandler->drawObjects();
-    this->render->render();
+    this->windowHandler->render();
 }
 
 bool Game::isRunning() const {
     return this->running;
+}
+
+void Game::quit(const int exitCode) {
+    this->running = false;
+    this->exitCode = exitCode;
 }
 
 void Game::setState(const GameState state) {
@@ -232,8 +241,8 @@ SoundBufferResourceHandler *Game::getSoundBufferResourceHandler() const {
     return this->soundBufferResourceHandler;
 }
 
-Renderer* Game::getRenderer() const {
-    return this->render;
+WindowHandler* Game::getRenderer() const {
+    return this->windowHandler;
 }
 
 EventHandler* Game::getEventHandler() const {

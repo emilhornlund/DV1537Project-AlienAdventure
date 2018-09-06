@@ -10,8 +10,8 @@
 
 #include "AnimationHandler.hpp"
 #include "AnimationSequence.hpp"
-#include "CollectibleCoin.hpp"
-#include "CollectibleHealth.hpp"
+#include "collectible/CollectibleCoin.hpp"
+#include "collectible/CollectibleHealth.hpp"
 #include "Enemy.hpp"
 #include "EventHandler.hpp"
 #include "Game.hpp"
@@ -19,7 +19,7 @@
 #include "LevelHandler.hpp"
 #include "ObjectHandler.hpp"
 #include "Player.hpp"
-#include "Renderer.hpp"
+#include "WindowHandler.hpp"
 #include "ResourceHandler.hpp"
 #include "World.hpp"
 

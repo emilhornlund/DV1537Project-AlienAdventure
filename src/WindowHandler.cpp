@@ -12,23 +12,23 @@
 #include "Hud.hpp"
 #include "LevelHandler.hpp"
 #include "Menu.hpp"
-#include "Renderer.hpp"
+#include "WindowHandler.hpp"
 #include "StaticFrame.hpp"
 #include "ResourceHandler.hpp"
 
 #include <iostream>
 
-Renderer::RenderItem::RenderItem(sf::Drawable* drawable, unsigned int depth) {
+WindowHandler::RenderItem::RenderItem(sf::Drawable* drawable, unsigned int depth) {
     this->drawable = drawable;
     this->depth = depth;
 }
 
-Renderer::RenderItem::RenderItem(const RenderItem &original) {
+WindowHandler::RenderItem::RenderItem(const RenderItem &original) {
     this->drawable = original.drawable;
     this->depth = original.depth;
 }
 
-Renderer::RenderItem& Renderer::RenderItem::operator=(const Renderer::RenderItem &original) {
+WindowHandler::RenderItem& WindowHandler::RenderItem::operator=(const WindowHandler::RenderItem &original) {
     if (this != &original) {
         this->drawable = original.getDrawable();
         this->depth = original.getDepth();
@@ -36,36 +36,37 @@ Renderer::RenderItem& Renderer::RenderItem::operator=(const Renderer::RenderItem
     return *this;
 }
 
-Renderer::RenderItem::~RenderItem() = default;;
+WindowHandler::RenderItem::~RenderItem() = default;;
 
-unsigned int Renderer::RenderItem::getDepth() const {
+unsigned int WindowHandler::RenderItem::getDepth() const {
     return this->depth;
 }
 
-sf::Drawable* Renderer::RenderItem::getDrawable() const {
+sf::Drawable* WindowHandler::RenderItem::getDrawable() const {
     return this->drawable;
 }
 
-bool Renderer::RenderItem::operator>(const RenderItem& original) const {
+bool WindowHandler::RenderItem::operator>(const RenderItem& original) const {
     return this->depth > original.depth;
 }
 
-bool Renderer::RenderItem::operator<(const RenderItem& original) const {
+bool WindowHandler::RenderItem::operator<(const RenderItem& original) const {
     return this->depth < original.depth;
 }
 
-Renderer::RenderItem* Renderer::RenderItem::clone() const {
-    return new Renderer::RenderItem(*this);
+WindowHandler::RenderItem* WindowHandler::RenderItem::clone() const {
+    return new WindowHandler::RenderItem(*this);
 }
 
-Renderer::Renderer(Game *game, const sf::Vector2u windowSize, const std::string &title) {
+WindowHandler::WindowHandler(Game *game, const unsigned int windowWidth, const unsigned int windowHeight,
+                             const std::string &title) {
     this->game = game;
 
     this->queueCapacity = 0;
     this->queueSize = 0;
     this->queue = new RenderItem*[this->queueCapacity];
 
-    sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(windowSize.x, windowSize.y, 32), title, sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight, 32), title, sf::Style::Titlebar | sf::Style::Close);
     window->setKeyRepeatEnabled(true);
     window->setMouseCursorVisible(false);
     window->setVerticalSyncEnabled(true);
@@ -77,12 +78,12 @@ Renderer::Renderer(Game *game, const sf::Vector2u windowSize, const std::string 
     window->setIcon(this->icon->getSize().x, this->icon->getSize().y, this->icon->getPixelsPtr());
 
     this->view = new sf::View();
-    this->view->reset(sf::FloatRect(0, 0, windowSize.x, windowSize.y));
+    this->view->reset(sf::FloatRect(0, 0, windowWidth, windowHeight));
     window->setView(*this->view);
     this->window = window;
 }
 
-Renderer::~Renderer() {
+WindowHandler::~WindowHandler() {
     this->clearQueue();
 
     delete this->window;
@@ -92,11 +93,11 @@ Renderer::~Renderer() {
     this->view = nullptr;
 }
 
-Game* Renderer::getGame() const {
+Game* WindowHandler::getGame() const {
     return this->game;
 }
 
-void Renderer::clearQueue() {
+void WindowHandler::clearQueue() {
     for (int i = 0; i < this->queueSize; i++) {
         delete this->queue[i];
         this->queue[i] = nullptr;
@@ -105,7 +106,7 @@ void Renderer::clearQueue() {
     this->queue = nullptr;
 }
 
-void Renderer::addRenderItem(sf::Drawable* drawable, unsigned int depth) {
+void WindowHandler::addRenderItem(sf::Drawable* drawable, unsigned int depth) {
     if (this->queueCapacity == this->queueSize) {
         this->queueCapacity += 5;
         auto **tempQueue = new RenderItem*[this->queueCapacity];
@@ -119,7 +120,7 @@ void Renderer::addRenderItem(sf::Drawable* drawable, unsigned int depth) {
     this->queueSize++;
 }
 
-void Renderer::sortQueue() {
+void WindowHandler::sortQueue() {
     int i, j, flag = 1;
     RenderItem* temp;
     for(i = 1; (i <= this->queueSize) && flag; i++) {
@@ -135,15 +136,15 @@ void Renderer::sortQueue() {
     }
 };
 
-sf::RenderWindow* Renderer::getRenderWindow() {
+sf::RenderWindow* WindowHandler::getRenderWindow() {
     return this->window;
 }
 
-sf::View* Renderer::getView() {
+sf::View* WindowHandler::getView() {
     return this->view;
 }
 
-void Renderer::updateCamera(const sf::Vector2f position) {
+void WindowHandler::updateCamera(const sf::Vector2f position) {
     sf::Vector2u minCenter;
     minCenter.x = this->window->getSize().x/2;
     minCenter.y = this->window->getSize().y/2;
@@ -173,7 +174,7 @@ void Renderer::updateCamera(const sf::Vector2f position) {
     this->getView()->setCenter(cameraPosition);
 }
 
-void Renderer::render() {
+void WindowHandler::render() {
     this->sortQueue();
 
     this->window->setView(*this->view);
@@ -186,15 +187,21 @@ void Renderer::render() {
     this->window->setView(this->window->getDefaultView());
     this->window->draw(*this->game->getHud());
 
-    if (this->game->getState() != Game::GameState::Playing) {
-        this->window->setView(this->window->getDefaultView());
-        if (this->game->getState() == Game::GameState::Paused) {
+    auto currentState = this->getGame()->getState();
+    switch (currentState) {
+        case Game::GameState::Playing:
+            break;
+        case Game::GameState::Paused:
             this->window->draw(*this->game->getPauseMenu());
-        } else if (this->game->getState() == Game::GameState::Respawn) {
+            break;
+        case Game::GameState::Respawn:
             this->window->draw(*this->game->getRespawnMenu());
-        } else if (this->game->getState() == Game::GameState::GameOver) {
+            break;
+        case Game::GameState::GameOver:
             this->window->draw(*this->game->getGameOverMenu());
-        }
+            break;
+        case Game::GameState::Uninitialized:
+            throw std::runtime_error("Game is not yet initialized");
     }
 
     this->window->display();
@@ -204,16 +211,16 @@ void Renderer::render() {
     this->queueSize = 0;
 }
 
-void Renderer::fitViewToWindow() {
+void WindowHandler::fitViewToWindow() {
     sf::Vector2u size = this->window->getSize();
     this->view->setSize(sf::Vector2f(size.x, size.y));
 }
 
-void Renderer::clear(sf::Color color) {
+void WindowHandler::clear(sf::Color color) {
     this->window->clear(color);
 }
 
-void Renderer::draw(GameObject &object) {
+void WindowHandler::draw(GameObject &object) {
     AnimationHandler* animation = object.getAnimationHandler();
     if (animation != nullptr && object.isVisible()) {
         int updates = 0;

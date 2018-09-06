@@ -4,7 +4,7 @@
  * @author Emil Hörnlund
  */
 
-#include "Collectible.hpp"
+#include "collectible/Collectible.hpp"
 #include "AnimationHandler.hpp"
 #include "AnimationSequence.hpp"
 #include "Game.hpp"
