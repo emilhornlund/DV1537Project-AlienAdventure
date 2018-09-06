@@ -7,6 +7,7 @@
 #include "AnimationFrame.hpp"
 #include "AnimationHandler.hpp"
 #include "AnimationSequence.hpp"
+#include "Camera.hpp"
 #include "Game.hpp"
 #include "GameObject.hpp"
 #include "Hud.hpp"
@@ -17,6 +18,8 @@
 #include "ResourceHandler.hpp"
 
 #include <iostream>
+#include <WindowHandler.hpp>
+
 
 WindowHandler::RenderItem::RenderItem(sf::Drawable* drawable, unsigned int depth) {
     this->drawable = drawable;
@@ -77,9 +80,8 @@ WindowHandler::WindowHandler(Game *game, const unsigned int windowWidth, const u
     this->icon = &this->game->getImageResourceHandler()->get(rpath);
     window->setIcon(this->icon->getSize().x, this->icon->getSize().y, this->icon->getPixelsPtr());
 
-    this->view = new sf::View();
-    this->view->reset(sf::FloatRect(0, 0, windowWidth, windowHeight));
-    window->setView(*this->view);
+    this->camera = new Camera(sf::FloatRect(0, 0, windowWidth, windowHeight));
+    window->setView(this->camera->getView());
     this->window = window;
 }
 
@@ -89,8 +91,8 @@ WindowHandler::~WindowHandler() {
     delete this->window;
     this->window = nullptr;
 
-    delete this->view;
-    this->view = nullptr;
+    delete this->camera;
+    this->camera = nullptr;
 }
 
 Game* WindowHandler::getGame() const {
@@ -141,43 +143,47 @@ sf::RenderWindow* WindowHandler::getRenderWindow() {
 }
 
 sf::View* WindowHandler::getView() {
-    return this->view;
+    return &this->camera->getView();
 }
 
-void WindowHandler::updateCamera(const sf::Vector2f position) {
-    sf::Vector2u minCenter;
-    minCenter.x = this->window->getSize().x/2;
-    minCenter.y = this->window->getSize().y/2;
-
-    sf::Vector2u maxCenter;
-    maxCenter.x = this->game->getLevelHandler()->getWorldSize().x - this->window->getSize().x/2;
-    maxCenter.y = this->game->getLevelHandler()->getWorldSize().y - this->window->getSize().y/2;
-
-    sf::Vector2f cameraPosition = {0, 0};
-
-    if (position.x < minCenter.x) {
-        cameraPosition.x = minCenter.x;
-    } else if (position.x > maxCenter.x) {
-        cameraPosition.x = maxCenter.x;
-    } else {
-        cameraPosition.x = position.x;
-    }
-
-    if (position.y < minCenter.y) {
-        cameraPosition.y = minCenter.y;
-    } else if (position.y > maxCenter.y) {
-        cameraPosition.y = maxCenter.y;
-    } else {
-        cameraPosition.y = position.y;
-    }
-
-    this->getView()->setCenter(cameraPosition);
+Camera &WindowHandler::getCamera() const {
+    return *this->camera;
 }
+
+//void WindowHandler::updateCamera(const sf::Vector2f position) {
+//    sf::Vector2u minCenter;
+//    minCenter.x = this->window->getSize().x/2;
+//    minCenter.y = this->window->getSize().y/2;
+//
+//    sf::Vector2u maxCenter;
+//    maxCenter.x = this->game->getLevelHandler()->getWorldSize().x - this->window->getSize().x/2;
+//    maxCenter.y = this->game->getLevelHandler()->getWorldSize().y - this->window->getSize().y/2;
+//
+//    sf::Vector2f cameraPosition = {0, 0};
+//
+//    if (position.x < minCenter.x) {
+//        cameraPosition.x = minCenter.x;
+//    } else if (position.x > maxCenter.x) {
+//        cameraPosition.x = maxCenter.x;
+//    } else {
+//        cameraPosition.x = position.x;
+//    }
+//
+//    if (position.y < minCenter.y) {
+//        cameraPosition.y = minCenter.y;
+//    } else if (position.y > maxCenter.y) {
+//        cameraPosition.y = maxCenter.y;
+//    } else {
+//        cameraPosition.y = position.y;
+//    }
+//
+//    this->getView()->setCenter(cameraPosition);
+//}
 
 void WindowHandler::render() {
     this->sortQueue();
 
-    this->window->setView(*this->view);
+    this->window->setView(this->camera->getView());
     this->fitViewToWindow();
 
     for (int i = 0; i < this->queueSize; i++) {
@@ -212,8 +218,8 @@ void WindowHandler::render() {
 }
 
 void WindowHandler::fitViewToWindow() {
-    sf::Vector2u size = this->window->getSize();
-    this->view->setSize(sf::Vector2f(size.x, size.y));
+//    sf::Vector2u size = this->window->getSize();
+//    this->view->setSize(sf::Vector2f(size.x, size.y));
 }
 
 void WindowHandler::clear(sf::Color color) {

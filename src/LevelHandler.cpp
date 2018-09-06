@@ -8,8 +8,9 @@
 #include <sstream>
 
 #include "Background.hpp"
-#include "collectible/CollectibleCoin.hpp"
-#include "collectible/CollectibleHealth.hpp"
+#include "Camera.hpp"
+#include "CollectibleCoin.hpp"
+#include "CollectibleHealth.hpp"
 #include "EnemyBee.hpp"
 #include "EnemyBeeBlack.hpp"
 #include "EnemyFishBlue.hpp"
@@ -29,6 +30,7 @@
 #include "ObjectHandler.hpp"
 #include "Player.hpp"
 #include "TileMap.hpp"
+#include "WindowHandler.hpp"
 #include "World.hpp"
 
 LevelHandler::LevelHandler(Game* game) {
@@ -64,6 +66,8 @@ void LevelHandler::load() {
     int worldWidth = this->readNextInt(inFile);
     int worldHeight = this->readNextInt(inFile);
     this->worldSize = { worldWidth, worldHeight };
+
+    this->game->getRenderer()->getCamera().setGlobalBounds({0, 0, (float)worldWidth, (float)worldHeight});
 
     World* world = new World(this->game, {worldWidth/70, worldHeight/70}, {70, 70});
     this->game->getObjectHandler()->addObject(world);

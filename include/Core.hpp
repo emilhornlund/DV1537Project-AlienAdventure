@@ -9,6 +9,7 @@ class AnimationFrame;
 class AnimationHandler;
 class AnimationSequence;
 class Background;
+class Camera;
 class Collectible;
 class CollectibleCoin;
 class CollectibleHealth;

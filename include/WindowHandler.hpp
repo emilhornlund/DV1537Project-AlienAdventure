@@ -49,7 +49,7 @@ private:
 
     sf::Image *icon;
 
-    sf::View *view;
+    Camera *camera;
 
     void clearQueue();
 
@@ -68,7 +68,9 @@ public:
 
     sf::View* getView();
 
-    void updateCamera(const sf::Vector2f position);
+    Camera& getCamera() const;
+
+//    void updateCamera(const sf::Vector2f position);
 
     void render();
 

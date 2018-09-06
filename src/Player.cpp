@@ -10,8 +10,9 @@
 
 #include "AnimationHandler.hpp"
 #include "AnimationSequence.hpp"
-#include "collectible/CollectibleCoin.hpp"
-#include "collectible/CollectibleHealth.hpp"
+#include "Camera.hpp"
+#include "CollectibleCoin.hpp"
+#include "CollectibleHealth.hpp"
 #include "Enemy.hpp"
 #include "EventHandler.hpp"
 #include "Game.hpp"
@@ -19,8 +20,8 @@
 #include "LevelHandler.hpp"
 #include "ObjectHandler.hpp"
 #include "Player.hpp"
-#include "WindowHandler.hpp"
 #include "ResourceHandler.hpp"
+#include "WindowHandler.hpp"
 #include "World.hpp"
 
 const std::string STATIONARY_LEFT_SEQUENCE_ID = "StationaryLeft";
@@ -569,7 +570,7 @@ void Player::handleAnimation(const float dt) {
 }
 
 void Player::updateCameraAndBackground() {
-    this->getGame()->getRenderer()->updateCamera(this->getPosition());
+    this->getGame()->getRenderer()->getCamera().setCenter(this->getPosition());
 }
 
 void Player::restore(const bool respawn) {

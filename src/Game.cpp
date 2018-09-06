@@ -4,14 +4,15 @@
  * @author Emil Hörnlund
  */
 
+#include "Camera.hpp"
 #include "EventHandler.hpp"
 #include "Game.hpp"
 #include "Hud.hpp"
 #include "LevelHandler.hpp"
 #include "Menu.hpp"
 #include "ObjectHandler.hpp"
-#include "WindowHandler.hpp"
 #include "ResourceHandler.hpp"
+#include "WindowHandler.hpp"
 
 const unsigned int WINDOW_WIDTH = 800;
 const unsigned int WINDOW_HEIGHT = 600;
@@ -196,7 +197,9 @@ void Game::update() {
 
     sf::Time delta = this->gameClock.restart();
     if (this->state != GameState::Paused) {
-        this->objectHandler->updateObjects(delta.asSeconds());
+        auto dt = delta.asSeconds();
+        this->objectHandler->updateObjects(dt);
+        this->windowHandler->getCamera().update(dt);
     }
 
     this->draw();
