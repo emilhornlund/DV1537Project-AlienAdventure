@@ -41,8 +41,6 @@ private:
 
     LevelHandler *levelHandler;
 
-    Hud* hud;
-
     Menu* pauseMenu;
 
     Menu* respawnMenu;
@@ -90,8 +88,6 @@ public:
     ObjectHandler* getObjectHandler() const;
 
     LevelHandler* getLevelHandler() const;
-
-    Hud* getHud() const;
 
     Menu* getPauseMenu() const;
 

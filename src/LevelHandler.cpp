@@ -9,6 +9,7 @@
 
 #include "Background.hpp"
 #include "Camera.hpp"
+#include "CollectibleBarObject.hpp"
 #include "CollectibleCoin.hpp"
 #include "CollectibleHealth.hpp"
 #include "EnemyBee.hpp"
@@ -206,8 +207,11 @@ void LevelHandler::load() {
 
     auto *healthBarObject = new HealthBarObject(this->game);
     this->game->getObjectHandler()->addObject(healthBarObject);
-
     this->game->getPropertyHandler()->set<unsigned int>("health", 3);
+
+    auto *collectibleBarObject = new CollectibleBarObject(this->game);
+    this->game->getObjectHandler()->addObject(collectibleBarObject);
+    this->game->getPropertyHandler()->set<unsigned int>("coins", 0);
 
     inFile.close();
 }

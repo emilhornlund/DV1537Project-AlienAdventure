@@ -10,7 +10,6 @@
 #include "Camera.hpp"
 #include "Game.hpp"
 #include "GameObject.hpp"
-#include "Hud.hpp"
 #include "LevelHandler.hpp"
 #include "Menu.hpp"
 #include "WindowHandler.hpp"
@@ -170,7 +169,6 @@ void WindowHandler::render() {
     }
 
     this->window->setView(this->window->getDefaultView());
-    this->window->draw(*this->game->getHud());
 
     auto currentState = this->getGame()->getState();
     switch (currentState) {

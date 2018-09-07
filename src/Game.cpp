@@ -9,7 +9,6 @@
 #include "Camera.hpp"
 #include "EventHandler.hpp"
 #include "Game.hpp"
-#include "Hud.hpp"
 #include "LevelHandler.hpp"
 #include "Menu.hpp"
 #include "ObjectHandler.hpp"
@@ -38,9 +37,6 @@ Game::Game() {
     this->eventHandler = new EventHandler(*(this->windowHandler->getRenderWindow()));
     this->objectHandler = new ObjectHandler(this);
     this->levelHandler = new LevelHandler(this);
-
-    //initialize the hud
-    this->hud = new Hud(this);
 
     //initialize menus
     this->pauseMenu = new Menu(this, Menu::MenuType::Pause);
@@ -94,9 +90,6 @@ Game::~Game() {
 
     delete this->propertyHandler;
     this->propertyHandler = nullptr;
-
-    delete this->hud;
-    this->hud = nullptr;
 
     delete this->pauseMenu;
     this->pauseMenu = nullptr;
@@ -187,7 +180,6 @@ void Game::update() {
                 unsigned int index = this->gameOverMenu->getSelection();
                 if (index == 0) {
                     this->setState(GameState::Playing);
-                    this->hud->restore();
                     this->objectHandler->restoreObjects(false);
                 } else {
                     this->quit(EXIT_SUCCESS);
@@ -269,10 +261,6 @@ ObjectHandler* Game::getObjectHandler() const {
 
 LevelHandler* Game::getLevelHandler() const {
     return this->levelHandler;
-}
-
-Hud* Game::getHud() const {
-    return this->hud;
 }
 
 Menu* Game::getPauseMenu() const {

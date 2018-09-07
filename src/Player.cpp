@@ -16,7 +16,6 @@
 #include "Enemy.hpp"
 #include "EventHandler.hpp"
 #include "Game.hpp"
-#include "Hud.hpp"
 #include "LevelHandler.hpp"
 #include "ObjectHandler.hpp"
 #include "Player.hpp"
@@ -509,7 +508,7 @@ void Player::handleCollision() {
                 auto *coin = dynamic_cast<CollectibleCoin*>(collectiblePtr);
                 if (coin != nullptr) {
                     this->coins += 1;
-                    this->getGame()->getHud()->setCoins(this->coins);
+                    this->getGame()->getPropertyHandler()->set<unsigned int>("coins", this->coins);
                 }
                 auto *healthPtr = dynamic_cast<CollectibleHealth*>(collectiblePtr);
                 if (healthPtr != nullptr) {
@@ -611,7 +610,7 @@ void Player::restore(const bool respawn) {
 
     if (!respawn) {
         this->coins = 0;
-        this->getGame()->getHud()->setCoins(this->coins);
+        this->getGame()->getPropertyHandler()->set<unsigned int>("coins", this->coins);
     }
 }
 

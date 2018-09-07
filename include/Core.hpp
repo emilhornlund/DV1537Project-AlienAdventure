@@ -31,7 +31,6 @@ class EnemyWormPink;
 class EventHandler;
 class Game;
 class GameObject;
-class Hud;
 class LevelHandler;
 class Menu;
 class ObjectHandler;
