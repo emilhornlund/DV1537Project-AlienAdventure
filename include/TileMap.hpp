@@ -31,14 +31,14 @@ private:
     std::vector<int> data;
 
     sf::VertexArray vertices;
-public:
-    explicit TileMap(Game *game);
 
     TileMap(const TileMap &original);
 
-    ~TileMap() override;
+    TileMap& operator=(const TileMap &original);
+public:
+    explicit TileMap(Game *game);
 
-    virtual TileMap& operator=(const TileMap &original);
+    ~TileMap() override;
 
     std::string getName() const;
 

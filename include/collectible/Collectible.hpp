@@ -21,14 +21,14 @@ private:
     sf::SoundBuffer* soundBuffer;
 
     sf::Sound* sound;
-public:
-    Collectible(Game *game, const sf::IntRect spawnArea, const std::string &soundFilePath);
 
     Collectible(const Collectible &original);
 
-    ~Collectible() override = 0;
+    Collectible& operator=(const Collectible &original);
+public:
+    Collectible(Game *game, const sf::IntRect spawnArea, const std::string &soundFilePath);
 
-    virtual Collectible& operator=(const Collectible &original);
+    ~Collectible() override = 0;
 
     bool isCollected() const;
 

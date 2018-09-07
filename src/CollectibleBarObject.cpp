@@ -24,22 +24,7 @@ CollectibleBarObject::CollectibleBarObject(Game *game) : GameObject(game, false)
     this->createFirstDigitCoin();
 }
 
-CollectibleBarObject::CollectibleBarObject(const CollectibleBarObject &original) : GameObject(original) {
-    this->currentCoins = original.currentCoins;
-}
-
-CollectibleBarObject &CollectibleBarObject::operator=(const CollectibleBarObject &original) {
-    if (this != &original) {
-        this->currentCoins = original.currentCoins;
-    }
-    return *this;
-}
-
 CollectibleBarObject::~CollectibleBarObject() = default;
-
-GameObject *CollectibleBarObject::clone() const {
-    return new CollectibleBarObject(*this);
-}
 
 void CollectibleBarObject::restore(const bool respawn) {
     if (!respawn) {
@@ -120,20 +105,9 @@ CollectibleBarObject::SpriteStaticFrame::SpriteStaticFrame(Game *game) : StaticF
     this->sprite = new sf::Sprite();
 }
 
-CollectibleBarObject::SpriteStaticFrame::SpriteStaticFrame(const CollectibleBarObject::SpriteStaticFrame &original) : StaticFrame(original) {
-    this->sprite = new sf::Sprite(*original.sprite);
-}
-
 CollectibleBarObject::SpriteStaticFrame::~SpriteStaticFrame() {
     delete this->sprite;
     this->sprite = nullptr;
-}
-
-CollectibleBarObject::SpriteStaticFrame &CollectibleBarObject::SpriteStaticFrame::operator=(const CollectibleBarObject::SpriteStaticFrame &original) {
-    if (this != &original) {
-        this->sprite = new sf::Sprite(*original.sprite);
-    }
-    return *this;
 }
 
 void CollectibleBarObject::SpriteStaticFrame::draw(sf::RenderTarget &target, sf::RenderStates states) const {

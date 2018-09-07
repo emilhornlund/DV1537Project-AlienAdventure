@@ -53,6 +53,10 @@ private:
 
     sf::Sound* clickSound;
 
+    Game(const Game &original);
+
+    Game& operator=(const Game &original);
+
     void update();
 
     void draw();
@@ -81,7 +85,7 @@ public:
 
     PropertyHandler* getPropertyHandler() const;
 
-    WindowHandler* getRenderer() const;
+    WindowHandler* getWindowHandler() const;
 
     EventHandler* getEventHandler() const;
 

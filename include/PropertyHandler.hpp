@@ -16,6 +16,10 @@
 class PropertyHandler {
 private:
     class IProperty {
+    private:
+        IProperty(const IProperty &original);
+
+        IProperty& operator=(const IProperty &original);
     public:
         IProperty() = default;
 
@@ -26,6 +30,10 @@ private:
     class TProperty : public IProperty {
     private:
         T value;
+
+        TProperty(const TProperty &original);
+
+        TProperty& operator=(const TProperty &original);
     public:
         explicit TProperty(T value) : IProperty(), value(value) {}
 
@@ -41,6 +49,10 @@ private:
     };
 
     std::map<const std::string, IProperty*> properties;
+
+    PropertyHandler(const PropertyHandler &original);
+
+    PropertyHandler& operator=(const PropertyHandler &original);
 public:
     PropertyHandler() = default;
 

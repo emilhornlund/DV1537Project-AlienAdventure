@@ -13,22 +13,7 @@ StaticFrame::StaticFrame(Game *game) {
     this->texture = nullptr;
 }
 
-StaticFrame::StaticFrame(const StaticFrame &original) {
-    this->game = original.game;
-    this->setTexture(original.texture);
-    this->offset = original.getOffset();
-}
-
 StaticFrame::~StaticFrame() = default;
-
-StaticFrame& StaticFrame::operator=(const StaticFrame &original) {
-    if (this != &original) {
-        this->game = original.game;
-        this->texture = new sf::Texture(*original.texture);
-        this->offset = original.getOffset();
-    }
-    return *this;
-}
 
 Game* StaticFrame::getGame() const {
     return this->game;

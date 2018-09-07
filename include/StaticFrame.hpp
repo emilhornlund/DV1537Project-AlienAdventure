@@ -17,14 +17,14 @@ private:
     sf::Texture* texture;
 
     sf::Vector2f offset;
-public:
-    StaticFrame(Game *game);
 
     StaticFrame(const StaticFrame &original);
 
-    ~StaticFrame() override;
+    StaticFrame& operator=(const StaticFrame &original);
+public:
+    explicit StaticFrame(Game *game);
 
-    virtual StaticFrame& operator=(const StaticFrame &original);
+    ~StaticFrame() override;
 
     Game* getGame() const;
 

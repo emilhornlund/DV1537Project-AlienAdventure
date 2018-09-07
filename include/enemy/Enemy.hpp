@@ -22,19 +22,17 @@ private:
 
     sf::Sound* sound;
 
+    Enemy(const Enemy &original);
+
+    Enemy& operator=(const Enemy &original);
+
     void handleMovement(const float dt);
 
     void handleAnimation(const float dt);
 public:
     Enemy(Game *game, const sf::IntRect spawnArea);
 
-    Enemy(const Enemy &original);
-
     ~Enemy() override;
-
-    virtual Enemy& operator=(const Enemy &original);
-
-    Enemy* clone() const override = 0;
 
     virtual void configure() = 0;
 

@@ -32,6 +32,10 @@ private:
 
     unsigned int currentCoins;
 
+    CollectibleBarObject(const CollectibleBarObject &original);
+
+    CollectibleBarObject& operator=(const CollectibleBarObject &original);
+
     void createCoin();
 
     void createMultiplier();
@@ -40,13 +44,7 @@ private:
 public:
     explicit CollectibleBarObject(Game *game);
 
-    CollectibleBarObject(const CollectibleBarObject &original);
-
-    CollectibleBarObject& operator=(const CollectibleBarObject &original);
-
     ~CollectibleBarObject() override;
-
-    GameObject* clone() const override;
 
     void restore(const bool respawn) override;
 

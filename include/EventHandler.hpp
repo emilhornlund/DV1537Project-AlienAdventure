@@ -27,6 +27,10 @@ private:
     WindowStatus windowStatus;
 
     void resetKeyStatus();
+
+    EventHandler(const EventHandler &original);
+
+    EventHandler& operator=(const EventHandler &original);
 public:
     explicit EventHandler(sf::RenderWindow& window);
 

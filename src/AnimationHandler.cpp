@@ -13,30 +13,9 @@ AnimationHandler::AnimationHandler(Game *game) {
     this->currentSequence = 0;
 }
 
-AnimationHandler::AnimationHandler(const AnimationHandler &original) {
-    this->game = original.game;
-    this->staticFrames = original.staticFrames;
-    this->sequences = original.sequences;
-    this->currentSequence = original.currentSequence;
-}
-
 AnimationHandler::~AnimationHandler() {
     this->clearStaticFrames();
     this->clearSequences();
-}
-
-AnimationHandler& AnimationHandler::operator=(const AnimationHandler &original) {
-    if (this != &original) {
-        this->game = original.game;
-        this->staticFrames = original.staticFrames;
-        this->sequences = original.sequences;
-        this->currentSequence = original.currentSequence;
-    }
-    return *this;
-}
-
-AnimationHandler* AnimationHandler::clone() const {
-    return new AnimationHandler(*this);
 }
 
 Game* AnimationHandler::getGame() const {

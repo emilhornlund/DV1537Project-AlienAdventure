@@ -10,15 +10,7 @@ EnemyWormPink::EnemyWormPink(Game *game, const sf::IntRect spawnArea) : Enemy(ga
 
 }
 
-EnemyWormPink::EnemyWormPink(const EnemyWormPink &original) = default;
-
 EnemyWormPink::~EnemyWormPink() = default;
-
-EnemyWormPink &EnemyWormPink::operator=(const EnemyWormPink &original) = default;
-
-EnemyWormPink *EnemyWormPink::clone() const {
-    return new EnemyWormPink(*this);
-}
 
 void EnemyWormPink::configure() {
     this->setBoundingBox({4, 43, 57, 22});

@@ -9,16 +9,14 @@
 #include "Enemy.hpp"
 
 class EnemySnail : public Enemy {
+private:
+    EnemySnail(const EnemySnail &original);
+
+    EnemySnail& operator=(const EnemySnail &original);
 public:
     EnemySnail(Game *game, const sf::IntRect spawnArea);
 
-    EnemySnail(const EnemySnail &original);
-
     ~EnemySnail() override;
-
-    virtual EnemySnail& operator=(const EnemySnail &original);
-
-    EnemySnail* clone() const override;
 
     void configure() override;
 };

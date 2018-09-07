@@ -29,6 +29,10 @@ private:
     sf::Vector2f acceleration;
 
     sf::IntRect boundingBox;
+
+    GameObject(const GameObject &original);
+
+    GameObject& operator=(const GameObject &original);
 public:
     static const int PLAYER_DEPTH = 1;
 
@@ -44,15 +48,9 @@ public:
 
     explicit GameObject(Game *game, const bool useCamera);
 
-    GameObject(const GameObject &original);
-
-    virtual GameObject& operator=(const GameObject &original);
-
     virtual ~GameObject();
 
     Game* getGame() const;
-
-    virtual GameObject* clone() const = 0;
 
     virtual void restore(const bool respawn = false) = 0;
 

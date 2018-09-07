@@ -10,36 +10,7 @@ TileMap::TileMap(Game *game) : StaticFrame(game) {
 
 }
 
-TileMap::TileMap(const TileMap &original) : StaticFrame(original) {
-    this->name = original.getName();
-    this->columns = original.getColumns();
-    this->rows = original.getRows();
-    this->tileWidth = original.getTileWidth();
-    this->tileHeight = original.getTileHeight();
-    this->tilesetColumns = original.getTilesetColumns();
-    this->tilesetRows = original.getTilesetRows();
-    this->filename = original.getFilename();
-    this->data = original.getData();
-    this->vertices = original.vertices;
-}
-
 TileMap::~TileMap() = default;
-
-TileMap& TileMap::operator=(const TileMap &original) {
-    if (this != &original) {
-        this->name = original.getName();
-        this->columns = original.getColumns();
-        this->rows = original.getRows();
-        this->tileWidth = original.getTileWidth();
-        this->tileHeight = original.getTileHeight();
-        this->tilesetColumns = original.getTilesetColumns();
-        this->tilesetRows = original.getTilesetRows();
-        this->filename = original.getFilename();
-        this->data = original.getData();
-        this->vertices = original.vertices;
-    }
-    return *this;
-}
 
 std::string TileMap::getName() const {
     return this->name;

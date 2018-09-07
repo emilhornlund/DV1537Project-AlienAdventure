@@ -9,19 +9,16 @@
 #include "Enemy.hpp"
 
 class EnemySlimePurple : public Enemy {
+private:
+    EnemySlimePurple(const EnemySlimePurple &original);
+
+    EnemySlimePurple& operator=(const EnemySlimePurple &original);
 public:
     EnemySlimePurple(Game *game, const sf::IntRect spawnArea);
 
-    EnemySlimePurple(const EnemySlimePurple &original);
-
     ~EnemySlimePurple() override;
-
-    virtual EnemySlimePurple& operator=(const EnemySlimePurple &original);
-
-    EnemySlimePurple* clone() const override;
 
     void configure() override;
 };
-
 
 #endif //ALIENADVENTURE_ENEMYSLIMEPURPLE_HPP

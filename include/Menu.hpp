@@ -33,15 +33,15 @@ private:
 
     unsigned int currentButton;
 
+    Menu(const Menu &original);
+
+    Menu& operator=(const Menu &original);
+
     void updateSelection();
 public:
     Menu(Game *game, MenuType type);
 
-    Menu(const Menu &original);
-
     ~Menu() override;
-
-    Menu& operator=(const Menu &original);
 
     Game* getGame() const;
 

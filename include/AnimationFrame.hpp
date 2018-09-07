@@ -13,16 +13,14 @@
 class AnimationFrame : public sf::Sprite {
 private:
     float duration;
-public:
-    explicit AnimationFrame(float duration = 0);
 
     AnimationFrame(const AnimationFrame &original);
 
+    AnimationFrame& operator=(const AnimationFrame &original);
+public:
+    explicit AnimationFrame(float duration = 0);
+
     ~AnimationFrame() override;
-
-    virtual AnimationFrame& operator=(const AnimationFrame &original);
-
-    virtual AnimationFrame* clone() const;
 
     void setDuration(const float duration);
 

@@ -7,6 +7,7 @@
 #ifndef RENDER_HPP
 #define RENDER_HPP
 
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include "Core.hpp"
 
@@ -19,12 +20,12 @@ private:
         sf::Drawable* drawable;
 
         bool useCamera;
-    public:
-        RenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera);
 
         RenderItem(const RenderItem &original);
 
-        virtual RenderItem& operator=(const RenderItem &original);
+        RenderItem& operator=(const RenderItem &original);
+    public:
+        RenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera);
 
         virtual ~RenderItem();
 
@@ -37,17 +38,11 @@ private:
         bool operator>(const RenderItem& original) const;
 
         bool operator<(const RenderItem& original) const;
-
-        virtual RenderItem* clone() const;
     };
 
     Game* game;
 
-    unsigned int queueCapacity;
-
-    unsigned int queueSize;
-
-    RenderItem** queue;
+    std::vector<std::shared_ptr<RenderItem>> renderItems;
 
     sf::RenderWindow *window;
 
@@ -55,7 +50,9 @@ private:
 
     Camera *camera;
 
-    void clearQueue();
+    WindowHandler(const WindowHandler &original);
+
+    WindowHandler& operator=(const WindowHandler &original);
 
     void addRenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera);
 

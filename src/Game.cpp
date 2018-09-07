@@ -247,7 +247,7 @@ PropertyHandler *Game::getPropertyHandler() const {
     return this->propertyHandler;
 }
 
-WindowHandler* Game::getRenderer() const {
+WindowHandler* Game::getWindowHandler() const {
     return this->windowHandler;
 }
 

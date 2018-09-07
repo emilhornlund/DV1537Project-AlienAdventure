@@ -58,35 +58,6 @@ Player::Player(Game *game, const std::vector<sf::IntRect> &spawnAreas, const sf:
     this->setupSounds();
 }
 
-Player::Player(const Player &original) : GameObject(original) {
-    this->state = original.state;
-    this->direction = original.direction;
-    this->spawnAreas = original.spawnAreas;
-    this->exitArea = original.exitArea;
-    this->currentCharacter = original.currentCharacter;
-    this->isHurt = original.isHurt;
-    this->timeSinceHurt = original.timeSinceHurt;
-    this->timeSinceGameOver = original.timeSinceGameOver;
-    this->health = original.health;
-    this->coins = original.coins;
-
-    this->jumpSoundBuffer = new sf::SoundBuffer(*original.jumpSoundBuffer);
-    this->jumpSound = new sf::Sound(*original.jumpSound);
-    this->jumpSound->setBuffer(*this->jumpSoundBuffer);
-
-    this->hurtSoundBuffer = new sf::SoundBuffer(*original.hurtSoundBuffer);
-    this->hurtSound = new sf::Sound(*original.hurtSound);
-    this->hurtSound->setBuffer(*this->hurtSoundBuffer);
-
-    this->gameOverSoundBuffer = new sf::SoundBuffer(*original.gameOverSoundBuffer);
-    this->gameOverSound = new sf::Sound(*original.gameOverSound);
-    this->gameOverSound->setBuffer(*this->gameOverSoundBuffer);
-
-    this->victoriousSoundBuffer = new sf::SoundBuffer(*original.victoriousSoundBuffer);
-    this->victoriousSound = new sf::Sound(*original.victoriousSound);
-    this->victoriousSound->setBuffer(*this->victoriousSoundBuffer);
-}
-
 Player::~Player() {
     delete this->jumpSound;
     this->jumpSound = nullptr;
@@ -99,41 +70,6 @@ Player::~Player() {
 
     delete this->victoriousSound;
     this->victoriousSound = nullptr;
-}
-
-Player& Player::operator=(const Player &original) {
-    if (this != &original) {
-        this->state = original.state;
-        this->direction = original.direction;
-        this->spawnAreas = original.spawnAreas;
-        this->exitArea = original.exitArea;
-        this->isHurt = original.isHurt;
-        this->timeSinceHurt = original.timeSinceHurt;
-        this->timeSinceGameOver = original.timeSinceGameOver;
-        this->health = original.health;
-        this->coins = original.coins;
-
-        this->jumpSoundBuffer = new sf::SoundBuffer(*original.jumpSoundBuffer);
-        this->jumpSound = new sf::Sound(*original.jumpSound);
-        this->jumpSound->setBuffer(*this->jumpSoundBuffer);
-
-        this->hurtSoundBuffer = new sf::SoundBuffer(*original.hurtSoundBuffer);
-        this->hurtSound = new sf::Sound(*original.hurtSound);
-        this->hurtSound->setBuffer(*this->hurtSoundBuffer);
-
-        this->gameOverSoundBuffer = new sf::SoundBuffer(*original.gameOverSoundBuffer);
-        this->gameOverSound = new sf::Sound(*original.gameOverSound);
-        this->gameOverSound->setBuffer(*this->gameOverSoundBuffer);
-
-        this->victoriousSoundBuffer = new sf::SoundBuffer(*original.victoriousSoundBuffer);
-        this->victoriousSound = new sf::Sound(*original.victoriousSound);
-        this->victoriousSound->setBuffer(*this->victoriousSoundBuffer);
-    }
-    return *this;
-}
-
-Player* Player::clone() const {
-    return new Player(*this);
 }
 
 void Player::setupSounds() {
@@ -380,7 +316,7 @@ void Player::handleMovement(const float dt) {
 
 void Player::handleCollision() {
     for (unsigned int i = 0; i < this->getGame()->getObjectHandler()->getNumberOfObjects(); i++) {
-        GameObject* objectPtr = this->getGame()->getObjectHandler()->getObject(i);
+        auto *objectPtr = &this->getGame()->getObjectHandler()->getObject(i);
 
         World* worldPtr = dynamic_cast<World*>(objectPtr);
         if (worldPtr != nullptr) {
@@ -570,7 +506,7 @@ void Player::handleAnimation(const float dt) {
 }
 
 void Player::updateCameraAndBackground() {
-    this->getGame()->getRenderer()->getCamera().setCenter(this->getPosition());
+    this->getGame()->getWindowHandler()->getCamera().setCenter(this->getPosition());
 }
 
 void Player::restore(const bool respawn) {

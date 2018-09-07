@@ -16,17 +16,7 @@ CollectibleCoin::CollectibleCoin(Game *game, const sf::IntRect spawnArea) : Coll
     this->setBoundingBox({ 10, 10, 50, 50 });
 }
 
-CollectibleCoin::CollectibleCoin(const CollectibleCoin &original) = default;
-
 CollectibleCoin::~CollectibleCoin() = default;
-
-CollectibleCoin &CollectibleCoin::operator=(const CollectibleCoin &original) {
-    return *this;
-}
-
-CollectibleCoin *CollectibleCoin::clone() const {
-    return new CollectibleCoin(*this);
-}
 
 void CollectibleCoin::restore(const bool respawn) {
     if (!respawn) {

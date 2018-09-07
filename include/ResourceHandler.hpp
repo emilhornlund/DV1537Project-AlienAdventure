@@ -17,6 +17,10 @@ template <typename Resource>
 class ResourceHandler {
 private:
     std::map<std::string, Resource*> resources;
+
+    ResourceHandler(const ResourceHandler &original);
+
+    ResourceHandler& operator=(const ResourceHandler &original);
 public:
     ResourceHandler() = default;
 

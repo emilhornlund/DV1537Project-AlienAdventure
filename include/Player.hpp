@@ -58,6 +58,10 @@ private:
 
     sf::Sound* victoriousSound;
 
+    Player(const Player &original);
+
+    Player& operator=(const Player &original);
+
     void setupSounds();
 
     void setupAnimations() const;
@@ -86,13 +90,7 @@ private:
 public:
     Player(Game *game, const std::vector<sf::IntRect> &spawnAreas, const sf::IntRect exitArea);
 
-    Player(const Player &original);
-
     ~Player() override;
-
-    virtual Player& operator=(const Player &original);
-
-    Player* clone() const override;
 
     void restore(const bool respawn) override;
 

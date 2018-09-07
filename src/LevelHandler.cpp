@@ -70,7 +70,7 @@ void LevelHandler::load() {
     int worldHeight = this->readNextInt(inFile);
     this->worldSize = { worldWidth, worldHeight };
 
-    this->game->getRenderer()->getCamera().setGlobalBounds({0, 0, (float)worldWidth, (float)worldHeight});
+    this->game->getWindowHandler()->getCamera().setGlobalBounds({0, 0, (float)worldWidth, (float)worldHeight});
 
     World* world = new World(this->game, {worldWidth/70, worldHeight/70}, {70, 70});
     this->game->getObjectHandler()->addObject(world);

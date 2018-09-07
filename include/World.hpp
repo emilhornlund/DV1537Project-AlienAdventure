@@ -20,17 +20,15 @@ private:
 
     int* collidableMap;
 
+    World(const World &original);
+
+    World& operator=(const World &original);
+
     void clearCollidableMap();
 public:
     World(Game *game, const sf::Vector2i worldSize, const sf::Vector2i tileSize);
 
-    World(const World &original);
-
     ~World() override;
-
-    virtual World& operator=(const World &original);
-
-    World* clone() const override;
 
     void addBackground(Background* background);
 

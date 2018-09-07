@@ -10,15 +10,7 @@ EnemySlimeGreen::EnemySlimeGreen(Game *game, const sf::IntRect spawnArea) : Enem
 
 }
 
-EnemySlimeGreen::EnemySlimeGreen(const EnemySlimeGreen &original) = default;
-
 EnemySlimeGreen::~EnemySlimeGreen() = default;
-
-EnemySlimeGreen &EnemySlimeGreen::operator=(const EnemySlimeGreen &original) = default;
-
-EnemySlimeGreen *EnemySlimeGreen::clone() const {
-    return new EnemySlimeGreen(*this);
-}
 
 void EnemySlimeGreen::configure() {
     this->setBoundingBox({8, 31, 49, 34});

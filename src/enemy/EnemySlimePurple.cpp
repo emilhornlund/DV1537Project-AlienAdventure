@@ -10,15 +10,7 @@ EnemySlimePurple::EnemySlimePurple(Game *game, const sf::IntRect spawnArea) : En
 
 }
 
-EnemySlimePurple::EnemySlimePurple(const EnemySlimePurple &original) = default;
-
 EnemySlimePurple::~EnemySlimePurple() = default;
-
-EnemySlimePurple &EnemySlimePurple::operator=(const EnemySlimePurple &original) = default;
-
-EnemySlimePurple *EnemySlimePurple::clone() const {
-    return new EnemySlimePurple(*this);
-}
 
 void EnemySlimePurple::configure() {
     this->setBoundingBox({8, 31, 49, 34});

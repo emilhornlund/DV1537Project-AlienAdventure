@@ -10,15 +10,7 @@ EnemyBee::EnemyBee(Game *game, const sf::IntRect spawnArea) : Enemy(game, spawnA
 
 }
 
-EnemyBee::EnemyBee(const EnemyBee &original) = default;
-
 EnemyBee::~EnemyBee() = default;
-
-EnemyBee &EnemyBee::operator=(const EnemyBee &original) = default;
-
-EnemyBee *EnemyBee::clone() const {
-    return new EnemyBee(*this);
-}
 
 void EnemyBee::configure() {
     this->setBoundingBox({5, 21, 55, 48});

@@ -29,30 +29,9 @@ Collectible::Collectible(Game *game, const sf::IntRect spawnArea, const std::str
     this->setPosition(position);
 }
 
-Collectible::Collectible(const Collectible &original) : GameObject(original) {
-    this->spawnArea = original.spawnArea;
-    this->collected = original.collected;
-
-    this->soundBuffer = new sf::SoundBuffer(*original.soundBuffer);
-    this->sound = new sf::Sound(*original.sound);
-    this->sound->setBuffer(*this->soundBuffer);
-}
-
 Collectible::~Collectible() {
     delete this->sound;
     this->sound = nullptr;
-}
-
-Collectible& Collectible::operator=(const Collectible &original) {
-    if (this != &original) {
-        this->spawnArea = original.spawnArea;
-        this->collected = original.collected;
-
-        this->soundBuffer = new sf::SoundBuffer(*original.soundBuffer);
-        this->sound = new sf::Sound(*original.sound);
-        this->sound->setBuffer(*this->soundBuffer);
-    }
-    return *this;
 }
 
 bool Collectible::isCollected() const {

@@ -16,6 +16,10 @@ private:
 
     sf::Vector2i worldSize;
 
+    LevelHandler(const LevelHandler &original);
+
+    LevelHandler& operator=(const LevelHandler &original);
+
     unsigned int readNextInt(std::ifstream &file) const;
 
     std::string readNextString(std::ifstream &file) const;

@@ -25,16 +25,16 @@ private:
     unsigned int *rows;
 
     sf::VertexArray vertices;
-public:
-    static const sf::Vector2i SIZE;
-
-    Background(Game *game);
 
     Background(const Background &original);
 
-    ~Background() override;
+    Background& operator=(const Background &original);
+public:
+    static const sf::Vector2i SIZE;
 
-    virtual Background& operator=(const Background &original);
+    explicit Background(Game *game);
+
+    ~Background() override;
 
     void addBackgroundSequence(const unsigned int column, const unsigned int row);
 

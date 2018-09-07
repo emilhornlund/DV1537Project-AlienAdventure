@@ -22,37 +22,6 @@ GameObject::GameObject(Game *game, const bool useCamera) {
     this->useCamera = useCamera;
 }
 
-GameObject::GameObject(const GameObject &original) {
-    this->game = original.getGame();
-    this->animation = original.animation->clone();
-    this->depth = original.getDepth();
-    this->visible = original.isVisible();
-    this->useCamera = original.isUsingCamera();
-    this->position = original.getPosition();
-    this->velocity = original.getVelocity();
-    this->acceleration = original.getAcceleration();
-    this->boundingBox = original.getBoundingBox();
-}
-
-GameObject& GameObject::operator=(const GameObject &original) {
-    if (this != &original) {
-        this->game = original.getGame();
-
-        delete this->animation;
-        this->animation = original.animation->clone();
-
-        this->depth = original.getDepth();
-        this->visible = original.isVisible();
-        this->useCamera = original.isUsingCamera();
-        this->position = original.getPosition();
-        this->velocity = original.getVelocity();
-        this->acceleration = original.getAcceleration();
-        this->boundingBox = original.getBoundingBox();
-    }
-    return *this;
-}
-
-
 GameObject::~GameObject() {
     delete this->animation;
     this->animation = nullptr;
@@ -127,7 +96,7 @@ void GameObject::updateSprites() {
     if (this->getAnimationHandler()->numberOfSequences() > 0) {
         auto *sequence = &this->animation->getCurrentSequence();
         if (sequence != nullptr) {
-            AnimationFrame* frame = sequence->getCurrentFrame();
+            auto *frame = &sequence->getCurrentFrame();
             if (frame != nullptr) {
                 frame->setPosition(this->position);
             }

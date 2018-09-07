@@ -10,15 +10,7 @@ EnemySnailMushroom::EnemySnailMushroom(Game *game, const sf::IntRect spawnArea) 
 
 }
 
-EnemySnailMushroom::EnemySnailMushroom(const EnemySnailMushroom &original) = default;
-
 EnemySnailMushroom::~EnemySnailMushroom() = default;
-
-EnemySnailMushroom &EnemySnailMushroom::operator=(const EnemySnailMushroom &original) = default;
-
-EnemySnailMushroom *EnemySnailMushroom::clone() const {
-    return new EnemySnailMushroom(*this);
-}
 
 void EnemySnailMushroom::configure() {
     this->setBoundingBox({3, 25, 59, 40});

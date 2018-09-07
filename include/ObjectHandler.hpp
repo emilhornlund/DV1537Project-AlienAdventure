@@ -7,37 +7,36 @@
 #ifndef OBJECT_HANDLER_HPP
 #define OBJECT_HANDLER_HPP
 
+#include <memory>
+#include <vector>
+
 #include "Core.hpp"
 
 class ObjectHandler {
 private:
     Game* game;
 
-    unsigned int objectsCapacity;
+    std::vector<std::shared_ptr<GameObject>> objects;
 
-    unsigned int objectsSize;
+    ObjectHandler(const ObjectHandler &original);
 
-    GameObject** objects;
+    ObjectHandler& operator=(const ObjectHandler &original);
 
     void clearObjects();
 public:
     explicit ObjectHandler(Game* game);
 
-    ObjectHandler(const ObjectHandler &original);
-
     virtual ~ObjectHandler();
-
-    virtual ObjectHandler& operator=(const ObjectHandler &original);
 
     void addObject(GameObject* object);
 
-    int getNumberOfObjects() const;
+    unsigned long getNumberOfObjects() const;
 
-    GameObject* getObject(const unsigned int index) const;
+    GameObject& getObject(const unsigned int index) const;
 
     void restoreObjects(const bool respawn = false);
 
-    void updateObjects(const float delta);
+    void updateObjects(const float dt);
 
     void drawObjects() const;
 };

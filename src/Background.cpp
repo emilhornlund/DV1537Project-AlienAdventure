@@ -19,56 +19,12 @@ Background::Background(Game *game) : StaticFrame(game) {
     this->rows = new unsigned int[this->rowsCapacity];
 }
 
-Background::Background(const Background &original) : StaticFrame(original) {
-    this->columnsCapacity = original.columnsCapacity;
-    this->columnsSize = original.columnsSize;
-    this->columns = new unsigned int[this->columnsCapacity];
-    for (int i = 0; i < this->columnsSize; i++) {
-        this->columns[i] = original.columns[i];
-    }
-
-    this->rowsCapacity = original.rowsCapacity;
-    this->rowsSize = original.rowsSize;
-    this->rows = new unsigned int[this->rowsCapacity];
-    for (int i = 0; i < this->rowsSize; i++) {
-        this->rows[i] = original.rows[i];
-    }
-
-    this->vertices = original.vertices;
-}
-
-/**
- * Destruktorn
- */
 Background::~Background() {
     delete[] this->columns;
     this->columns = nullptr;
 
     delete[] this->rows;
     this->rows = nullptr;
-}
-
-Background& Background::operator=(const Background &original) {
-    if (this != &original) {
-        delete[] this->columns;
-        this->columnsCapacity = original.columnsCapacity;
-        this->columnsSize = original.columnsSize;
-        this->columns = new unsigned int[this->columnsCapacity];
-        for (int i = 0; i < this->columnsSize; i++) {
-            this->columns[i] = original.columns[i];
-        }
-
-        delete[] this->rows;
-        this->rowsCapacity = original.rowsCapacity;
-        this->rowsSize = original.rowsSize;
-        this->rows = new unsigned int[this->rowsCapacity];
-        for (int i = 0; i < this->rowsSize; i++) {
-            this->rows[i] = original.rows[i];
-        }
-
-        this->vertices = original.vertices;
-    }
-    return *this;
 }
 
 void Background::addBackgroundSequence(const unsigned int column, const unsigned int row) {

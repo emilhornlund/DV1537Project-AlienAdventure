@@ -24,38 +24,8 @@ World::World(Game *game, const sf::Vector2i worldSize, const sf::Vector2i tileSi
     this->setPosition({0, 0});
 }
 
-World::World(const World &original) : GameObject(original) {
-    this->worldSize = original.worldSize;
-    this->tileSize = original.tileSize;
-
-    this->collidableMapSize = original.collidableMapSize;
-    this->collidableMap = new int[this->collidableMapSize];
-    for (int i = 0; i < this->collidableMapSize; i++) {
-        this->collidableMap[i] = original.collidableMap[i];
-    }
-}
-
 World::~World() {
     this->clearCollidableMap();
-}
-
-World& World::operator=(const World &original) {
-    if (this != &original) {
-        this->worldSize = original.worldSize;
-        this->tileSize = original.tileSize;
-
-        this->clearCollidableMap();
-        this->collidableMapSize = original.collidableMapSize;
-        this->collidableMap = new int[this->collidableMapSize];
-        for (int i = 0; i < this->collidableMapSize; i++) {
-            this->collidableMap[i] = original.collidableMap[i];
-        }
-    }
-    return *this;
-}
-
-World* World::clone() const {
-    return new World(*this);
 }
 
 void World::clearCollidableMap() {

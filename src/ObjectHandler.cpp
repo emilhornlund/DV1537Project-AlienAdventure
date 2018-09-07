@@ -11,90 +11,45 @@
 
 ObjectHandler::ObjectHandler(Game* game) {
     this->game = game;
-
-    this->objectsCapacity = 0;//50;
-    this->objectsSize = 0;
-    this->objects = new GameObject *[this->objectsCapacity];
-}
-
-ObjectHandler::ObjectHandler(const ObjectHandler &original) {
-    this->game = original.game;
-
-    this->objectsCapacity = original.objectsCapacity;
-    this->objectsSize = original.objectsSize;
-
-    this->objects = new GameObject *[this->objectsCapacity];
-    for (int i = 0; i < this->objectsSize; i++) {
-        this->objects[i] = original.objects[i]->clone();
-    }
 }
 
 ObjectHandler::~ObjectHandler() {
     this->clearObjects();
 }
 
-ObjectHandler& ObjectHandler::operator=(const ObjectHandler &original) {
-    if (this != &original) {
-        this->game = original.game;
-
-        this->clearObjects();
-        this->objectsCapacity = original.objectsCapacity;
-        this->objectsSize = original.objectsSize;
-
-        this->objects = new GameObject *[this->objectsCapacity];
-        for (int i = 0; i < this->objectsSize; i++) {
-            this->objects[i] = original.objects[i]->clone();
-        }
-    }
-    return *this;
-}
-
 void ObjectHandler::clearObjects() {
-    for (int i = 0; i < this->objectsSize; i++) {
-        delete this->objects[i];
-        this->objects[i] = nullptr;
-    }
-    delete[] this->objects;
-    this->objects = nullptr;
+    this->objects.clear();
 }
 
 void ObjectHandler::addObject(GameObject *object) {
-    if (this->objectsCapacity == this->objectsSize) {
-        this->objectsCapacity += 5;
-        auto **tempObjects = new GameObject *[this->objectsCapacity];
-        for (int i = 0; i < this->objectsSize; i++) {
-            tempObjects[i] = this->objects[i]->clone();
-        }
-        this->clearObjects();
-        this->objects = tempObjects;
-    }
-    this->objects[this->objectsSize] = object;
-    this->objectsSize++;
+    std::shared_ptr<GameObject> sharedPtr;
+    sharedPtr.reset(object);
+    this->objects.push_back(sharedPtr);
 }
 
-int ObjectHandler::getNumberOfObjects() const {
-    return this->objectsSize;
+unsigned long ObjectHandler::getNumberOfObjects() const {
+    return this->objects.size();
 }
 
-GameObject* ObjectHandler::getObject(const unsigned int index) const {
-    return this->objects[index];
+GameObject& ObjectHandler::getObject(const unsigned int index) const {
+    return *this->objects[index];
 }
 
 void ObjectHandler::restoreObjects(const bool respawn) {
-    for (int i = 0; i < this->objectsSize; i++) {
-        this->objects[i]->restore(respawn);
+    for (const auto &object : this->objects) {
+        object->restore(respawn);
     }
 }
 
-void ObjectHandler::updateObjects(const float delta) {
-    for (int i = 0; i < this->objectsSize; i++) {
-        this->objects[i]->processEvents();
-        this->objects[i]->update(delta);
+void ObjectHandler::updateObjects(const float dt) {
+    for (const auto &object : this->objects) {
+        object->processEvents();
+        object->update(dt);
     }
 }
 
 void ObjectHandler::drawObjects() const {
-    for (int i = 0; i < this->objectsSize; i++) {
-        this->game->getRenderer()->draw(*this->objects[i]);
+    for (const auto &object : this->objects) {
+        this->game->getWindowHandler()->draw(*object);
     }
 }

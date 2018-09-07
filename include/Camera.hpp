@@ -25,8 +25,12 @@ private:
     sf::Vector2f acceleration;
 
     sf::Vector2f velocity;
+
+    Camera(const Camera &original);
+
+    Camera& operator=(const Camera &original);
 public:
-    Camera(const sf::FloatRect &rect);
+    explicit Camera(const sf::FloatRect &rect);
 
     ~Camera();
 

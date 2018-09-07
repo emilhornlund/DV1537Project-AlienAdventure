@@ -28,16 +28,14 @@ private:
     };
 
     unsigned int currentHealth;
-public:
-    explicit HealthBarObject(Game *game);
 
     HealthBarObject(const HealthBarObject &original);
 
     HealthBarObject& operator=(const HealthBarObject &original);
+public:
+    explicit HealthBarObject(Game *game);
 
     ~HealthBarObject() override;
-
-    virtual GameObject* clone() const override;
 
     void restore(const bool respawn) override;
 

@@ -16,17 +16,7 @@ CollectibleHealth::CollectibleHealth(Game *game, const sf::IntRect spawnArea) : 
     this->setBoundingBox({ 10, 10, 50, 50 });
 }
 
-CollectibleHealth::CollectibleHealth(const CollectibleHealth &original) = default;
-
 CollectibleHealth::~CollectibleHealth() = default;
-
-CollectibleHealth &CollectibleHealth::operator=(const CollectibleHealth &original) {
-    return *this;
-}
-
-CollectibleHealth *CollectibleHealth::clone() const {
-    return new CollectibleHealth(*this);
-}
 
 void CollectibleHealth::restore(const bool respawn) {
     if (!respawn) {

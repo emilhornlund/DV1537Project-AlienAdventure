@@ -28,30 +28,9 @@ Enemy::Enemy(Game *game, const sf::IntRect spawnArea) : GameObject(game, true) {
     this->sound->setBuffer(*this->soundBuffer);
 }
 
-Enemy::Enemy(const Enemy &original) : GameObject(original) {
-    this->spawnArea = original.spawnArea;
-    this->alive = original.alive;
-
-    this->soundBuffer = new sf::SoundBuffer(*original.soundBuffer);
-    this->sound = new sf::Sound(*original.sound);
-    this->sound->setBuffer(*this->soundBuffer);
-}
-
 Enemy::~Enemy() {
     delete this->sound;
     this->sound = nullptr;
-}
-
-Enemy& Enemy::operator=(const Enemy &original) {
-    if (this != &original) {
-        this->spawnArea = original.spawnArea;
-        this->alive = original.alive;
-
-        this->soundBuffer = new sf::SoundBuffer(*original.soundBuffer);
-        this->sound = new sf::Sound(*original.sound);
-        this->sound->setBuffer(*this->soundBuffer);
-    }
-    return *this;
 }
 
 void Enemy::handleMovement(const float dt) {
@@ -75,9 +54,9 @@ void Enemy::handleMovement(const float dt) {
                 velocity.x = -MAX_VELOCITY.x;
             }
             if (velocity.x < 0) {
-                this->getAnimationHandler()->getCurrentSequence().getCurrentFrame()->setScale({1, 1});
+                this->getAnimationHandler()->getCurrentSequence().getCurrentFrame().setScale({1, 1});
             } else {
-                this->getAnimationHandler()->getCurrentSequence().getCurrentFrame()->setScale({-1, 1});
+                this->getAnimationHandler()->getCurrentSequence().getCurrentFrame().setScale({-1, 1});
             }
         } else {
             float minY = this->spawnArea.top + 65/2;

@@ -10,15 +10,7 @@ EnemySlimeBlue::EnemySlimeBlue(Game *game, const sf::IntRect spawnArea) : Enemy(
 
 }
 
-EnemySlimeBlue::EnemySlimeBlue(const EnemySlimeBlue &original) = default;
-
 EnemySlimeBlue::~EnemySlimeBlue() = default;
-
-EnemySlimeBlue &EnemySlimeBlue::operator=(const EnemySlimeBlue &original) = default;
-
-EnemySlimeBlue *EnemySlimeBlue::clone() const {
-    return new EnemySlimeBlue(*this);
-}
 
 void EnemySlimeBlue::configure() {
     this->setBoundingBox({8, 31, 49, 34});

@@ -7,6 +7,7 @@
 #ifndef ANIMATION_SEQUENCE_HPP
 #define ANIMATION_SEQUENCE_HPP
 
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include "Core.hpp"
 
@@ -24,19 +25,15 @@ private:
 
     int currentFrame;
 
-    unsigned int framesCapacity;
-
-    unsigned int framesSize;
-
-    AnimationFrame** frames;
-public:
-    AnimationSequence(Game *game, std::string id, std::string filename);
+    std::vector<std::shared_ptr<AnimationFrame>> frames;
 
     AnimationSequence(const AnimationSequence &original);
 
-    virtual ~AnimationSequence();
+    AnimationSequence& operator=(const AnimationSequence &original);
+public:
+    AnimationSequence(Game *game, std::string id, std::string filename);
 
-    virtual AnimationSequence& operator=(const AnimationSequence &original);
+    virtual ~AnimationSequence();
 
     Game* getGame() const;
 
@@ -48,9 +45,9 @@ public:
 
     void updateFrames(const float dt, sf::Color color = sf::Color(255, 255, 255, 255));
 
-    AnimationFrame* getCurrentFrame();
+    AnimationFrame& getCurrentFrame();
 
-    int numberOfFrames() const;
+    int getNumberOfFrames() const;
 
     void clearFrames();
 };

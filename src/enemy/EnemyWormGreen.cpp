@@ -10,15 +10,7 @@ EnemyWormGreen::EnemyWormGreen(Game *game, const sf::IntRect spawnArea) : Enemy(
 
 }
 
-EnemyWormGreen::EnemyWormGreen(const EnemyWormGreen &original) = default;
-
 EnemyWormGreen::~EnemyWormGreen() = default;
-
-EnemyWormGreen &EnemyWormGreen::operator=(const EnemyWormGreen &original) = default;
-
-EnemyWormGreen *EnemyWormGreen::clone() const {
-    return new EnemyWormGreen(*this);
-}
 
 void EnemyWormGreen::configure() {
     this->setBoundingBox({4, 43, 57, 22});

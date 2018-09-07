@@ -16,22 +16,7 @@ HealthBarObject::HealthBarObject(Game *game) : GameObject(game, false) {
     this->currentHealth = 0;
 }
 
-HealthBarObject::HealthBarObject(const HealthBarObject &original) : GameObject(original) {
-    this->currentHealth = original.currentHealth;
-}
-
-HealthBarObject &HealthBarObject::operator=(const HealthBarObject &original) {
-    if (this != &original) {
-        this->currentHealth = original.currentHealth;
-    }
-    return *this;
-}
-
 HealthBarObject::~HealthBarObject() = default;
-
-GameObject *HealthBarObject::clone() const {
-    return new HealthBarObject(*this);
-}
 
 void HealthBarObject::restore(const bool respawn) {
     if (!respawn) {
@@ -86,21 +71,9 @@ HealthBarObject::HealthBarObjectStaticFrame::HealthBarObjectStaticFrame(Game *ga
     this->sprite->setTexture(*this->getTexture());
 }
 
-HealthBarObject::HealthBarObjectStaticFrame::HealthBarObjectStaticFrame(const HealthBarObjectStaticFrame &original) : StaticFrame(
-        original) {
-    this->sprite = new sf::Sprite(*original.sprite);
-}
-
 HealthBarObject::HealthBarObjectStaticFrame::~HealthBarObjectStaticFrame() {
     delete this->sprite;
     this->sprite = nullptr;
-}
-
-HealthBarObject::HealthBarObjectStaticFrame &HealthBarObject::HealthBarObjectStaticFrame::operator=(const HealthBarObject::HealthBarObjectStaticFrame &original) {
-    if (this != &original) {
-        this->sprite = new sf::Sprite(*original.sprite);
-    }
-    return *this;
 }
 
 void HealthBarObject::HealthBarObjectStaticFrame::draw(sf::RenderTarget &target, sf::RenderStates states) const {

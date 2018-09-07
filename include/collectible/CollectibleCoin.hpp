@@ -9,16 +9,14 @@
 #include "Collectible.hpp"
 
 class CollectibleCoin : public Collectible {
+private:
+    CollectibleCoin(const CollectibleCoin &original);
+
+    CollectibleCoin& operator=(const CollectibleCoin &original);
 public:
     CollectibleCoin(Game *game, const sf::IntRect spawnArea);
 
-    CollectibleCoin(const CollectibleCoin &original);
-
     ~CollectibleCoin() override;
-
-    virtual CollectibleCoin& operator=(const CollectibleCoin &original);
-
-    CollectibleCoin* clone() const override;
 
     void restore(const bool respawn) override;
 };

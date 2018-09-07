@@ -17,62 +17,10 @@
 #include "ResourceHandler.hpp"
 
 #include <iostream>
-#include <WindowHandler.hpp>
+#include <algorithm>
 
-WindowHandler::RenderItem::RenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera) {
-    this->drawable = drawable;
-    this->depth = depth;
-    this->useCamera = useCamera;
-}
-
-WindowHandler::RenderItem::RenderItem(const RenderItem &original) {
-    this->drawable = original.drawable;
-    this->depth = original.depth;
-    this->useCamera = original.useCamera;
-}
-
-WindowHandler::RenderItem& WindowHandler::RenderItem::operator=(const WindowHandler::RenderItem &original) {
-    if (this != &original) {
-        this->drawable = original.getDrawable();
-        this->depth = original.getDepth();
-        this->useCamera = original.useCamera;
-    }
-    return *this;
-}
-
-WindowHandler::RenderItem::~RenderItem() = default;;
-
-unsigned int WindowHandler::RenderItem::getDepth() const {
-    return this->depth;
-}
-
-sf::Drawable* WindowHandler::RenderItem::getDrawable() const {
-    return this->drawable;
-}
-
-bool WindowHandler::RenderItem::isUsingCamera() const {
-    return this->useCamera;
-}
-
-bool WindowHandler::RenderItem::operator>(const RenderItem& original) const {
-    return this->depth > original.depth;
-}
-
-bool WindowHandler::RenderItem::operator<(const RenderItem& original) const {
-    return this->depth < original.depth;
-}
-
-WindowHandler::RenderItem* WindowHandler::RenderItem::clone() const {
-    return new WindowHandler::RenderItem(*this);
-}
-
-WindowHandler::WindowHandler(Game *game, const unsigned int windowWidth, const unsigned int windowHeight,
-                             const std::string &title) {
+WindowHandler::WindowHandler(Game *game, const unsigned int windowWidth, const unsigned int windowHeight, const std::string &title) {
     this->game = game;
-
-    this->queueCapacity = 0;
-    this->queueSize = 0;
-    this->queue = new RenderItem *[this->queueCapacity];
 
     sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight, 32), title, sf::Style::Titlebar | sf::Style::Close);
     window->setKeyRepeatEnabled(true);
@@ -91,8 +39,6 @@ WindowHandler::WindowHandler(Game *game, const unsigned int windowWidth, const u
 }
 
 WindowHandler::~WindowHandler() {
-    this->clearQueue();
-
     delete this->window;
     this->window = nullptr;
 
@@ -104,43 +50,14 @@ Game* WindowHandler::getGame() const {
     return this->game;
 }
 
-void WindowHandler::clearQueue() {
-    for (int i = 0; i < this->queueSize; i++) {
-        delete this->queue[i];
-        this->queue[i] = nullptr;
-    }
-    delete[] this->queue;
-    this->queue = nullptr;
-}
-
 void WindowHandler::addRenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera) {
-    if (this->queueCapacity == this->queueSize) {
-        this->queueCapacity += 5;
-        auto **tempQueue = new RenderItem *[this->queueCapacity];
-        for (int i = 0; i < this->queueSize; i++) {
-            tempQueue[i] = this->queue[i]->clone();
-        }
-        this->clearQueue();
-        this->queue = tempQueue;
-    }
-    this->queue[this->queueSize] = new RenderItem(drawable, depth, useCamera);
-    this->queueSize++;
+    std::shared_ptr<RenderItem> item = std::make_shared<RenderItem>(drawable, depth, useCamera);
+    this->renderItems.push_back(item);
 }
 
 void WindowHandler::sortQueue() {
-    int i, j, flag = 1;
-    RenderItem* temp;
-    for(i = 1; (i <= this->queueSize) && flag; i++) {
-        flag = 0;
-        for (j = 0; j < (this->queueSize - 1); j++) {
-            if (*this->queue[j+1] > *this->queue[j]) {
-                temp = this->queue[j];
-                this->queue[j] = this->queue[j+1];
-                this->queue[j+1] = temp;
-                flag = 1;
-            }
-        }
-    }
+//    std::sort(this->renderItems.begin(), this->renderItems.end());
+    //TODO: Implement a sort function here
 };
 
 sf::RenderWindow* WindowHandler::getRenderWindow() {
@@ -158,14 +75,13 @@ Camera &WindowHandler::getCamera() const {
 void WindowHandler::render() {
     this->sortQueue();
 
-    for (int i = 0; i < this->queueSize; i++) {
-        auto &object = *queue[i];
-        if (object.isUsingCamera()) {
+    for (const auto& item : this->renderItems) {
+        if (item->isUsingCamera()) {
             this->window->setView(this->camera->getView());
         } else {
             this->window->setView(this->window->getDefaultView());
         }
-        this->window->draw(*object.getDrawable());
+        this->window->draw(*item->getDrawable());
     }
 
     this->window->setView(this->window->getDefaultView());
@@ -188,10 +104,7 @@ void WindowHandler::render() {
     }
 
     this->window->display();
-
-    this->clearQueue();
-    this->queueCapacity = 0;
-    this->queueSize = 0;
+    this->renderItems.clear();
 }
 
 void WindowHandler::clear(sf::Color color) {
@@ -215,7 +128,7 @@ void WindowHandler::draw(GameObject &object) {
         if (animation->numberOfSequences() > 0) {
             auto *sequence = &animation->getCurrentSequence();
             if (sequence != nullptr) {
-                auto *frame = sequence->getCurrentFrame();
+                auto *frame = &sequence->getCurrentFrame();
                 if (frame != nullptr) {
                     this->addRenderItem(frame, (unsigned int)object.getDepth(), object.isUsingCamera());
                     updates++;
@@ -227,4 +140,32 @@ void WindowHandler::draw(GameObject &object) {
             object.updateSprites();
         }
     }
+}
+
+WindowHandler::RenderItem::RenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera) {
+    this->drawable = drawable;
+    this->depth = depth;
+    this->useCamera = useCamera;
+}
+
+WindowHandler::RenderItem::~RenderItem() = default;;
+
+unsigned int WindowHandler::RenderItem::getDepth() const {
+    return this->depth;
+}
+
+sf::Drawable* WindowHandler::RenderItem::getDrawable() const {
+    return this->drawable;
+}
+
+bool WindowHandler::RenderItem::isUsingCamera() const {
+    return this->useCamera;
+}
+
+bool WindowHandler::RenderItem::operator>(const RenderItem& original) const {
+    return this->depth > original.depth;
+}
+
+bool WindowHandler::RenderItem::operator<(const RenderItem& original) const {
+    return this->depth < original.depth;
 }

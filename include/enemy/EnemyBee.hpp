@@ -9,16 +9,14 @@
 #include "Enemy.hpp"
 
 class EnemyBee : public Enemy {
+private:
+    EnemyBee(const EnemyBee &original);
+
+    EnemyBee& operator=(const EnemyBee &original);
 public:
     EnemyBee(Game *game, const sf::IntRect spawnArea);
 
-    EnemyBee(const EnemyBee &original);
-
     ~EnemyBee() override;
-
-    virtual EnemyBee& operator=(const EnemyBee &original);
-
-    EnemyBee* clone() const override;
 
     void configure() override;
 };

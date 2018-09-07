@@ -10,15 +10,7 @@ EnemySnail::EnemySnail(Game *game, const sf::IntRect spawnArea) : Enemy(game, sp
 
 }
 
-EnemySnail::EnemySnail(const EnemySnail &original) = default;
-
 EnemySnail::~EnemySnail() = default;
-
-EnemySnail &EnemySnail::operator=(const EnemySnail &original) = default;
-
-EnemySnail *EnemySnail::clone() const {
-    return new EnemySnail(*this);
-}
 
 void EnemySnail::configure() {
     this->setBoundingBox({3, 25, 59, 40});

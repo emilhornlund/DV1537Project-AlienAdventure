@@ -21,16 +21,14 @@ private:
     std::vector<std::shared_ptr<AnimationSequence>> sequences;
 
     unsigned int currentSequence;
-public:
-    explicit AnimationHandler(Game *game);
 
     AnimationHandler(const AnimationHandler &original);
 
-    virtual ~AnimationHandler();
-
     AnimationHandler& operator=(const AnimationHandler &original);
+public:
+    explicit AnimationHandler(Game *game);
 
-    virtual AnimationHandler* clone() const;
+    virtual ~AnimationHandler();
 
     Game* getGame() const;
 

@@ -58,25 +58,6 @@ Menu::Menu(Game *game, MenuType type) {
     this->updateSelection();
 }
 
-Menu::Menu(const Menu &original) {
-    this->game = original.game;
-
-    this->type = original.type;
-    this->texture = original.texture;
-    this->switchBuffer = original.switchBuffer;
-    this->switchSound = original.switchSound;
-
-    this->buttonsCapacity = original.buttonsCapacity;
-    this->buttonsSize = original.buttonsSize;
-
-    this->buttons = new sf::Sprite*[this->buttonsCapacity];
-    for (int i = 0; i < this->buttonsSize; i++) {
-        this->buttons[i] = original.buttons[i];
-    }
-
-    this->currentButton = original.currentButton;
-}
-
 Menu::~Menu() {
     delete this->switchSound;
     this->switchSound = nullptr;
@@ -87,41 +68,6 @@ Menu::~Menu() {
     }
     delete[] this->buttons;
     this->buttons = nullptr;
-}
-
-Menu& Menu::operator=(const Menu &original) {
-    if (this != &original) {
-        this->game = original.game;
-
-        this->type = original.type;
-
-        delete this->texture;
-        this->texture = original.texture;
-
-        delete this->switchBuffer;
-        this->switchBuffer = original.switchBuffer;
-
-        delete this->switchSound;
-        this->switchSound = original.switchSound;
-
-        for (int i = 0; i < this->buttonsSize; i++) {
-            delete this->buttons[i];
-            this->buttons[i] = nullptr;
-        }
-        delete[] this->buttons;
-        this->buttons = nullptr;
-
-        this->buttonsCapacity = original.buttonsCapacity;
-        this->buttonsSize = original.buttonsSize;
-
-        this->buttons = new sf::Sprite*[this->buttonsCapacity];
-        for (int i = 0; i < this->buttonsSize; i++) {
-            this->buttons[i] = original.buttons[i];
-        }
-
-        this->currentButton = original.currentButton;
-    }
-    return *this;
 }
 
 Game* Menu::getGame() const {

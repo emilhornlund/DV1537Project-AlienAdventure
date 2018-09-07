@@ -9,16 +9,14 @@
 #include "Enemy.hpp"
 
 class EnemyWormPink : public Enemy {
+private:
+    EnemyWormPink(const EnemyWormPink &original);
+
+    EnemyWormPink& operator=(const EnemyWormPink &original);
 public:
     EnemyWormPink(Game *game, const sf::IntRect spawnArea);
 
-    EnemyWormPink(const EnemyWormPink &original);
-
     ~EnemyWormPink() override;
-
-    virtual EnemyWormPink& operator=(const EnemyWormPink &original);
-
-    EnemyWormPink* clone() const override;
 
     void configure() override;
 };
