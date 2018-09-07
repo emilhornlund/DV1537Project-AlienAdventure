@@ -36,8 +36,6 @@ public:
 
     virtual Background& operator=(const Background &original);
 
-    Background* clone() const override;
-
     void addBackgroundSequence(const unsigned int column, const unsigned int row);
 
     void generate();

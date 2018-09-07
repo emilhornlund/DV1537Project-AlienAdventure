@@ -23,8 +23,6 @@ private:
 
         SpriteStaticFrame& operator=(const SpriteStaticFrame &original);
 
-        SpriteStaticFrame* clone() const override;
-
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
         sf::Sprite& getSprite() const;

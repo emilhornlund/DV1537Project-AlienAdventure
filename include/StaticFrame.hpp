@@ -26,8 +26,6 @@ public:
 
     virtual StaticFrame& operator=(const StaticFrame &original);
 
-    virtual StaticFrame* clone() const = 0;
-
     Game* getGame() const;
 
     void setTexture(sf::Texture* texture);

@@ -40,8 +40,6 @@ public:
 
     virtual TileMap& operator=(const TileMap &original);
 
-    TileMap* clone() const override;
-
     std::string getName() const;
 
     unsigned int getColumns() const;

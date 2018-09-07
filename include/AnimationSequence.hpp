@@ -38,8 +38,6 @@ public:
 
     virtual AnimationSequence& operator=(const AnimationSequence &original);
 
-    virtual AnimationSequence* clone() const;
-
     Game* getGame() const;
 
     void setIdentifier(const std::string &id);

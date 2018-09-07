@@ -103,10 +103,6 @@ HealthBarObject::HealthBarObjectStaticFrame &HealthBarObject::HealthBarObjectSta
     return *this;
 }
 
-HealthBarObject::HealthBarObjectStaticFrame *HealthBarObject::HealthBarObjectStaticFrame::clone() const {
-    return new HealthBarObjectStaticFrame(*this);
-}
-
 void HealthBarObject::HealthBarObjectStaticFrame::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     states.transform *= getTransform();
     target.draw(*this->sprite);

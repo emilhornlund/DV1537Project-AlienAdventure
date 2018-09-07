@@ -22,8 +22,6 @@ private:
 
         HealthBarObjectStaticFrame& operator=(const HealthBarObjectStaticFrame &original);
 
-        HealthBarObjectStaticFrame* clone() const override;
-
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
         sf::Sprite& getSprite() const;

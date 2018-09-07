@@ -78,10 +78,6 @@ AnimationSequence& AnimationSequence::operator=(const AnimationSequence &origina
     return *this;
 }
 
-AnimationSequence* AnimationSequence::clone() const {
-    return new AnimationSequence(*this);
-}
-
 Game* AnimationSequence::getGame() const {
     return this->game;
 }

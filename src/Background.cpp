@@ -71,10 +71,6 @@ Background& Background::operator=(const Background &original) {
     return *this;
 }
 
-Background* Background::clone() const {
-    return new Background(*this);
-}
-
 void Background::addBackgroundSequence(const unsigned int column, const unsigned int row) {
     if (this->columnsCapacity == this->columnsSize) {
         this->columnsCapacity += 2;

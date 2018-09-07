@@ -136,10 +136,6 @@ CollectibleBarObject::SpriteStaticFrame &CollectibleBarObject::SpriteStaticFrame
     return *this;
 }
 
-CollectibleBarObject::SpriteStaticFrame *CollectibleBarObject::SpriteStaticFrame::clone() const {
-    return new SpriteStaticFrame(*this);
-}
-
 void CollectibleBarObject::SpriteStaticFrame::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     states.transform *= getTransform();
     target.draw(*this->sprite);

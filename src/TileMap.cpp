@@ -146,10 +146,6 @@ void TileMap::generate() {
     }
 }
 
-TileMap* TileMap::clone() const {
-    return new TileMap(*this);
-}
-
 void TileMap::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     states.transform *= getTransform();
     states.texture = this->getTexture();
