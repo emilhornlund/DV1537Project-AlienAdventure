@@ -550,7 +550,7 @@ void Player::handleAnimation(const float dt) {
         } break;
     }
 
-    if (this->getAnimationHandler()->getCurrentSequence()->getIdentifier() != animationIdentifier) {
+    if (this->getAnimationHandler()->getCurrentSequence().getIdentifier() != animationIdentifier) {
         this->getAnimationHandler()->switchSequence(animationIdentifier);
     }
 
@@ -566,7 +566,7 @@ void Player::handleAnimation(const float dt) {
         flash = sf::Color(255, 255, 255, 255);
     }
 
-    this->getAnimationHandler()->getCurrentSequence()->updateFrames(dt, flash);
+    this->getAnimationHandler()->getCurrentSequence().updateFrames(dt, flash);
 }
 
 void Player::updateCameraAndBackground() {

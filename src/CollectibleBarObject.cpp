@@ -42,7 +42,14 @@ GameObject *CollectibleBarObject::clone() const {
 }
 
 void CollectibleBarObject::restore(const bool respawn) {
+    if (!respawn) {
+        this->currentCoins = 0;
+        this->getAnimationHandler()->clearStaticFrames();
 
+        this->createCoin();
+        this->createMultiplier();
+        this->createFirstDigitCoin();
+    }
 }
 
 void CollectibleBarObject::processEvents() {
@@ -64,7 +71,7 @@ void CollectibleBarObject::update(const float dt) {
         } else {
             for (unsigned int i = 0; i < (nframes - 2); i++) {
                 int digit = std::to_string(value)[i] - '0';
-                auto *frame = dynamic_cast<SpriteStaticFrame*>(this->getAnimationHandler()->getStaticFrame(i+2));
+                auto *frame = dynamic_cast<SpriteStaticFrame*>(&this->getAnimationHandler()->getStaticFrame(i+2));
                 if (frame != nullptr) {
                     auto &sprite = frame->getSprite();
                     sprite.setTextureRect({(int)SPRITE_WIDTH*(digit+1), (int)SPRITE_HEIGHT*3, (int)SPRITE_WIDTH, (int)SPRITE_HEIGHT});

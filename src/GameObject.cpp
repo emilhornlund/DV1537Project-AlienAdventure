@@ -116,7 +116,7 @@ AnimationHandler* GameObject::getAnimationHandler() const {
 
 void GameObject::updateSprites() {
     for (unsigned int i = 0; i < this->getAnimationHandler()->numberOfStaticFrames(); i++) {
-        StaticFrame* frame = this->getAnimationHandler()->getStaticFrame(i);
+        auto *frame = &this->getAnimationHandler()->getStaticFrame(i);
         if (frame != nullptr) {
             sf::Vector2f tempPosition = this->getPosition();
             tempPosition.x += frame->getOffset().x;
@@ -124,9 +124,8 @@ void GameObject::updateSprites() {
             frame->setPosition(tempPosition);
         }
     }
-
     if (this->getAnimationHandler()->numberOfSequences() > 0) {
-        AnimationSequence* sequence = this->animation->getCurrentSequence();
+        auto *sequence = &this->animation->getCurrentSequence();
         if (sequence != nullptr) {
             AnimationFrame* frame = sequence->getCurrentFrame();
             if (frame != nullptr) {

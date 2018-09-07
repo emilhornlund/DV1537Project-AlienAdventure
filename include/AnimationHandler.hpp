@@ -10,23 +10,17 @@
 #include <SFML/Graphics.hpp>
 #include "Core.hpp"
 
+#include <memory>
+
 class AnimationHandler {
 private:
     Game* game;
 
-    unsigned int staticFramesCapacity;
+    std::vector<std::shared_ptr<StaticFrame>> staticFrames;
 
-    unsigned int staticFramesSize;
-
-    StaticFrame** staticFrames;
-
-    unsigned int sequencesCapacity;
-
-    unsigned int sequencesSize;
+    std::vector<std::shared_ptr<AnimationSequence>> sequences;
 
     unsigned int currentSequence;
-
-    AnimationSequence** sequences;
 public:
     explicit AnimationHandler(Game *game);
 
@@ -34,15 +28,15 @@ public:
 
     virtual ~AnimationHandler();
 
-    virtual AnimationHandler& operator=(const AnimationHandler &original);
+    AnimationHandler& operator=(const AnimationHandler &original);
 
     virtual AnimationHandler* clone() const;
 
     Game* getGame() const;
 
-    int numberOfStaticFrames() const;
+    unsigned long numberOfStaticFrames() const;
 
-    StaticFrame* getStaticFrame(const unsigned int index) const;
+    StaticFrame& getStaticFrame(const unsigned int index) const;
 
     void addStaticFrame(StaticFrame *frame);
 
@@ -52,7 +46,7 @@ public:
 
     bool switchSequence(const std::string &identifier);
 
-    AnimationSequence* getCurrentSequence();
+    AnimationSequence& getCurrentSequence();
 
     int numberOfSequences() const;
 

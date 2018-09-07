@@ -204,21 +204,25 @@ void WindowHandler::draw(GameObject &object) {
         int updates = 0;
         if (animation->numberOfStaticFrames() > 0) {
             for (unsigned int i = 0; i < animation->numberOfStaticFrames(); i++) {
-                StaticFrame* frame = animation->getStaticFrame(i);
+                auto *frame = &animation->getStaticFrame(i);
                 if (frame != nullptr) {
                     this->addRenderItem(frame, (unsigned int)object.getDepth(), object.isUsingCamera());
                     updates++;
                 }
             }
         }
-        AnimationSequence* sequence = animation->getCurrentSequence();
-        if (sequence != nullptr) {
-            AnimationFrame* frame = sequence->getCurrentFrame();
-            if (frame != nullptr) {
-                this->addRenderItem(frame, (unsigned int)object.getDepth(), object.isUsingCamera());
-                updates++;
+
+        if (animation->numberOfSequences() > 0) {
+            auto *sequence = &animation->getCurrentSequence();
+            if (sequence != nullptr) {
+                auto *frame = sequence->getCurrentFrame();
+                if (frame != nullptr) {
+                    this->addRenderItem(frame, (unsigned int)object.getDepth(), object.isUsingCamera());
+                    updates++;
+                }
             }
         }
+
         if (updates > 0) {
             object.updateSprites();
         }

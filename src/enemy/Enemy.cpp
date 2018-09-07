@@ -75,9 +75,9 @@ void Enemy::handleMovement(const float dt) {
                 velocity.x = -MAX_VELOCITY.x;
             }
             if (velocity.x < 0) {
-                this->getAnimationHandler()->getCurrentSequence()->getCurrentFrame()->setScale({1, 1});
+                this->getAnimationHandler()->getCurrentSequence().getCurrentFrame()->setScale({1, 1});
             } else {
-                this->getAnimationHandler()->getCurrentSequence()->getCurrentFrame()->setScale({-1, 1});
+                this->getAnimationHandler()->getCurrentSequence().getCurrentFrame()->setScale({-1, 1});
             }
         } else {
             float minY = this->spawnArea.top + 65/2;
@@ -108,11 +108,11 @@ void Enemy::handleMovement(const float dt) {
 void Enemy::handleAnimation(const float dt) {
     std::string animationIdentifier = this->alive ? "alive" : "dead";
 
-    if (this->getAnimationHandler()->getCurrentSequence()->getIdentifier() != animationIdentifier) {
+    if (this->getAnimationHandler()->getCurrentSequence().getIdentifier() != animationIdentifier) {
         this->getAnimationHandler()->switchSequence(animationIdentifier);
     }
 
-    this->getAnimationHandler()->getCurrentSequence()->updateFrames(dt);
+    this->getAnimationHandler()->getCurrentSequence().updateFrames(dt);
 }
 
 bool Enemy::isAlive() {

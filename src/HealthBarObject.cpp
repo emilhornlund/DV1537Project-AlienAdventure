@@ -35,8 +35,8 @@ GameObject *HealthBarObject::clone() const {
 
 void HealthBarObject::restore(const bool respawn) {
     if (!respawn) {
-//        this->currentHealth = 0;
-//        this->getAnimationHandler()->clearStaticFrames();
+        this->currentHealth = 0;
+        this->getAnimationHandler()->clearStaticFrames();
     }
 }
 
@@ -64,7 +64,7 @@ void HealthBarObject::update(const float dt) {
         ///position and update the texture rect for every frame and sprite
         nframes = this->getAnimationHandler()->numberOfStaticFrames();
         for (int i = 0; i < nframes; i++) {
-            auto *frame = dynamic_cast<HealthBarObjectStaticFrame*>(this->getAnimationHandler()->getStaticFrame(i));
+            auto *frame = dynamic_cast<HealthBarObjectStaticFrame*>(&this->getAnimationHandler()->getStaticFrame(i));
             if (frame != nullptr) {
                 auto &sprite = frame->getSprite();
                 sprite.setPosition({SPACE + SPRITE_WIDTH * i + SPACE * i, SPACE});
