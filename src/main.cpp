@@ -4,11 +4,10 @@
  * @author Emil Hörnlund
  */
 
-#include "Game.hpp"
-#include "EventHandler.hpp"
+#include "game/classes/Game.hpp"
 
 int main(int, char const**) {
-    Game *game = new Game;
+    Game* game = new Game();
     int exitCode = game->run();
     delete game;
     return exitCode;
