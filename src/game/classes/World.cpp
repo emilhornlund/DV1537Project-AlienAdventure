@@ -7,7 +7,6 @@
 #include "core/classes/PropertyHandler.hpp"
 #include "core/classes/ResourceHandler.hpp"
 #include "core/interfaces/IGame.hpp"
-#include "game/classes/Background.hpp"
 #include "game/classes/TileMap.hpp"
 #include "game/classes/World.hpp"
 
@@ -34,15 +33,7 @@ void World::clearCollidableMap() {
     this->collidableMap = nullptr;
 }
 
-void World::addBackground(Background* background) {
-    background->setTexture(this->getGame()->getTextureResourceHandler().load("./resources/Backgrounds.png"));
-    background->setOrigin(0, 0);
-    background->setOffset({0, (float)this->getGame()->getPropertyHandler().get<sf::Vector2i>("worldSize").y - Background::SIZE.y});
-    background->generate();
-    this->addEntity(background);
-}
-
-void World::addTileMap(TileMap* tileMap, int depth) {
+void World::addTileMap(std::shared_ptr<TileMap> tileMap, int depth) {
     tileMap->setTexture(this->getGame()->getTextureResourceHandler().load("./resources/" + tileMap->getFilename()));
     tileMap->setOrigin(0, 0);
     tileMap->generate();

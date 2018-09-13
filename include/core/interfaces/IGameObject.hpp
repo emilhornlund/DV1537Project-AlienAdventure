@@ -54,7 +54,7 @@ public:
 
     IGame* getGame() const;
 
-    void addEntity(IEntity* entity);
+    void addEntity(std::shared_ptr<IEntity> entity);
 
     unsigned long getEntitiesSize() const;
 

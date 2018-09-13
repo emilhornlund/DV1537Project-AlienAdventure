@@ -24,7 +24,7 @@ void CollectibleHealth::restore(const bool respawn) {
     if (!respawn) {
         this->setCollected(false);
 
-        auto* entity = new AnimatedEntity();
+        std::shared_ptr<AnimatedEntity> entity = std::make_shared<AnimatedEntity>();
         entity->setOrigin(26, 24);
         entity->play(*this->m_animation);
         this->addEntity(entity);

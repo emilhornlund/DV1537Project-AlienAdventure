@@ -48,7 +48,7 @@ Player::Player(IGame *game, const std::vector<sf::IntRect> &spawnAreas, const sf
 
     this->setupSounds();
 
-    auto* entity = new AnimatedEntity(false);
+    auto entity = std::make_shared<AnimatedEntity>();
     entity->setOrigin(PLAYER_SIZE.x/2, PLAYER_SIZE.y/2);
     this->addEntity(entity);
 }

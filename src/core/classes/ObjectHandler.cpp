@@ -15,10 +15,8 @@ ObjectHandler::~ObjectHandler() {
     this->clearObjects();
 }
 
-void ObjectHandler::addObject(IGameObject *object) {
-    std::shared_ptr<IGameObject> sharedPtr;
-    sharedPtr.reset(object);
-    this->m_objects.push_back(sharedPtr);
+void ObjectHandler::addObject(std::shared_ptr<IGameObject> object) {
+    this->m_objects.push_back(object);
 }
 
 unsigned long ObjectHandler::getNumberOfObjects() const {

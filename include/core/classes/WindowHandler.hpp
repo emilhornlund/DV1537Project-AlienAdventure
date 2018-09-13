@@ -11,6 +11,7 @@
 #include <vector>
 
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Vector2.hpp>
 
 class Camera;
 class IGame;
@@ -27,25 +28,29 @@ class WindowHandler {
 private:
     class RenderItem {
     private:
-        unsigned int depth;
+        unsigned int m_zIndex;
 
-        sf::Drawable* drawable;
+        std::vector<sf::Drawable*> m_drawables;
 
-        bool useCamera;
+        bool m_useCamera;
 
         RenderItem(const RenderItem &original);
 
         RenderItem& operator=(const RenderItem &original);
     public:
-        RenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera);
+        RenderItem(unsigned int depth, const bool useCamera);
 
         virtual ~RenderItem();
 
         unsigned int getDepth() const;
 
-        sf::Drawable* getDrawable() const;
-
         bool isUsingCamera() const;
+
+        void addDrawable(sf::Drawable* drawable);
+
+        unsigned long getDrawablesSize() const;
+
+        const sf::Drawable & getDrawable(const unsigned long index) const;
     };
 
     IGame* m_game;
@@ -62,8 +67,6 @@ private:
 
     WindowHandler& operator=(const WindowHandler &original);
 
-    void addRenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera);
-
     void sortQueue();
 public:
     WindowHandler(IGame* game, const unsigned int windowWidth, const unsigned int windowHeight, const std::string &title);
@@ -75,6 +78,8 @@ public:
     sf::RenderWindow& getRenderWindow() const;
 
     Camera& getCamera() const;
+
+    const sf::Vector2f& getWindowSize() const;
 
     void render();
 

@@ -8,7 +8,6 @@
 #include "core/classes/ObjectHandler.hpp"
 #include "core/classes/PropertyHandler.hpp"
 #include "core/classes/WindowHandler.hpp"
-#include "game/classes/Background.hpp"
 #include "game/classes/CollectibleCoin.hpp"
 #include "game/classes/CollectibleHealth.hpp"
 #include "game/classes/EnemyBee.hpp"
@@ -22,12 +21,14 @@
 #include "game/classes/EnemyWormPink.hpp"
 #include "game/classes/Game.hpp"
 #include "game/classes/Hud.hpp"
+#include "game/classes/ParallaxBackground.hpp"
 #include "game/classes/Player.hpp"
 #include "game/classes/TileMap.hpp"
 #include "game/classes/World.hpp"
 
 #include <fstream>
 #include <sstream>
+#include <memory>
 
 Game::Game() : IGame(800, 600, "Alien Adventure") {}
 
@@ -58,20 +59,13 @@ void Game::loadLevel() {
     this->getPropertyHandler().set<sf::Vector2i>("worldSize", {worldWidth, worldHeight});
     this->getWindowHandler().getCamera().setGlobalBounds({0, 0, (float)worldWidth, (float)worldHeight});
 
-    auto *world = new World(this, {worldWidth/70, worldHeight/70}, {70, 70});
+    const auto tiles = sf::Vector2i(worldWidth/70, worldHeight/70);
+    const auto tileSize = sf::Vector2i(70, 70);
+    auto world = std::make_shared<World>(this, tiles, tileSize);
     this->getObjectHandler().addObject(world);
 
-    int nrOfBackgrounds = this->readNextInt(inFile);
-    auto *background = new Background();
-    for (int i = 0; i < nrOfBackgrounds; i++) {
-        unsigned int column = this->readNextInt(inFile);
-        unsigned int row = this->readNextInt(inFile);
-        unsigned int times = this->readNextInt(inFile);
-        for (int j = 0; j < times; j++) {
-            background->addBackgroundSequence(column, row);
-        }
-    }
-    world->addBackground(background);
+    auto parallaxBackground = std::make_shared<ParallaxBackground>(this);
+    this->getObjectHandler().addObject(parallaxBackground);
 
     int nrOfTileMaps = this->readNextInt(inFile);
     for (int i = 0; i < nrOfTileMaps; i++) {
@@ -95,7 +89,7 @@ void Game::loadLevel() {
             }
         }
 
-        auto *tileMap = new TileMap(this);
+        auto tileMap = std::make_shared<TileMap>(this);
         tileMap->setName(name);
         tileMap->setColumns(columns);
         tileMap->setRows(rows);
@@ -127,7 +121,7 @@ void Game::loadLevel() {
     playerExitArea.width = this->readNextInt(inFile);
     playerExitArea.height = this->readNextInt(inFile);
 
-    auto *player = new Player(this, playerSpawnAreas, playerExitArea);
+    auto player = std::make_shared<Player>(this, playerSpawnAreas, playerExitArea);
     this->getObjectHandler().addObject(player);
 
     int nrOfEnemies = this->readNextInt(inFile);
@@ -140,31 +134,31 @@ void Game::loadLevel() {
         spawnArea.height = this->readNextInt(inFile);
 
         if (typeString == "Bee") {
-            auto *enemy = new EnemyBee(this, spawnArea);
+            auto enemy = std::make_shared<EnemyBee>(this, spawnArea);
             this->getObjectHandler().addObject(enemy);
         } else if (typeString == "BeeBlack") {
-            auto *enemy = new EnemyBeeBlack(this, spawnArea);
+            auto enemy = std::make_shared<EnemyBeeBlack>(this, spawnArea);
             this->getObjectHandler().addObject(enemy);
         } else if (typeString == "SlimeBlue") {
-            auto *enemy = new EnemySlimeBlue(this, spawnArea);
+            auto enemy = std::make_shared<EnemySlimeBlue>(this, spawnArea);
             this->getObjectHandler().addObject(enemy);
         } else if (typeString == "SlimeGreen") {
-            auto *enemy = new EnemySlimeGreen(this, spawnArea);
+            auto enemy = std::make_shared<EnemySlimeGreen>(this, spawnArea);
             this->getObjectHandler().addObject(enemy);
         } else if (typeString == "SlimePurple") {
-            auto *enemy = new EnemySlimePurple(this, spawnArea);
+            auto enemy = std::make_shared<EnemySlimePurple>(this, spawnArea);
             this->getObjectHandler().addObject(enemy);
         } else if (typeString == "Snail") {
-            auto *enemy = new EnemySnail(this, spawnArea);
+            auto enemy = std::make_shared<EnemySnail>(this, spawnArea);
             this->getObjectHandler().addObject(enemy);
         } else if (typeString == "SnailMushroom") {
-            auto *enemy = new EnemySnailMushroom(this, spawnArea);
+            auto enemy = std::make_shared<EnemySnailMushroom>(this, spawnArea);
             this->getObjectHandler().addObject(enemy);
         } else if (typeString == "WormGreen") {
-            auto *enemy = new EnemyWormGreen(this, spawnArea);
+            auto enemy = std::make_shared<EnemyWormGreen>(this, spawnArea);
             this->getObjectHandler().addObject(enemy);
         } else if (typeString == "WormPink") {
-            auto *enemy = new EnemyWormPink(this, spawnArea);
+            auto enemy = std::make_shared<EnemyWormPink>(this, spawnArea);
             this->getObjectHandler().addObject(enemy);
         } else {
             throw std::runtime_error("Unknown enemy type: " + typeString);
@@ -181,10 +175,10 @@ void Game::loadLevel() {
         spawnArea.height = this->readNextInt(inFile);
 
         if (typeString == "CoinGold") {
-            auto coin = new CollectibleCoin(this, spawnArea);
+            auto coin = std::make_shared<CollectibleCoin>(this, spawnArea);
             this->getObjectHandler().addObject(coin);
         } else if (typeString == "Health") {
-            auto health = new CollectibleHealth(this, spawnArea);
+            auto health = std::make_shared<CollectibleHealth>(this, spawnArea);
             this->getObjectHandler().addObject(health);
         } else {
             throw std::runtime_error("Unknown collectible type: " + typeString);
@@ -194,7 +188,7 @@ void Game::loadLevel() {
     this->getPropertyHandler().set<unsigned int>("health", 3);
     this->getPropertyHandler().set<unsigned int>("coins", 0);
 
-    auto* hud = new Hud(this);
+    auto hud = std::make_shared<Hud>(this);
     this->getObjectHandler().addObject(hud);
 
     inFile.close();

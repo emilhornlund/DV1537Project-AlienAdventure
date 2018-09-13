@@ -27,7 +27,7 @@ public:
 
     virtual ~ObjectHandler();
 
-    void addObject(IGameObject* object);
+    void addObject(std::shared_ptr<IGameObject> object);
 
     unsigned long getNumberOfObjects() const;
 

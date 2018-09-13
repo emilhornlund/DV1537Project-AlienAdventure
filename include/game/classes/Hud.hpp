@@ -8,6 +8,7 @@
 #include "core/interfaces/IGameObject.hpp"
 
 #include <vector>
+#include <memory>
 
 class IGame;
 class SpriteEntity;
@@ -18,13 +19,13 @@ private:
 
     unsigned int m_currentCoins;
 
-    std::vector<SpriteEntity*> m_healthSprites;
+    std::vector<std::shared_ptr<SpriteEntity>> m_healthSprites;
 
-    std::vector<SpriteEntity*> m_coinDigitSprites;
+    std::vector<std::shared_ptr<SpriteEntity>> m_coinDigitSprites;
 
-    SpriteEntity* m_coinSprite;
+    std::shared_ptr<SpriteEntity> m_coinSprite;
 
-    SpriteEntity* m_coinMultiplierSprite;
+    std::shared_ptr<SpriteEntity> m_coinMultiplierSprite;
 
     Hud(const Hud &original);
 

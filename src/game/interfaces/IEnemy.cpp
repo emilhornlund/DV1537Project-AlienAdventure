@@ -23,7 +23,7 @@ IEnemy::IEnemy(IGame *game, const sf::IntRect &spawnArea) : IGameObject(game, IG
     this->m_sound = new sf::Sound;
     this->m_sound->setBuffer(*this->m_soundBuffer);
 
-    auto* entity = new AnimatedEntity();
+    auto entity = std::make_shared<AnimatedEntity>();
     entity->setOrigin((float)65/2, (float)65/2);
     this->addEntity(entity);
 }

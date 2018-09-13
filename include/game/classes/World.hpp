@@ -9,7 +9,6 @@
 
 #include "core/interfaces/IGameObject.hpp"
 
-class Background;
 class TileMap;
 
 class World : public IGameObject {
@@ -32,9 +31,7 @@ public:
 
     ~World() override;
 
-    void addBackground(Background* background);
-
-    void addTileMap(TileMap* tileMap, int depth);
+    void addTileMap(std::shared_ptr<TileMap> tileMap, int depth);
 
     sf::Vector2f getShortestCollisionDistance(const sf::Vector2f &position);
 

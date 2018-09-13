@@ -73,7 +73,7 @@ void Hud::updateHealth(const unsigned health) {
     if (health > this->m_healthSprites.size()) {
         auto n = health - this->m_healthSprites.size();
         for (int i = 0; i < n; i++) {
-            auto* entity = new SpriteEntity();
+            std::shared_ptr<SpriteEntity> entity = std::make_shared<SpriteEntity>();
             const auto& texture = this->getGame()->getTextureResourceHandler().load("resources/Hud.png");
             entity->setTexture(texture);
             entity->setOrigin(SPRITE_WIDTH/2, SPRITE_HEIGHT/2);
@@ -84,7 +84,7 @@ void Hud::updateHealth(const unsigned health) {
 
     ///reconfigure each health sprite
     for (unsigned long i = 0; i < this->m_healthSprites.size(); i++) {
-        auto* entity = this->m_healthSprites.at(i);
+        auto entity = this->m_healthSprites.at(i);
         if (health > 0 && health > i) {
             entity->setTextureRect({0, (int)SPRITE_HEIGHT, (int)SPRITE_WIDTH, (int)SPRITE_HEIGHT});
         } else {
@@ -106,7 +106,7 @@ void Hud::updateCoins(const unsigned coins) {
     if (n > this->m_coinDigitSprites.size()) {
         auto j = n - this->m_coinDigitSprites.size();
         for (int i = 0; i < j; i++) {
-            auto* entity = new SpriteEntity();
+            std::shared_ptr<SpriteEntity> entity = std::make_shared<SpriteEntity>();
             const auto& texture = this->getGame()->getTextureResourceHandler().load("resources/Hud.png");
             entity->setTexture(texture);
             entity->setOrigin(SPRITE_WIDTH/2, SPRITE_HEIGHT/2);
@@ -118,7 +118,7 @@ void Hud::updateCoins(const unsigned coins) {
     ///reconfigure each health sprite
     if (this->m_coinDigitSprites.size() == n) {
         for (unsigned long i = 0; i < this->m_coinDigitSprites.size(); i++) {
-            auto* entity = this->m_coinDigitSprites.at(i);
+            auto entity = this->m_coinDigitSprites.at(i);
             int digit = std::to_string(coins)[n-i-1] - '0';
             entity->setTextureRect({ (int)SPRITE_WIDTH*(digit+1), (int)SPRITE_HEIGHT*3, (int)SPRITE_WIDTH, (int)SPRITE_HEIGHT });
             entity->setOffset(800 - (SPRITE_WIDTH/2)*3 - SPACING - (SPRITE_WIDTH*FACTOR*i), SPRITE_HEIGHT/2+SPACING);
@@ -131,7 +131,7 @@ void Hud::updateCoins(const unsigned coins) {
 }
 
 void Hud::setupCoin() {
-    auto* entity = new SpriteEntity();
+    std::shared_ptr<SpriteEntity> entity = std::make_shared<SpriteEntity>();
     const auto& texture = this->getGame()->getTextureResourceHandler().load("resources/Hud.png");
     entity->setTexture(texture);
     entity->setTextureRect({ (int)SPRITE_WIDTH*3, (int)SPRITE_HEIGHT, (int)SPRITE_WIDTH, (int)SPRITE_HEIGHT });
@@ -142,7 +142,7 @@ void Hud::setupCoin() {
 }
 
 void Hud::setupCoinInitialDigit() {
-    auto* entity = new SpriteEntity();
+    std::shared_ptr<SpriteEntity> entity = std::make_shared<SpriteEntity>();
     const auto& texture = this->getGame()->getTextureResourceHandler().load("resources/Hud.png");
     entity->setTexture(texture);
     entity->setTextureRect({ (int)SPRITE_WIDTH, (int)SPRITE_HEIGHT*3, (int)SPRITE_WIDTH, (int)SPRITE_HEIGHT });
@@ -153,7 +153,7 @@ void Hud::setupCoinInitialDigit() {
 }
 
 void Hud::setupCoinMultiplier() {
-    auto* entity = new SpriteEntity();
+    std::shared_ptr<SpriteEntity> entity = std::make_shared<SpriteEntity>();
     const auto& texture = this->getGame()->getTextureResourceHandler().load("resources/Hud.png");
     entity->setTexture(texture);
     entity->setTextureRect({ 0, (int)SPRITE_HEIGHT*3, (int)SPRITE_WIDTH, (int)SPRITE_HEIGHT });

@@ -35,11 +35,6 @@ IGame*  WindowHandler::getGame() const {
     return this->m_game;
 }
 
-void WindowHandler::addRenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera) {
-    std::shared_ptr<RenderItem> item = std::make_shared<RenderItem>(drawable, depth, useCamera);
-    this->m_renderItems.push_back(item);
-}
-
 void WindowHandler::sortQueue() {
     std::sort(this->m_renderItems.begin(), this->m_renderItems.end(), [](const std::shared_ptr<RenderItem> &lhs, const std::shared_ptr<RenderItem> &rhs) -> bool {
         return lhs->getDepth() > rhs->getDepth();
@@ -54,6 +49,10 @@ Camera& WindowHandler::getCamera() const {
     return *this->m_camera;
 }
 
+const sf::Vector2f &WindowHandler::getWindowSize() const {
+    return this->getCamera().getView().getSize();
+}
+
 void WindowHandler::render() {
     this->sortQueue();
 
@@ -63,7 +62,9 @@ void WindowHandler::render() {
         } else {
             this->m_window->setView(this->m_window->getDefaultView());
         }
-        this->m_window->draw(*item->getDrawable());
+        for (unsigned long i = 0; i < item->getDrawablesSize(); i++) {
+            this->m_window->draw(item->getDrawable(i));
+        }
     }
 
     this->m_window->setView(this->m_window->getDefaultView());
@@ -94,33 +95,37 @@ void WindowHandler::clear(sf::Color color) {
 }
 
 void WindowHandler::draw(IGameObject &object) {
-    int updates = 0;
-    for (unsigned long i = 0; i < object.getEntitiesSize(); i++) {
-        auto* entity = &object.getEntity(i);
-        this->addRenderItem(entity, (unsigned int) object.getZIndex(), object.isUsingCamera());
-        updates++;
-    }
-    if (updates > 0) {
+    std::vector<sf::Drawable*> drawables;
+    if (object.getEntitiesSize() > 0) {
+        std::shared_ptr<RenderItem> item = std::make_shared<RenderItem>(object.getZIndex(), object.isUsingCamera());
+        for (unsigned long i = 0; i < object.getEntitiesSize(); i++) {
+            item->addDrawable(&object.getEntity(i));
+        }
+        this->m_renderItems.push_back(item);
         object.updateSprites();
     }
 }
 
-WindowHandler::RenderItem::RenderItem(sf::Drawable *drawable, unsigned int depth, const bool useCamera) {
-    this->drawable = drawable;
-    this->depth = depth;
-    this->useCamera = useCamera;
-}
+WindowHandler::RenderItem::RenderItem(unsigned int depth, const bool useCamera) : m_zIndex(depth), m_useCamera(useCamera) {}
 
 WindowHandler::RenderItem::~RenderItem() = default;
 
 unsigned int WindowHandler::RenderItem::getDepth() const {
-    return this->depth;
-}
-
-sf::Drawable* WindowHandler::RenderItem::getDrawable() const {
-    return this->drawable;
+    return this->m_zIndex;
 }
 
 bool WindowHandler::RenderItem::isUsingCamera() const {
-    return this->useCamera;
+    return this->m_useCamera;
+}
+
+void WindowHandler::RenderItem::addDrawable(sf::Drawable *drawable) {
+    this->m_drawables.push_back(drawable);
+}
+
+unsigned long WindowHandler::RenderItem::getDrawablesSize() const {
+    return this->m_drawables.size();
+}
+
+const sf::Drawable& WindowHandler::RenderItem::getDrawable(const unsigned long index) const {
+    return *this->m_drawables.at(index);
 }

@@ -27,10 +27,8 @@ IGame* IGameObject::getGame() const {
     return this->m_game;
 }
 
-void IGameObject::addEntity(IEntity *entity) {
-    std::shared_ptr<IEntity> ptr;
-    ptr.reset(entity);
-    this->m_entities.push_back(ptr);
+void IGameObject::addEntity(std::shared_ptr<IEntity> entity) {
+    this->m_entities.push_back(entity);
 }
 
 unsigned long IGameObject::getEntitiesSize() const {
