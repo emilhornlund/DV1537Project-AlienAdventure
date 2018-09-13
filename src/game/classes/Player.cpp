@@ -15,6 +15,7 @@
 #include "core/interfaces/IGame.hpp"
 #include "game/classes/CollectibleCoin.hpp"
 #include "game/classes/CollectibleHealth.hpp"
+#include "game/classes/Game.hpp"
 #include "game/classes/Player.hpp"
 #include "game/classes/World.hpp"
 #include "game/interfaces/IEnemy.hpp"
@@ -38,9 +39,7 @@ const sf::Vector2f PLAYER_SIZE = {71, 99};
 
 const int SPAWN_DELAY = 1;
 
-Player::Player(IGame *game, const std::vector<sf::IntRect> &spawnAreas, const sf::IntRect &exitArea) : IGameObject(game,
-                                                                                                                   IGameObject::DRAW_ORDER_PLAYER,
-                                                                                                                   true) {
+Player::Player(IGame *game, const std::vector<sf::IntRect> &spawnAreas, const sf::IntRect &exitArea) : IGameObject(game, Game::DRAW_ORDER_PLAYER, true) {
     this->setBoundingBox({ 10, 10, 51, 89 });
     this->spawnAreas = spawnAreas;
     this->exitArea = exitArea;

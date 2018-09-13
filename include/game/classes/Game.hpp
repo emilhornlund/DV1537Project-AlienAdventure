@@ -12,6 +12,15 @@
 #include "core/interfaces/IGame.hpp"
 
 class Game : public IGame {
+public:
+    static const int DRAW_ORDER_HUD = 0;
+    static const int DRAW_ORDER_ENEMY_DEAD = 1;
+    static const int DRAW_ORDER_PLAYER = 2;
+    static const int DRAW_ORDER_ENEMY_ALIVE = 3;
+    static const int DRAW_ORDER_COLLECTIBLE = 4;
+    static const int DRAW_ORDER_TILEMAP = 5;
+    static const int DRAW_ORDER_BACKGROUND = 6;
+    static const int DRAW_ORDER_SUN = 7;
 private:
     Game(const Game &original);
 

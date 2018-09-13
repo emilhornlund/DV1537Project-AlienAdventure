@@ -6,7 +6,7 @@
 
 #include "core/classes/PropertyHandler.hpp"
 #include "core/classes/ResourceHandler.hpp"
-#include "core/interfaces/IGame.hpp"
+#include "game/classes/Game.hpp"
 #include "game/classes/TileMap.hpp"
 #include "game/classes/World.hpp"
 
@@ -14,7 +14,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 
-World::World(IGame *game, const sf::Vector2i &worldSize, const sf::Vector2i &tileSize) : IGameObject(game, IGameObject::DRAW_ORDER_TILEMAP, true) {
+World::World(IGame *game, const sf::Vector2i &worldSize, const sf::Vector2i &tileSize) : IGameObject(game, Game::DRAW_ORDER_TILEMAP, true) {
     this->worldSize = worldSize;
     this->tileSize = tileSize;
 

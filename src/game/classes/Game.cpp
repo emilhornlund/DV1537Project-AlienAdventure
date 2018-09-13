@@ -23,6 +23,7 @@
 #include "game/classes/Hud.hpp"
 #include "game/classes/ParallaxBackground.hpp"
 #include "game/classes/Player.hpp"
+#include "game/classes/Sun.hpp"
 #include "game/classes/TileMap.hpp"
 #include "game/classes/World.hpp"
 
@@ -190,6 +191,10 @@ void Game::loadLevel() {
 
     auto hud = std::make_shared<Hud>(this);
     this->getObjectHandler().addObject(hud);
+
+    auto sun = std::make_shared<Sun>(this);
+    this->getObjectHandler().addObject(sun);
+
 
     inFile.close();
 }

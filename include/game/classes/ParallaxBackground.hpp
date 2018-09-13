@@ -9,8 +9,6 @@
 
 #include "core/interfaces/IGameObject.hpp"
 
-#include <SFML/Graphics/VertexArray.hpp>
-
 #include <memory>
 #include <vector>
 
