@@ -24,45 +24,49 @@ public:
 
     enum class PlayerDirection { Left, Right };
 private:
-    PlayerState state;
+    PlayerState m_state;
 
-    PlayerDirection direction;
+    PlayerDirection m_direction;
 
-    std::vector<sf::IntRect> spawnAreas;
+    std::vector<sf::IntRect> m_spawnAreas;
 
-    sf::IntRect exitArea;
+    sf::IntRect m_exitArea;
 
-    bool isHurt;
+    bool m_hurt;
 
-    bool initialFall;
+    bool m_initialFall;
 
-    int currentCharacter;
+    int m_currentCharacter;
 
-    float timeSinceNewGame;
+    float m_timeSinceNewGame;
 
-    float timeSinceHurt;
+    float m_timeSinceHurt;
 
-    float timeSinceGameOver;
+    float m_timeSinceGameOver;
 
-    unsigned int health;
+    bool m_isJumping;
 
-    unsigned int coins;
+    bool m_wasJumping;
 
-    sf::SoundBuffer* jumpSoundBuffer;
+    unsigned int m_health;
 
-    std::shared_ptr<sf::Sound> jumpSound;
+    unsigned int m_coins;
 
-    sf::SoundBuffer* hurtSoundBuffer;
+    sf::SoundBuffer* m_jumpSoundBuffer;
 
-    std::shared_ptr<sf::Sound> hurtSound;
+    std::shared_ptr<sf::Sound> m_jumpSound;
 
-    sf::SoundBuffer* gameOverSoundBuffer;
+    sf::SoundBuffer* m_hurtSoundBuffer;
 
-    std::shared_ptr<sf::Sound> gameOverSound;
+    std::shared_ptr<sf::Sound> m_hurtSound;
 
-    sf::SoundBuffer* victoriousSoundBuffer;
+    sf::SoundBuffer* m_gameOverSoundBuffer;
 
-    std::shared_ptr<sf::Sound> victoriousSound;
+    std::shared_ptr<sf::Sound> m_gameOverSound;
+
+    sf::SoundBuffer* m_victoriousSoundBuffer;
+
+    std::shared_ptr<sf::Sound> m_victoriousSound;
 
     std::shared_ptr<Animation> m_stationaryLeftAnimation;
 
@@ -107,8 +111,6 @@ private:
     void handleCollision();
 
     void handleAnimation(const float dt);
-
-    void updateCameraAndBackground();
 public:
     Player(IGame *game, const std::vector<sf::IntRect> &spawnAreas, const sf::IntRect &exitArea);
 

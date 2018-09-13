@@ -39,11 +39,13 @@ const sf::Vector2f PLAYER_SIZE = {71, 99};
 
 const int SPAWN_DELAY = 1;
 
-Player::Player(IGame *game, const std::vector<sf::IntRect> &spawnAreas, const sf::IntRect &exitArea) : IGameObject(game, Game::DRAW_ORDER_PLAYER, true) {
+Player::Player(IGame *game, const std::vector<sf::IntRect> &spawnAreas, const sf::IntRect &exitArea) : IGameObject(game, Game::DRAW_ORDER_PLAYER, true),
+                                                                                                       m_isJumping(false),
+                                                                                                       m_wasJumping(false) {
     this->setBoundingBox({ 10, 10, 51, 89 });
-    this->spawnAreas = spawnAreas;
-    this->exitArea = exitArea;
-    this->currentCharacter = 0;
+    this->m_spawnAreas = spawnAreas;
+    this->m_exitArea = exitArea;
+    this->m_currentCharacter = 0;
 
     this->setupSounds();
 
@@ -55,31 +57,31 @@ Player::Player(IGame *game, const std::vector<sf::IntRect> &spawnAreas, const sf
 Player::~Player() = default;
 
 void Player::setupSounds() {
-    this->jumpSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/Jump.wav");
-    this->jumpSound = std::make_shared<sf::Sound>();
-    this->jumpSound->setBuffer(*this->jumpSoundBuffer);
-    this->jumpSound->setVolume(70);
+    this->m_jumpSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/Jump.wav");
+    this->m_jumpSound = std::make_shared<sf::Sound>();
+    this->m_jumpSound->setBuffer(*this->m_jumpSoundBuffer);
+    this->m_jumpSound->setVolume(70);
 
-    this->hurtSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/Hurt.wav");
-    this->hurtSound = std::make_shared<sf::Sound>();
-    this->hurtSound->setBuffer(*this->hurtSoundBuffer);
-    this->hurtSound->setVolume(70);
+    this->m_hurtSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/Hurt.wav");
+    this->m_hurtSound = std::make_shared<sf::Sound>();
+    this->m_hurtSound->setBuffer(*this->m_hurtSoundBuffer);
+    this->m_hurtSound->setVolume(70);
 
-    this->gameOverSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/GameOver.wav");
-    this->gameOverSound = std::make_shared<sf::Sound>();
-    this->gameOverSound->setBuffer(*this->gameOverSoundBuffer);
-    this->gameOverSound->setVolume(70);
+    this->m_gameOverSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/GameOver.wav");
+    this->m_gameOverSound = std::make_shared<sf::Sound>();
+    this->m_gameOverSound->setBuffer(*this->m_gameOverSoundBuffer);
+    this->m_gameOverSound->setVolume(70);
 
-    this->victoriousSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/Victorious.wav");
-    this->victoriousSound = std::make_shared<sf::Sound>();
-    this->victoriousSound->setBuffer(*this->victoriousSoundBuffer);
-    this->victoriousSound->setVolume(40);
+    this->m_victoriousSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/Victorious.wav");
+    this->m_victoriousSound = std::make_shared<sf::Sound>();
+    this->m_victoriousSound->setBuffer(*this->m_victoriousSoundBuffer);
+    this->m_victoriousSound->setVolume(40);
 }
 
 void Player::setupAnimations() {
     const auto& spritesheet = this->getGame()->getTextureResourceHandler().load("./resources/Characters.png");
 
-    int posY = this->currentCharacter * (int)PLAYER_SIZE.y;
+    int posY = this->m_currentCharacter * (int)PLAYER_SIZE.y;
 
     this->m_stationaryLeftAnimation = std::make_shared<Animation>(sf::seconds(1.f));
     this->m_stationaryLeftAnimation->addFrame({(int)PLAYER_SIZE.x * 1, posY, (int)PLAYER_SIZE.x, (int)PLAYER_SIZE.y});
@@ -129,7 +131,7 @@ bool Player::isAlive() const {
     else if (this->getPosition().y > this->getGame()->getPropertyHandler().get<sf::Vector2i>("worldSize").y) {
         alive = false;
     }
-    else if (this->health == 0) {
+    else if (this->m_health == 0) {
         alive = false;
     }
     return alive;
@@ -137,9 +139,9 @@ bool Player::isAlive() const {
 
 bool Player::isVictorious() const {
     bool victorious = false;
-    if (this->getPosition().x > this->exitArea.left &&
-        this->getPosition().y > this->exitArea.top &&
-        this->getPosition().y < this->exitArea.top + this->exitArea.height) {
+    if (this->getPosition().x > this->m_exitArea.left &&
+        this->getPosition().y > this->m_exitArea.top &&
+        this->getPosition().y < this->m_exitArea.top + this->m_exitArea.height) {
         victorious = true;
     }
     return victorious;
@@ -175,7 +177,7 @@ void Player::accelerate(const float dt) {
     }
     //öka hastigheten beroende på riktningen tills den når max
     sf::Vector2f velocity = this->getVelocity();
-    switch (this->direction) {
+    switch (this->m_direction) {
         case PlayerDirection::Left:
             if (velocity.x > 0) {
                 velocity.x -= this->getAcceleration().x * 2 * dt;
@@ -241,7 +243,7 @@ void Player::bounceAgainstSide(const sf::Vector2f &threshold, const sf::Vector2f
 }
 
 void Player::handleMovement(const float dt) {
-    switch (this->state) {
+    switch (this->m_state) {
         case PlayerState::Stationary: {
             this->decelerate(dt);
             this->updatePosition(dt);
@@ -249,15 +251,16 @@ void Player::handleMovement(const float dt) {
         case PlayerState::Jumping: {
             sf::Vector2f velocity = this->getVelocity();
             if (velocity.y > 0) {
-                this->state = PlayerState::Falling;
+                this->m_state = PlayerState::Falling;
             } else {
-                if ((velocity.x > 0 && this->direction == PlayerDirection::Left) || (velocity.x < 0 && this->direction == PlayerDirection::Right)) {
+                if ((velocity.x > 0 && this->m_direction == PlayerDirection::Left) || (velocity.x < 0 && this->m_direction == PlayerDirection::Right)) {
                     velocity.x = 0;
                 }
                 if (velocity.y == 0) {
                     velocity.y = -std::abs(MAX_VELOCITY.y);
                     this->setVelocity(velocity);
-                    this->jumpSound->play();
+                    this->m_jumpSound->play();
+                    this->m_isJumping = true;
                 }
                 this->updatePosition(dt);
                 this->applyGravity(dt);
@@ -278,7 +281,7 @@ void Player::handleCollision() {
     for (unsigned int i = 0; i < this->getGame()->getObjectHandler().getNumberOfObjects(); i++) {
         auto *objectPtr = &this->getGame()->getObjectHandler().getObject(i);
 
-        World* worldPtr = dynamic_cast<World*>(objectPtr);
+        auto worldPtr = dynamic_cast<World*>(objectPtr);
         if (worldPtr != nullptr) {
 
             sf::Vector2f threshold;
@@ -290,7 +293,7 @@ void Player::handleCollision() {
             if (std::abs(distance.x) < threshold.x && std::abs(distance.y) < threshold.y) {
                 sf::Vector2f velocity = this->getVelocity();
                 sf::Vector2f overlap = { threshold.x - std::abs(distance.x), threshold.y - std::abs(distance.y) };
-                switch (this->state) {
+                switch (this->m_state) {
                     case PlayerState::Stationary: {
                         if (distance.y == (PLAYER_SIZE.y-TILE_SIZE.y)/2) {
                             this->bounceAgainstSide(threshold, distance);
@@ -308,26 +311,31 @@ void Player::handleCollision() {
                     case PlayerState::Falling: {
                         if (overlap.y < overlap.x) {
                             if (distance.y > 0) {
-                                if (velocity.y >= VELOCITY_HURT_THRESHOLD && !this->initialFall && !this->isHurt) {
-                                    this->state = PlayerState::Jumping;
-                                    this->isHurt = true;
+                                if (velocity.y >= VELOCITY_HURT_THRESHOLD && !this->m_initialFall && !this->m_hurt) {
+                                    this->m_state = PlayerState::Jumping;
+                                    this->m_hurt = true;
 
                                     this->move({0, -overlap.y});
                                     velocity.y = -HURT_VELOCITY.y;
                                     this->setVelocity(velocity);
 
-                                    this->health -= 1;
-                                    this->getGame()->getPropertyHandler().set<unsigned int>("health", this->health);
+                                    this->m_health -= 1;
+                                    this->getGame()->getPropertyHandler().set<unsigned int>("health", this->m_health);
 
-                                    this->hurtSound->play();
+                                    this->m_hurtSound->play();
                                 } else {
-                                    if (this->initialFall)
-                                        this->initialFall = false;
+                                    if (this->m_initialFall)
+                                        this->m_initialFall = false;
 
                                     this->move({0, -overlap.y});
                                     velocity.y = 0;
                                     this->setVelocity(velocity);
-                                    this->state = PlayerState::Stationary;
+                                    this->m_state = PlayerState::Stationary;
+
+                                    if (this->m_isJumping) {
+                                        this->m_isJumping = false;
+                                        this->m_wasJumping = true;
+                                    }
                                 }
                             } else {
                                 this->move({0, overlap.y});
@@ -344,57 +352,57 @@ void Player::handleCollision() {
                             if (std::abs(velocity.x) > 150) {
                                 velocity.y = -std::abs(velocity.x)/2;
                                 this->setVelocity(velocity);
-                                this->state = PlayerState::Jumping;
+                                this->m_state = PlayerState::Jumping;
                             }
                         }
                     } break;
                 }
             } else if (std::abs(distance.x) > threshold.x && distance.y > (PLAYER_SIZE.y-TILE_SIZE.y)/2) {
-                this->state = PlayerState::Falling;
+                this->m_state = PlayerState::Falling;
             }
         }
 
-        IEnemy* enemyPtr = dynamic_cast<IEnemy*>(objectPtr);
+        auto enemyPtr = dynamic_cast<IEnemy*>(objectPtr);
         if (enemyPtr != nullptr && enemyPtr->isAlive()) {
-            float ax = this->getBoundingBox().width/2 + this->getBoundingBox().left;
-            float bx = enemyPtr->getBoundingBox().width/2 + enemyPtr->getBoundingBox().left;
+            float ax = (float)this->getBoundingBox().width/2 + this->getBoundingBox().left;
+            float bx = (float)enemyPtr->getBoundingBox().width/2 + enemyPtr->getBoundingBox().left;
 
             sf::Vector2f diff;
             diff.x = std::abs(enemyPtr->getPosition().x - this->getPosition().x);
 
-            float aPosY = this->getPosition().y + this->getBoundingBox().top/2;
-            float bPosY = enemyPtr->getPosition().y + enemyPtr->getBoundingBox().top/2;
+            float aPosY = this->getPosition().y + (float)this->getBoundingBox().top/2;
+            float bPosY = enemyPtr->getPosition().y + (float)enemyPtr->getBoundingBox().top/2;
             diff.y = std::abs(aPosY - bPosY);
 
             if (diff.x < ax + bx) {
                 sf::Vector2f velocity = this->getVelocity();
-                if (this->getPosition().y < enemyPtr->getPosition().y && (diff.y < (this->getBoundingBox().height/2 + enemyPtr->getBoundingBox().top)) && (diff.y > (this->getBoundingBox().height/2 + enemyPtr->getBoundingBox().top)*0.9) && this->state == PlayerState::Falling) {
+                if (this->getPosition().y < enemyPtr->getPosition().y && (diff.y < ((float)this->getBoundingBox().height/2 + enemyPtr->getBoundingBox().top)) && (diff.y > ((float)this->getBoundingBox().height/2 + enemyPtr->getBoundingBox().top)*0.9) && this->m_state == PlayerState::Falling) {
                     enemyPtr->setDead();
                     velocity.y = -(MAX_VELOCITY.y/2);
                 }
-                else if (((diff.y < this->getBoundingBox().height/2 + enemyPtr->getBoundingBox().top) ||
-                          (diff.y < enemyPtr->getBoundingBox().height/2 + this->getBoundingBox().top)) && !this->isHurt) {
-                    this->state = PlayerState::Jumping;
-                    this->isHurt = true;
+                else if (((diff.y < (float)this->getBoundingBox().height/2 + enemyPtr->getBoundingBox().top) ||
+                          (diff.y < (float)enemyPtr->getBoundingBox().height/2 + this->getBoundingBox().top)) && !this->m_hurt) {
+                    this->m_state = PlayerState::Jumping;
+                    this->m_hurt = true;
 
                     velocity.x *= -1;
                     velocity.x *= 0.5;
                     velocity.y = -HURT_VELOCITY.y;
 
-                    this->health -= 1;
-                    this->getGame()->getPropertyHandler().set<unsigned int>("health", this->health);
+                    this->m_health -= 1;
+                    this->getGame()->getPropertyHandler().set<unsigned int>("health", this->m_health);
 
-                    this->hurtSound->play();
+                    this->m_hurtSound->play();
                 }
                 this->setVelocity(velocity);
             }
         }
 
-        ICollectible* collectiblePtr = dynamic_cast<ICollectible*>(objectPtr);
+        auto collectiblePtr = dynamic_cast<ICollectible*>(objectPtr);
         if (collectiblePtr != nullptr) {
             sf::Vector2f threshold;
-            threshold.x = 70/2 - 10 - (float)this->getBoundingBox().left + (float)this->getBoundingBox().width/2;
-            threshold.y = 70/2 - 10 + (float)(this->getBoundingBox().top + this->getBoundingBox().height)/2;
+            threshold.x = 70.f/2 - 10 - (float)this->getBoundingBox().left + (float)this->getBoundingBox().width/2;
+            threshold.y = 70.f/2 - 10 + (float)(this->getBoundingBox().top + this->getBoundingBox().height)/2;
 
             sf::Vector2f distance;
             distance.x = std::abs(collectiblePtr->getPosition().x - this->getPosition().x);
@@ -403,13 +411,13 @@ void Player::handleCollision() {
             if (std::abs(distance.x) < threshold.x && distance.y < threshold.y && !collectiblePtr->isCollected()) {
                 auto *coin = dynamic_cast<CollectibleCoin*>(collectiblePtr);
                 if (coin != nullptr) {
-                    this->coins += 1;
-                    this->getGame()->getPropertyHandler().set<unsigned int>("coins", this->coins);
+                    this->m_coins += 1;
+                    this->getGame()->getPropertyHandler().set<unsigned int>("coins", this->m_coins);
                 }
                 auto *healthPtr = dynamic_cast<CollectibleHealth*>(collectiblePtr);
                 if (healthPtr != nullptr) {
-                    this->health += 1;
-                    this->getGame()->getPropertyHandler().set<unsigned int>("health", this->health);
+                    this->m_health += 1;
+                    this->getGame()->getPropertyHandler().set<unsigned int>("health", this->m_health);
                 }
                 collectiblePtr->setCollected(true);
             }
@@ -418,43 +426,42 @@ void Player::handleCollision() {
 }
 
 void Player::handleAnimation(const float dt) {
-
     auto* entity = &this->getEntity(0);
     auto* animatedEntity = dynamic_cast<AnimatedEntity*>(entity);
     if (animatedEntity == nullptr)
         return;
 
     const Animation* nextAnimation = nullptr;
-    switch (this->state) {
+    switch (this->m_state) {
         case PlayerState::Stationary: {
             if (this->getVelocity().x == 0) {
-                nextAnimation = this->direction == PlayerDirection::Left ? this->m_stationaryLeftAnimation.get() : this->m_stationaryRightAnimation.get();
+                nextAnimation = this->m_direction == PlayerDirection::Left ? this->m_stationaryLeftAnimation.get() : this->m_stationaryRightAnimation.get();
             } else {
-                nextAnimation = this->direction == PlayerDirection::Left ? this->m_walkLeftAnimation.get() : this->m_walkRightAnimation.get();
+                nextAnimation = this->m_direction == PlayerDirection::Left ? this->m_walkLeftAnimation.get() : this->m_walkRightAnimation.get();
             }
         } break;
         case PlayerState::Walking: {
-            nextAnimation = this->direction == PlayerDirection::Left ? this->m_walkLeftAnimation.get() : this->m_walkRightAnimation.get();
+            nextAnimation = this->m_direction == PlayerDirection::Left ? this->m_walkLeftAnimation.get() : this->m_walkRightAnimation.get();
         } break;
         case PlayerState::Jumping: {
-            if (this->isHurt) {
-                nextAnimation = this->direction == PlayerDirection::Left ? this->m_hurtLeftAnimation.get() : this->m_hurtRightAnimation.get();
+            if (this->m_hurt) {
+                nextAnimation = this->m_direction == PlayerDirection::Left ? this->m_hurtLeftAnimation.get() : this->m_hurtRightAnimation.get();
             } else {
-                nextAnimation = this->direction == PlayerDirection::Left ? this->m_jumpLeftAnimation.get() : this->m_jumpRightAnimation.get();
+                nextAnimation = this->m_direction == PlayerDirection::Left ? this->m_jumpLeftAnimation.get() : this->m_jumpRightAnimation.get();
             }
         } break;
         case PlayerState::Falling: {
-            if (this->isHurt) {
-                nextAnimation = this->direction == PlayerDirection::Left ? this->m_hurtLeftAnimation.get() : this->m_hurtRightAnimation.get();
+            if (this->m_hurt) {
+                nextAnimation = this->m_direction == PlayerDirection::Left ? this->m_hurtLeftAnimation.get() : this->m_hurtRightAnimation.get();
             } else {
-                nextAnimation = this->direction == PlayerDirection::Left ? this->m_jumpLeftAnimation.get() : this->m_jumpRightAnimation.get();
+                nextAnimation = this->m_direction == PlayerDirection::Left ? this->m_jumpLeftAnimation.get() : this->m_jumpRightAnimation.get();
             }
         } break;
     }
 
     if (nextAnimation != animatedEntity->getAnimation()) {
         animatedEntity->play(*nextAnimation);
-        switch (this->direction) {
+        switch (this->m_direction) {
             case PlayerDirection::Left:
                 animatedEntity->setScale({-1, 1});
                 break;
@@ -466,8 +473,8 @@ void Player::handleAnimation(const float dt) {
     animatedEntity->update(sf::seconds(dt));
 
     sf::Color flash;
-    if (this->isHurt) {
-        int currentFlash = (int)(this->timeSinceHurt / HURT_FLASH_SPEED) + 1;
+    if (this->m_hurt) {
+        int currentFlash = (int)(this->m_timeSinceHurt / HURT_FLASH_SPEED) + 1;
         if (currentFlash % 2 == 1) {
             flash = sf::Color(255, 255, 255, 128);
         } else {
@@ -479,14 +486,10 @@ void Player::handleAnimation(const float dt) {
     animatedEntity->setColor(flash);
 }
 
-void Player::updateCameraAndBackground() {
-    this->getGame()->getWindowHandler().getCamera().setCenter(this->getPosition());
-}
-
 void Player::restore(const bool respawn) {
     if (!respawn) {
         auto rand = std::bind(std::uniform_int_distribution<>(0,5),std::default_random_engine(std::random_device{}()));
-        this->currentCharacter = rand() % 5;
+        this->m_currentCharacter = rand() % 5;
     }
     this->setupAnimations();
 
@@ -494,33 +497,36 @@ void Player::restore(const bool respawn) {
     this->setVelocity({0, 1});
 
     int spawnIndex = 0;
-    for (int i = 0; i < this->spawnAreas.size() && respawn; i++) {
-        if (this->getPosition().x >= this->spawnAreas[i].left) {
+    for (int i = 0; i < this->m_spawnAreas.size() && respawn; i++) {
+        if (this->getPosition().x >= this->m_spawnAreas[i].left) {
             spawnIndex = i;
         }
     }
     sf::Vector2f position;
-    position.x = (float)spawnAreas[spawnIndex].left+this->getBoundingBox().width/2;
+    position.x = (float)m_spawnAreas[spawnIndex].left+(float)this->getBoundingBox().width/2;
     position.y = 0;
     this->setPosition(position);
 
     this->setVisible(false);
 
-    this->state = PlayerState::Falling;
-    this->direction = PlayerDirection::Right;
-    this->isHurt = false;
-    this->initialFall = true;
+    this->m_state = PlayerState::Falling;
+    this->m_direction = PlayerDirection::Right;
+    this->m_hurt = false;
+    this->m_initialFall = true;
 
-    this->timeSinceNewGame = 0;
-    this->timeSinceGameOver = 0;
-    this->timeSinceHurt = 0;
+    this->m_isJumping = false;
+    this->m_wasJumping = false;
 
-    this->health = 3;
-    this->getGame()->getPropertyHandler().set<unsigned int>("health", this->health);
+    this->m_timeSinceNewGame = 0;
+    this->m_timeSinceGameOver = 0;
+    this->m_timeSinceHurt = 0;
+
+    this->m_health = 3;
+    this->getGame()->getPropertyHandler().set<unsigned int>("health", this->m_health);
 
     if (!respawn) {
-        this->coins = 0;
-        this->getGame()->getPropertyHandler().set<unsigned int>("coins", this->coins);
+        this->m_coins = 0;
+        this->getGame()->getPropertyHandler().set<unsigned int>("coins", this->m_coins);
     }
 }
 
@@ -529,34 +535,34 @@ void Player::processEvents() {
         bool leftPressed = this->getGame()->getEventHandler().getKeyStatus(sf::Keyboard::Key::Left).down;
         bool rightPressed = this->getGame()->getEventHandler().getKeyStatus(sf::Keyboard::Key::Right).down;
         bool spacePressed = this->getGame()->getEventHandler().getKeyStatus(sf::Keyboard::Key::Space).pressed;
-        switch (this->state) {
+        switch (this->m_state) {
             case PlayerState::Stationary:
                 if (leftPressed != rightPressed) {
-                    this->state = PlayerState::Walking;
+                    this->m_state = PlayerState::Walking;
                     if (leftPressed) {
-                        this->direction = PlayerDirection::Left;
+                        this->m_direction = PlayerDirection::Left;
                     }
                     if (rightPressed) {
-                        this->direction = PlayerDirection::Right;
+                        this->m_direction = PlayerDirection::Right;
                     }
                 } else if (spacePressed) {
-                    this->state = PlayerState::Jumping;
+                    this->m_state = PlayerState::Jumping;
                 }
                 break;
             case PlayerState::Walking:
                 if (leftPressed != rightPressed) {
                     if (leftPressed) {
-                        this->direction = PlayerDirection::Left;
+                        this->m_direction = PlayerDirection::Left;
                     }
                     if (rightPressed) {
-                        this->direction = PlayerDirection::Right;
+                        this->m_direction = PlayerDirection::Right;
                     }
                 }
                 if (leftPressed == rightPressed) {
-                    this->state = PlayerState::Stationary;
+                    this->m_state = PlayerState::Stationary;
                 }
                 if (spacePressed) {
-                    this->state = PlayerState::Jumping;
+                    this->m_state = PlayerState::Jumping;
                 }
                 break;
             default:
@@ -571,21 +577,21 @@ void Player::update(const float dt) {
         this->handleAnimation(dt);
     }
 
-    if (this->isHurt) {
-        this->timeSinceHurt += dt;
-        if (this->timeSinceHurt >= HURT_DURATION) {
-            this->timeSinceHurt = 0;
-            this->isHurt = false;
+    if (this->m_hurt) {
+        this->m_timeSinceHurt += dt;
+        if (this->m_timeSinceHurt >= HURT_DURATION) {
+            this->m_timeSinceHurt = 0;
+            this->m_hurt = false;
         }
     }
 
-    if (this->timeSinceNewGame >= SPAWN_DELAY) {
-        if (this->timeSinceNewGame != 0) {
-            this->timeSinceNewGame = 0;
+    if (this->m_timeSinceNewGame >= SPAWN_DELAY) {
+        if (this->m_timeSinceNewGame != 0) {
+            this->m_timeSinceNewGame = 0;
             this->setVisible(true);
         }
     } else if (!this->isVisible()) {
-        this->timeSinceNewGame += dt;
+        this->m_timeSinceNewGame += dt;
     }
     if (this->isVisible() && this->isAlive()) {
         this->handleCollision();
@@ -594,28 +600,37 @@ void Player::update(const float dt) {
     if (this->getGame()->getState() == IGame::GameState::Playing) {
         if (this->isVictorious() && this->isAlive()) {
             if (this->getVelocity().y == 0) {
-                this->state = PlayerState::Walking;
-                this->direction = PlayerDirection::Right;
+                this->m_state = PlayerState::Walking;
+                this->m_direction = PlayerDirection::Right;
             }
-            if (this->timeSinceGameOver == 0) {
-                this->victoriousSound->play();
+            if (this->m_timeSinceGameOver == 0) {
+                this->m_victoriousSound->play();
             }
-            this->timeSinceGameOver += dt;
-            if (this->timeSinceGameOver >= 0.5) {
+            this->m_timeSinceGameOver += dt;
+            if (this->m_timeSinceGameOver >= 0.5) {
                 this->getGame()->setState(IGame::GameState::GameOver);
             }
         }
         else if (!this->isAlive() && !this->isVictorious()) {
-            if (this->timeSinceGameOver == 0) {
+            if (this->m_timeSinceGameOver == 0) {
                 this->getGame()->getPropertyHandler().set<unsigned int>("health", 0);
-                this->gameOverSound->play();
+                this->m_gameOverSound->play();
             }
-            this->timeSinceGameOver += dt;
-            if (this->timeSinceGameOver >= 1) {
+            this->m_timeSinceGameOver += dt;
+            if (this->m_timeSinceGameOver >= 1) {
                 this->getGame()->setState(IGame::GameState::Respawn);
             }
         }
     }
 
-    this->updateCameraAndBackground();
+    auto newCenter = this->getPosition();
+    if (this->m_isJumping) {
+        auto cameraCenter = this->getGame()->getWindowHandler().getCamera().getCenter();
+        newCenter.y = cameraCenter.y;
+    }
+    if (this->m_wasJumping) {
+        std::cout << "did jump" << std::endl;
+        this->m_wasJumping = false;
+    }
+    this->getGame()->getWindowHandler().getCamera().setCenter(newCenter);
 }
