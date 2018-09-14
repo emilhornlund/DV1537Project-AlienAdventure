@@ -133,7 +133,9 @@ void IEnemy::setDead() {
 
 void IEnemy::restore(const bool respawn) {
     if (!respawn) {
-        this->setVelocity({0, 0});
+        if (!this->m_alive) {
+            this->setVelocity({0, 0});
+        }
         this->m_alive = true;
         this->setZIndex(GameScene::DRAW_ORDER_ENEMY_ALIVE);
     }
