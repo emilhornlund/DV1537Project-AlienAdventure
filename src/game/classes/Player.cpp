@@ -35,7 +35,7 @@ const float ACCELERATE_BY = 1600;
 const float VELOCITY_HURT_THRESHOLD = 800;
 
 const float HURT_DURATION = 3;
-const float HURT_FLASH_SPEED = 0.05;
+const float HURT_FLASH_SPEED = 0.1;
 
 const sf::Vector2f TILE_SIZE = {70, 70};
 const sf::Vector2f PLAYER_SIZE = {71, 99};
