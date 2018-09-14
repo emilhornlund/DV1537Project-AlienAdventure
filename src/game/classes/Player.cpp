@@ -488,8 +488,7 @@ void Player::handleAnimation(const float dt) {
 
 void Player::restore(const bool respawn) {
     if (!respawn) {
-        auto rand = std::bind(std::uniform_int_distribution<>(0,5),std::default_random_engine(std::random_device{}()));
-        this->m_currentCharacter = rand() % 5;
+        this->m_currentCharacter = std::bind(std::uniform_int_distribution<>(0,4),std::default_random_engine(std::random_device{}()))();
     }
     this->setupAnimations();
 
@@ -629,7 +628,6 @@ void Player::update(const float dt) {
         newCenter.y = cameraCenter.y;
     }
     if (this->m_wasJumping) {
-        std::cout << "did jump" << std::endl;
         this->m_wasJumping = false;
     }
     this->getGame()->getWindowHandler().getCamera().setCenter(newCenter);

@@ -96,7 +96,7 @@ void WindowHandler::clear(sf::Color color) {
 
 void WindowHandler::draw(IGameObject &object) {
     std::vector<sf::Drawable*> drawables;
-    if (object.getEntitiesSize() > 0) {
+    if (object.getEntitiesSize() > 0 && object.isVisible()) {
         std::shared_ptr<RenderItem> item = std::make_shared<RenderItem>(object.getZIndex(), object.isUsingCamera());
         for (unsigned long i = 0; i < object.getEntitiesSize(); i++) {
             item->addDrawable(&object.getEntity(i));

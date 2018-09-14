@@ -8,6 +8,7 @@
 #include "core/classes/ObjectHandler.hpp"
 #include "core/classes/PropertyHandler.hpp"
 #include "core/classes/WindowHandler.hpp"
+#include "game/classes/Cloud.hpp"
 #include "game/classes/CollectibleCoin.hpp"
 #include "game/classes/CollectibleHealth.hpp"
 #include "game/classes/EnemyBee.hpp"
@@ -195,6 +196,19 @@ void Game::loadLevel() {
     auto sun = std::make_shared<Sun>(this);
     this->getObjectHandler().addObject(sun);
 
+    auto cw = 400;
+    auto ch = 200;
+    auto xn = (int)worldWidth/cw;
+    auto yn = (int)worldHeight/ch;
+    for (int i = 0; i < xn; i++) {
+        auto x = i*cw;
+        for (int j = 0; j < yn; j++) {
+            auto y = -(int)this->getWindowHandler().getWindowSize().y/2+j*ch;
+            auto r = sf::IntRect(x, y, cw, ch);
+            auto cloud = std::make_shared<Cloud>(this, r);
+            this->getObjectHandler().addObject(cloud);
+        }
+    }
 
     inFile.close();
 }
