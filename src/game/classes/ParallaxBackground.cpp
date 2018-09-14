@@ -10,6 +10,7 @@
 #include "core/classes/SpriteEntity.hpp"
 #include "core/classes/WindowHandler.hpp"
 #include "game/classes/Game.hpp"
+#include "game/classes/GameScene.hpp"
 #include "game/classes/ParallaxBackground.hpp"
 
 #include <SFML/Graphics/Texture.hpp>
@@ -31,7 +32,7 @@ const float LAYER3_TEXTURE_WIDTH = 640.f;
 const float LAYER3_TEXTURE_HEIGHT = 420.f;
 const float LAYER3_SPEED = LAYER1_SPEED*0.5f;
 
-ParallaxBackground::ParallaxBackground(IGame *game) : IGameObject(game, Game::DRAW_ORDER_BACKGROUND, false) {
+ParallaxBackground::ParallaxBackground(IGame *game) : IGameObject(game, GameScene::DRAW_ORDER_BACKGROUND, false) {
     this->setupLayer(3);
     this->setupLayer(2);
     this->setupLayer(1);

@@ -42,7 +42,7 @@ private:
 public:
     IEnemy(IGame *game, const sf::IntRect &spawnArea);
 
-    ~IEnemy() override;
+    ~IEnemy() override = 0;
 
     const EnemyDirection& getDirection() const;
 

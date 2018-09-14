@@ -11,18 +11,21 @@
 #include "core/classes/ObjectHandler.hpp"
 #include "core/classes/PropertyHandler.hpp"
 #include "core/classes/ResourceHandler.hpp"
+#include "core/classes/SceneHandler.hpp"
 #include "core/classes/WindowHandler.hpp"
 #include "core/interfaces/IGame.hpp"
+#include "core/interfaces/IScene.hpp"
 #include "game/classes/CollectibleCoin.hpp"
 #include "game/classes/CollectibleHealth.hpp"
 #include "game/classes/Game.hpp"
+#include "game/classes/GameScene.hpp"
 #include "game/classes/Player.hpp"
 #include "game/classes/World.hpp"
 #include "game/interfaces/IEnemy.hpp"
 
-#include <random>
-
 #include <SFML/Graphics/Texture.hpp>
+
+#include <random>
 
 const sf::Vector2f GRAVITY = { 0, -1000 };
 const sf::Vector2f MAX_ACCELERATION(400, 0);
@@ -39,7 +42,7 @@ const sf::Vector2f PLAYER_SIZE = {71, 99};
 
 const int SPAWN_DELAY = 1;
 
-Player::Player(IGame *game, const std::vector<sf::IntRect> &spawnAreas, const sf::IntRect &exitArea) : IGameObject(game, Game::DRAW_ORDER_PLAYER, true),
+Player::Player(IGame *game, const std::vector<sf::IntRect> &spawnAreas, const sf::IntRect &exitArea) : IGameObject(game, GameScene::DRAW_ORDER_PLAYER, true),
                                                                                                        m_isJumping(false),
                                                                                                        m_wasJumping(false) {
     this->setBoundingBox({ 10, 10, 51, 89 });
@@ -278,8 +281,10 @@ void Player::handleMovement(const float dt) {
 }
 
 void Player::handleCollision() {
-    for (unsigned int i = 0; i < this->getGame()->getObjectHandler().getNumberOfObjects(); i++) {
-        auto *objectPtr = &this->getGame()->getObjectHandler().getObject(i);
+    auto& objectHandler = this->getGame()->getSceneHandler().getActiveScene().getObjectHandler();
+
+    for (unsigned int i = 0; i < objectHandler.getNumberOfObjects(); i++) {
+        auto *objectPtr = &objectHandler.getObject(i);
 
         auto worldPtr = dynamic_cast<World*>(objectPtr);
         if (worldPtr != nullptr) {
@@ -596,29 +601,27 @@ void Player::update(const float dt) {
         this->handleCollision();
     }
 
-    if (this->getGame()->getState() == IGame::GameState::Playing) {
-        if (this->isVictorious() && this->isAlive()) {
-            if (this->getVelocity().y == 0) {
-                this->m_state = PlayerState::Walking;
-                this->m_direction = PlayerDirection::Right;
-            }
-            if (this->m_timeSinceGameOver == 0) {
-                this->m_victoriousSound->play();
-            }
-            this->m_timeSinceGameOver += dt;
-            if (this->m_timeSinceGameOver >= 0.5) {
-                this->getGame()->setState(IGame::GameState::GameOver);
-            }
+    if (this->isVictorious() && this->isAlive()) {
+        if (this->getVelocity().y == 0) {
+            this->m_state = PlayerState::Walking;
+            this->m_direction = PlayerDirection::Right;
         }
-        else if (!this->isAlive() && !this->isVictorious()) {
-            if (this->m_timeSinceGameOver == 0) {
-                this->getGame()->getPropertyHandler().set<unsigned int>("health", 0);
-                this->m_gameOverSound->play();
-            }
-            this->m_timeSinceGameOver += dt;
-            if (this->m_timeSinceGameOver >= 1) {
-                this->getGame()->setState(IGame::GameState::Respawn);
-            }
+        if (this->m_timeSinceGameOver == 0) {
+            this->m_victoriousSound->play();
+        }
+        this->m_timeSinceGameOver += dt;
+        if (this->m_timeSinceGameOver >= 0.5) {
+            this->getGame()->getPropertyHandler().set<bool>("levelComplete", true);
+        }
+    }
+    else if (!this->isAlive() && !this->isVictorious()) {
+        if (this->m_timeSinceGameOver == 0) {
+            this->getGame()->getPropertyHandler().set<unsigned int>("health", 0);
+            this->m_gameOverSound->play();
+        }
+        this->m_timeSinceGameOver += dt;
+        if (this->m_timeSinceGameOver >= 1) {
+            this->getGame()->getPropertyHandler().set<bool>("gameOver", true);
         }
     }
 

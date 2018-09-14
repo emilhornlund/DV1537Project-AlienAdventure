@@ -15,6 +15,8 @@ class SpriteEntity : public IEntity {
 private:
     sf::Vertex m_vertices[4];
 
+    sf::IntRect m_textureRect;
+
     SpriteEntity(const SpriteEntity &original);
 
     SpriteEntity& operator=(const SpriteEntity &original);
@@ -25,7 +27,9 @@ public:
 
     ~SpriteEntity() override;
 
-    void setTextureRect(const sf::IntRect& rectangle);
+    void setTextureRect(const sf::IntRect& rect);
+
+    const sf::IntRect & getTextureRect() const;
 
     void setColor(const sf::Color& color) override;
 };

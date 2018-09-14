@@ -9,13 +9,14 @@
 #include "core/interfaces/IGame.hpp"
 #include "game/classes/EnemySlimePurple.hpp"
 #include "game/classes/Game.hpp"
+#include "game/classes/GameScene.hpp"
 #include "game/interfaces/IEnemy.hpp"
 
 #include <random>
 
 const sf::Vector2f MAX_VELOCITY = {50, 100};
 
-IEnemy::IEnemy(IGame *game, const sf::IntRect &spawnArea) : IGameObject(game, Game::DRAW_ORDER_ENEMY_ALIVE, true) {
+IEnemy::IEnemy(IGame *game, const sf::IntRect &spawnArea) : IGameObject(game, GameScene::DRAW_ORDER_ENEMY_ALIVE, true) {
     this->m_spawnArea = spawnArea;
     this->m_direction = EnemyDirection::None;
 
@@ -121,7 +122,7 @@ bool IEnemy::isAlive() {
 void IEnemy::setDead() {
     this->m_alive = false;
 
-    this->setZIndex(Game::DRAW_ORDER_ENEMY_DEAD);
+    this->setZIndex(GameScene::DRAW_ORDER_ENEMY_DEAD);
 
     sf::Vector2f velocity = this->getVelocity();
     velocity.y = -300;
@@ -134,7 +135,7 @@ void IEnemy::restore(const bool respawn) {
     if (!respawn) {
         this->setVelocity({0, 0});
         this->m_alive = true;
-        this->setZIndex(Game::DRAW_ORDER_ENEMY_ALIVE);
+        this->setZIndex(GameScene::DRAW_ORDER_ENEMY_ALIVE);
     }
 }
 

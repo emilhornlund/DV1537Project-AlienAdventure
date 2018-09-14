@@ -6,13 +6,14 @@
 
 #include "core/classes/ResourceHandler.hpp"
 #include "game/classes/Game.hpp"
+#include "game/classes/GameScene.hpp"
 #include "game/interfaces/ICollectible.hpp"
 
 #include <random>
 
 float FLOATING_VELOCITY = 20;
 
-ICollectible::ICollectible(IGame *game, const sf::IntRect &spawnArea, const std::string &soundFilePath) : IGameObject(game, Game::DRAW_ORDER_COLLECTIBLE, true) {
+ICollectible::ICollectible(IGame *game, const sf::IntRect &spawnArea, const std::string &soundFilePath) : IGameObject(game, GameScene::DRAW_ORDER_COLLECTIBLE, true) {
     this->m_spawnArea = spawnArea;
 
     this->m_soundBuffer = &this->getGame()->getSoundBufferResourceHandler().load(soundFilePath);

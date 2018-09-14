@@ -5,7 +5,6 @@
  */
 
 #include "core/classes/Camera.hpp"
-#include "core/classes/Menu.hpp"
 #include "core/classes/ResourceHandler.hpp"
 #include "core/classes/WindowHandler.hpp"
 #include "core/interfaces/IEntity.hpp"
@@ -55,7 +54,6 @@ const sf::Vector2f &WindowHandler::getWindowSize() const {
 
 void WindowHandler::render() {
     this->sortQueue();
-
     for (const auto& item : this->m_renderItems) {
         if (item->isUsingCamera()) {
             this->m_window->setView(this->m_camera->getView());
@@ -66,26 +64,7 @@ void WindowHandler::render() {
             this->m_window->draw(item->getDrawable(i));
         }
     }
-
     this->m_window->setView(this->m_window->getDefaultView());
-
-    auto currentState = this->getGame()->getState();
-    switch (currentState) {
-        case IGame::GameState::Playing:
-            break;
-        case IGame::GameState::Paused:
-            this->m_window->draw(this->m_game->getPauseMenu());
-            break;
-        case IGame::GameState::Respawn:
-            this->m_window->draw(this->m_game->getRespawnMenu());
-            break;
-        case IGame::GameState::GameOver:
-            this->m_window->draw(this->m_game->getGameOverMenu());
-            break;
-        case IGame::GameState::Uninitialized:
-            throw std::runtime_error("Game is not yet initialized");
-    }
-
     this->m_window->display();
     this->m_renderItems.clear();
 }

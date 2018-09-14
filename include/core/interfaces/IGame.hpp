@@ -13,8 +13,8 @@
 class PropertyHandler;
 class WindowHandler;
 class EventHandler;
-class ObjectHandler;
-class Menu;
+class SceneHandler;
+class IMenuObject;
 
 template <typename Resource>
 class ResourceHandler;
@@ -24,54 +24,37 @@ namespace sf {
     class Music;
     class SoundBuffer;
     class Texture;
-    class Sound;
 }
 
 class IGame {
-public:
-    enum class GameState { Uninitialized, Playing, Paused, Respawn, GameOver };
 private:
-    std::shared_ptr<ResourceHandler<sf::Image>> imageResourceHandler;
+    std::shared_ptr<ResourceHandler<sf::Image>> m_imageResourceHandler;
 
-    std::shared_ptr<ResourceHandler<sf::Music>> musicResourceHandler;
+    std::shared_ptr<ResourceHandler<sf::Music>> m_musicResourceHandler;
 
-    std::shared_ptr<ResourceHandler<sf::SoundBuffer>> soundBufferResourceHandler;
+    std::shared_ptr<ResourceHandler<sf::SoundBuffer>> m_soundBufferResourceHandler;
 
-    std::shared_ptr<ResourceHandler<sf::Texture>> textureResourceHandler;
+    std::shared_ptr<ResourceHandler<sf::Texture>> m_textureResourceHandler;
 
-    std::shared_ptr<PropertyHandler> propertyHandler;
+    std::shared_ptr<PropertyHandler> m_propertyHandler;
 
-    std::shared_ptr<WindowHandler> windowHandler;
+    std::shared_ptr<WindowHandler> m_windowHandler;
 
-    std::shared_ptr<EventHandler> eventHandler;
+    std::shared_ptr<EventHandler> m_eventHandler;
 
-    std::shared_ptr<ObjectHandler> objectHandler;
+    std::shared_ptr<SceneHandler> m_sceneHandler;
 
-    bool running;
+    std::shared_ptr<IMenuObject> m_menu;
 
-    int exitCode;
+    bool m_running;
 
-    GameState state;
+    int m_exitCode;
 
-    sf::Clock gameClock;
-
-    std::shared_ptr<Menu> pauseMenu;
-
-    std::shared_ptr<Menu> respawnMenu;
-
-    std::shared_ptr<Menu> gameOverMenu;
-
-    sf::Music* backgroundMusic;
-
-    std::shared_ptr<sf::Sound> clickSound;
+    sf::Clock m_gameClock;
 
     IGame(const IGame &original);
 
     IGame& operator=(const IGame &original);
-
-    void update();
-
-    void draw();
 public:
     IGame(const unsigned int windowWidth, const unsigned int windowHeight, const std::string& title);
 
@@ -83,9 +66,11 @@ public:
 
     void quit(const int exitCode);
 
-    void setState(const GameState state);
+    void setMenu(std::shared_ptr<IMenuObject> menu);
 
-    GameState getState() const;
+    bool hasActiveMenu() const;
+
+    void closeMenu();
 
     PropertyHandler& getPropertyHandler() const;
 
@@ -101,15 +86,7 @@ public:
 
     EventHandler& getEventHandler() const;
 
-    ObjectHandler& getObjectHandler() const;
-
-    Menu& getPauseMenu() const;
-
-    Menu& getRespawnMenu() const;
-
-    Menu& getGameOverMenu() const;
-
-    virtual void loadLevel() = 0;
+    SceneHandler& getSceneHandler() const;
 };
 
 #endif //ALIENADVENTURE_IGAME_HPP

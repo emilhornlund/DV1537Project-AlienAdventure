@@ -67,7 +67,7 @@ public:
         if (this->properties.find(id) != this->properties.end()) {
             return static_cast<TProperty<T>*>(this->properties.at(id))->getValue();
         } else {
-            throw std::runtime_error("Unable to find property");
+            return T();
         }
     }
 

@@ -4,223 +4,128 @@
 
 #include "core/classes/Camera.hpp"
 #include "core/classes/EventHandler.hpp"
-#include "core/classes/Menu.hpp"
 #include "core/classes/ObjectHandler.hpp"
 #include "core/classes/PropertyHandler.hpp"
 #include "core/classes/ResourceHandler.hpp"
+#include "core/classes/SceneHandler.hpp"
 #include "core/classes/WindowHandler.hpp"
 #include "core/interfaces/IGame.hpp"
+#include "core/interfaces/IMenuObject.hpp"
+#include "core/interfaces/IScene.hpp"
 
 #include <SFML/Audio/Music.hpp>
-#include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
 IGame::IGame(const unsigned int windowWidth, const unsigned int windowHeight, const std::string &title) {
     //initialize resource handlers
-    this->imageResourceHandler = std::make_shared<ResourceHandler<sf::Image>>();
-    this->musicResourceHandler = std::make_shared<ResourceHandler<sf::Music>>();
-    this->soundBufferResourceHandler = std::make_shared<ResourceHandler<sf::SoundBuffer>>();
-    this->textureResourceHandler = std::make_shared<ResourceHandler<sf::Texture>>();
+    this->m_imageResourceHandler = std::make_shared<ResourceHandler<sf::Image>>();
+    this->m_musicResourceHandler = std::make_shared<ResourceHandler<sf::Music>>();
+    this->m_soundBufferResourceHandler = std::make_shared<ResourceHandler<sf::SoundBuffer>>();
+    this->m_textureResourceHandler = std::make_shared<ResourceHandler<sf::Texture>>();
 
     //initialize other handlers
-    this->propertyHandler = std::make_shared<PropertyHandler>();
-    this->windowHandler = std::make_shared<WindowHandler>(this, windowWidth, windowHeight, title);
-    this->eventHandler = std::make_shared<EventHandler>(this->windowHandler->getRenderWindow());
-    this->objectHandler = std::make_shared<ObjectHandler>(this);
+    this->m_propertyHandler = std::make_shared<PropertyHandler>();
+    this->m_windowHandler = std::make_shared<WindowHandler>(this, windowWidth, windowHeight, title);
+    this->m_eventHandler = std::make_shared<EventHandler>(this->m_windowHandler->getRenderWindow());
+    this->m_sceneHandler = std::make_shared<SceneHandler>(this);
 
     //signal the game as not yet running.
-    this->state = GameState::Uninitialized;
-    this->running = false;
-    this->exitCode = 0;
-
-    //initialize menus
-    this->pauseMenu = std::make_shared<Menu>(this, Menu::MenuType::Pause);
-    this->respawnMenu = std::make_shared<Menu>(this, Menu::MenuType::Respawn);
-    this->gameOverMenu = std::make_shared<Menu>(this, Menu::MenuType::GameOver);
-
-    //position the menus
-    this->pauseMenu->setPosition({(float)(windowWidth - this->pauseMenu->getSize().x)/2, (float)(windowHeight - this->pauseMenu->getSize().y)/2});
-    this->respawnMenu->setPosition({(float)(windowWidth - this->respawnMenu->getSize().x)/2, (float)(windowHeight - this->respawnMenu->getSize().y)/2});
-    this->gameOverMenu->setPosition({(float)(windowWidth - this->gameOverMenu->getSize().x)/2, (float)(windowHeight - this->gameOverMenu->getSize().y)/2});
-
-    //configure background music
-    auto& rmusic = this->musicResourceHandler->open("./resources/Music.ogg");
-    rmusic.setLoop(true);
-    rmusic.setVolume(50);
-    this->backgroundMusic = &rmusic;
-
-    //configure menu click sound
-    this->clickSound = std::make_shared<sf::Sound>();
-    this->clickSound->setBuffer(this->soundBufferResourceHandler->load("./resources/Click.wav"));
+    this->m_running = false;
+    this->m_exitCode = 0;
 }
 
 IGame::~IGame() = default;
 
 int IGame::run() {
-    this->backgroundMusic->play();
+    this->m_exitCode = EXIT_SUCCESS;
+    this->m_running = true;
 
-    this->loadLevel();
-    this->objectHandler->restoreObjects(false);
+    while (this->m_running && !this->m_eventHandler->getWindowStatus().closed) {
+        if (!this->m_sceneHandler->isEmpty()) {
+            auto& scene = this->m_sceneHandler->getActiveScene();
 
-    this->setState(GameState::Playing);
+            this->m_eventHandler->updateEvents();
+            scene.processEvents();
+            if (this->m_menu != nullptr) {
+                this->m_menu->processEvents();
+            }
 
-    this->exitCode = EXIT_SUCCESS;
-    this->running = true;
+            sf::Time delta = this->m_gameClock.restart();
+            auto dt = delta.asSeconds();
+            if (!scene.isPaused()) {
+                scene.update(dt);
+                this->m_windowHandler->getCamera().update(dt);
+            }
+            if (this->m_menu != nullptr) {
+                this->m_menu->update(dt);
+            }
 
-    while (this->running && !this->eventHandler->getWindowStatus().closed) {
-        this->update();
+            this->m_windowHandler->clear(sf::Color(208, 244, 247));
+            scene.draw();
+            if (this->m_menu != nullptr) {
+                this->m_windowHandler->draw(*this->m_menu);
+            }
+            this->m_windowHandler->render();
+
+            this->m_sceneHandler->cleanup();
+        } else {
+            this->quit(0);
+        }
     }
 
-    return this->exitCode;
+    return this->m_exitCode;
 }
 
 bool IGame::isRunning() const {
-    return this->running;
+    return this->m_running;
 }
 
 void IGame::quit(const int exitCode) {
-    this->running = false;
-    this->exitCode = exitCode;
+    this->m_running = false;
+    this->m_exitCode = exitCode;
 }
 
-void IGame::setState(const IGame::GameState state) {
-    this->state = state;
+void IGame::setMenu(std::shared_ptr<IMenuObject> menu) {
+    this->m_menu = std::move(menu);
 }
 
-IGame::GameState IGame::getState() const {
-    return this->state;
+bool IGame::hasActiveMenu() const {
+    return (this->m_menu != nullptr);
 }
 
-void IGame::update() {
-    this->eventHandler->updateEvents();
-
-    if (this->eventHandler->getWindowStatus().lostFocus) {
-        this->setState(GameState::Paused);
-    }
-
-    switch (this->state) {
-        case GameState::Playing:
-            if (this->eventHandler->getKeyStatus(sf::Keyboard::Escape).pressed) {
-                this->setState(GameState::Paused);
-            }
-            break;
-        case GameState::Paused:
-            if (this->eventHandler->getKeyStatus(sf::Keyboard::Return).pressed) {
-                this->clickSound->play();
-            } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Return).released) {
-                unsigned int index = this->pauseMenu->getSelection();
-                if (index == 0) {
-                    this->setState(GameState::Playing);
-                } else if (index == 1) {
-                    this->setState(GameState::Playing);
-                    this->objectHandler->restoreObjects(false);
-                } else {
-                    this->quit(EXIT_SUCCESS);
-                }
-            } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Down).pressed) {
-                this->pauseMenu->toggleNext();
-            } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Up).pressed) {
-                this->pauseMenu->togglePrevious();
-            }
-            break;
-        case GameState::Respawn:
-            if (this->eventHandler->getKeyStatus(sf::Keyboard::Return).pressed) {
-                this->clickSound->play();
-            } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Return).released) {
-                unsigned int index = this->respawnMenu->getSelection();
-                if (index == 0) {
-                    this->setState(GameState::Playing);
-                    this->objectHandler->restoreObjects(true);
-                } else if (index == 1) {
-                    this->setState(GameState::Playing);
-                    this->objectHandler->restoreObjects(false);
-                } else {
-                    this->quit(EXIT_SUCCESS);
-                }
-            } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Down).pressed) {
-                this->respawnMenu->toggleNext();
-            } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Up).pressed) {
-                this->respawnMenu->togglePrevious();
-            }
-            break;
-        case GameState::GameOver:
-            if (this->eventHandler->getKeyStatus(sf::Keyboard::Return).pressed) {
-                this->clickSound->play();
-            } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Return).released) {
-                unsigned int index = this->gameOverMenu->getSelection();
-                if (index == 0) {
-                    this->setState(GameState::Playing);
-                    this->objectHandler->restoreObjects(false);
-                } else {
-                    this->quit(EXIT_SUCCESS);
-                }
-            } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Down).pressed) {
-                this->gameOverMenu->toggleNext();
-            } else if (this->eventHandler->getKeyStatus(sf::Keyboard::Up).pressed) {
-                this->gameOverMenu->togglePrevious();
-            }
-            break;
-        case GameState::Uninitialized:
-            throw std::runtime_error("Game is not yet initialized");
-    }
-
-    sf::Time delta = this->gameClock.restart();
-    if (this->state != GameState::Paused) {
-        auto dt = delta.asSeconds();
-        this->objectHandler->updateObjects(dt);
-        this->windowHandler->getCamera().update(dt);
-    }
-
-    this->draw();
-}
-
-void IGame::draw() {
-    this->windowHandler->clear(sf::Color(208, 244, 247));
-    this->objectHandler->drawObjects();
-    this->windowHandler->render();
+void IGame::closeMenu() {
+    this->m_menu = nullptr;
 }
 
 PropertyHandler &IGame::getPropertyHandler() const {
-    return *this->propertyHandler;
+    return *this->m_propertyHandler;
 }
 
 ResourceHandler<sf::Image> &IGame::getImageResourceHandler() const {
-    return *this->imageResourceHandler;
+    return *this->m_imageResourceHandler;
 }
 
 ResourceHandler<sf::Music> &IGame::getMusicResourceHandler() const {
-    return *this->musicResourceHandler;
+    return *this->m_musicResourceHandler;
 }
 
 ResourceHandler<sf::SoundBuffer>& IGame::getSoundBufferResourceHandler() const {
-    return *this->soundBufferResourceHandler;
+    return *this->m_soundBufferResourceHandler;
 }
 
 ResourceHandler<sf::Texture> &IGame::getTextureResourceHandler() const {
-    return *this->textureResourceHandler;
+    return *this->m_textureResourceHandler;
 }
 
 WindowHandler &IGame::getWindowHandler() const {
-    return *this->windowHandler;
+    return *this->m_windowHandler;
 }
 
 EventHandler &IGame::getEventHandler() const {
-    return *this->eventHandler;
+    return *this->m_eventHandler;
 }
 
-ObjectHandler &IGame::getObjectHandler() const {
-    return *this->objectHandler;
-}
-
-Menu &IGame::getPauseMenu() const {
-    return *this->pauseMenu;
-}
-
-Menu &IGame::getRespawnMenu() const {
-    return *this->respawnMenu;
-}
-
-Menu &IGame::getGameOverMenu() const {
-    return *gameOverMenu;
+SceneHandler &IGame::getSceneHandler() const {
+    return *this->m_sceneHandler;
 }

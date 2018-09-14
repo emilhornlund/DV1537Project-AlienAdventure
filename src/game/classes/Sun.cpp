@@ -6,11 +6,12 @@
 #include "core/classes/SpriteEntity.hpp"
 #include "core/classes/WindowHandler.hpp"
 #include "game/classes/Game.hpp"
+#include "game/classes/GameScene.hpp"
 #include "game/classes/Sun.hpp"
 
 #include <SFML/Graphics/Texture.hpp>
 
-Sun::Sun(IGame *game) : IGameObject(game, Game::DRAW_ORDER_SUN, false) {
+Sun::Sun(IGame *game) : IGameObject(game, GameScene::DRAW_ORDER_SUN, false) {
     std::shared_ptr<SpriteEntity> entity = std::make_shared<SpriteEntity>();
     const auto& texture = this->getGame()->getTextureResourceHandler().load("resources/Sun.png");
     entity->setTexture(texture);

@@ -7,16 +7,16 @@
 #include "core/classes/SpriteEntity.hpp"
 #include "game/classes/Cloud.hpp"
 #include "game/classes/Game.hpp"
+#include "game/classes/GameScene.hpp"
 
 #include <SFML/Graphics/Texture.hpp>
 
 #include <random>
-#include <iostream>
 
 const unsigned int SPEED_MIN = 20;
 const unsigned int SPEED_MAX = 50;
 
-Cloud::Cloud(IGame *game, const sf::IntRect &spawnArea) : IGameObject(game, Game::DRAW_ORDER_BACKGROUND, true), m_spawnArea(spawnArea) {
+Cloud::Cloud(IGame *game, const sf::IntRect &spawnArea) : IGameObject(game, GameScene::DRAW_ORDER_BACKGROUND, true), m_spawnArea(spawnArea) {
     auto newZIndex = this->randomZIndex();
     this->setZIndex(newZIndex);
 
@@ -68,9 +68,9 @@ void Cloud::update(const float dt) {
 int Cloud::randomZIndex() const {
     auto zIndex = std::bind(std::uniform_int_distribution<>(0,1),std::default_random_engine(std::random_device{}()))();
     if (zIndex == 0) {
-        return Game::DRAW_ORDER_CLOUD_LAYER1;
+        return GameScene::DRAW_ORDER_CLOUD_LAYER1;
     } else {
-        return Game::DRAW_ORDER_CLOUD_LAYER2;
+        return GameScene::DRAW_ORDER_CLOUD_LAYER2;
     }
 }
 

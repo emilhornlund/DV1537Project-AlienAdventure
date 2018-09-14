@@ -6,6 +6,7 @@
 #include "core/classes/ResourceHandler.hpp"
 #include "core/classes/SpriteEntity.hpp"
 #include "game/classes/Game.hpp"
+#include "game/classes/GameScene.hpp"
 #include "game/classes/Hud.hpp"
 
 #include <SFML/Graphics/Texture.hpp>
@@ -16,7 +17,7 @@ const float SPRITE_HEIGHT = 48.0;
 const float SPACING = 10.0;
 const float FACTOR = 0.8f;
 
-Hud::Hud(IGame *game) : IGameObject(game, Game::DRAW_ORDER_HUD, false),
+Hud::Hud(IGame *game) : IGameObject(game, GameScene::DRAW_ORDER_HUD, false),
                         m_currentHealth(0),
                         m_currentCoins(0),
                         m_coinSprite(nullptr) {}
