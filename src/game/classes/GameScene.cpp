@@ -196,7 +196,8 @@ void GameScene::cleanup() {
 
 void GameScene::processExtraEvents() {
     bool escapePressed = this->getGame()->getEventHandler().getKeyStatus(sf::Keyboard::Key::Escape).pressed;
-    if (escapePressed && !this->getGame()->hasActiveMenu()) {
+    bool lostFocus = this->getGame()->getEventHandler().getWindowStatus().lostFocus;
+    if ((escapePressed || lostFocus) && !this->getGame()->hasActiveMenu()) {
         this->pause();
         this->getGame()->setMenu(this->m_pauseMenu);
     }
