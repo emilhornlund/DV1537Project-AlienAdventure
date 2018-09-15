@@ -4,6 +4,7 @@
 
 #include "core/classes/Camera.hpp"
 #include "core/classes/EventHandler.hpp"
+#include "core/classes/Level.hpp"
 #include "core/classes/ObjectHandler.hpp"
 #include "core/classes/PropertyHandler.hpp"
 #include "core/classes/ResourceHandler.hpp"
@@ -41,6 +42,9 @@ GameScene::GameScene(IGame *game, const std::string &levelFilePath) : IScene(gam
 GameScene::~GameScene() = default;
 
 void GameScene::performInit() {
+
+    auto& level = this->getGame()->getLevelResourceHandler().load("level_test.tmx");
+
     ///setup the background music
     this->m_backgroundMusic = &this->getGame()->getMusicResourceHandler().open("Music.ogg");
     this->m_backgroundMusic->setLoop(true);

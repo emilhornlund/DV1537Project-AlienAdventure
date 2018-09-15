@@ -33,8 +33,10 @@ file(GLOB SRC
         "${PROJECT_SOURCE_DIR}/src/game/interfaces/*.cpp"
 )
 
+include_directories(dependencies/tinyxml2)
+
 if (APPLE)
-    add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${INC} "${PROJECT_SOURCE_DIR}/src/main.cpp" ${SRC})
+    add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${INC} "dependencies/tinyxml2/tinyxml2.h" "${PROJECT_SOURCE_DIR}/src/main.cpp" ${SRC} "dependencies/tinyxml2/tinyxml2.cpp")
 else()
     add_executable(${EXECUTABLE_NAME} ${INC} "${PROJECT_SOURCE_DIR}/src/main.cpp" ${SRC})
 endif()

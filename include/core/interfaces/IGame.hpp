@@ -15,6 +15,7 @@ class WindowHandler;
 class EventHandler;
 class SceneHandler;
 class IMenuObject;
+class Level;
 
 template <typename Resource>
 class ResourceHandler;
@@ -35,6 +36,8 @@ private:
     std::shared_ptr<ResourceHandler<sf::SoundBuffer>> m_soundBufferResourceHandler;
 
     std::shared_ptr<ResourceHandler<sf::Texture>> m_textureResourceHandler;
+
+    std::shared_ptr<ResourceHandler<Level>> m_levelResourceHandler;
 
     std::shared_ptr<PropertyHandler> m_propertyHandler;
 
@@ -81,6 +84,8 @@ public:
     ResourceHandler<sf::SoundBuffer>& getSoundBufferResourceHandler() const;
 
     ResourceHandler<sf::Texture>& getTextureResourceHandler() const;
+
+    ResourceHandler<Level>& getLevelResourceHandler() const;
 
     WindowHandler& getWindowHandler() const;
 

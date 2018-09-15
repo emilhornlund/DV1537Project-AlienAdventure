@@ -4,6 +4,7 @@
 
 #include "core/classes/Camera.hpp"
 #include "core/classes/EventHandler.hpp"
+#include "core/classes/Level.hpp"
 #include "core/classes/ObjectHandler.hpp"
 #include "core/classes/PropertyHandler.hpp"
 #include "core/classes/ResourceHandler.hpp"
@@ -16,6 +17,8 @@
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <core/interfaces/IGame.hpp>
+
 
 IGame::IGame(const unsigned int windowWidth, const unsigned int windowHeight, const std::string &title) {
     //initialize resource handlers
@@ -23,6 +26,7 @@ IGame::IGame(const unsigned int windowWidth, const unsigned int windowHeight, co
     this->m_musicResourceHandler = std::make_shared<ResourceHandler<sf::Music>>();
     this->m_soundBufferResourceHandler = std::make_shared<ResourceHandler<sf::SoundBuffer>>();
     this->m_textureResourceHandler = std::make_shared<ResourceHandler<sf::Texture>>();
+    this->m_levelResourceHandler = std::make_shared<ResourceHandler<Level>>();
 
     //initialize other handlers
     this->m_propertyHandler = std::make_shared<PropertyHandler>();
@@ -116,6 +120,10 @@ ResourceHandler<sf::SoundBuffer>& IGame::getSoundBufferResourceHandler() const {
 
 ResourceHandler<sf::Texture> &IGame::getTextureResourceHandler() const {
     return *this->m_textureResourceHandler;
+}
+
+ResourceHandler<Level> &IGame::getLevelResourceHandler() const {
+    return *this->m_levelResourceHandler;
 }
 
 WindowHandler &IGame::getWindowHandler() const {
