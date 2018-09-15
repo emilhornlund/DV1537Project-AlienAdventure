@@ -60,29 +60,29 @@ Player::Player(IGame *game, const std::vector<sf::IntRect> &spawnAreas, const sf
 Player::~Player() = default;
 
 void Player::setupSounds() {
-    this->m_jumpSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/Jump.wav");
+    this->m_jumpSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("Jump.wav");
     this->m_jumpSound = std::make_shared<sf::Sound>();
     this->m_jumpSound->setBuffer(*this->m_jumpSoundBuffer);
     this->m_jumpSound->setVolume(70);
 
-    this->m_hurtSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/Hurt.wav");
+    this->m_hurtSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("Hurt.wav");
     this->m_hurtSound = std::make_shared<sf::Sound>();
     this->m_hurtSound->setBuffer(*this->m_hurtSoundBuffer);
     this->m_hurtSound->setVolume(70);
 
-    this->m_gameOverSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/GameOver.wav");
+    this->m_gameOverSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("GameOver.wav");
     this->m_gameOverSound = std::make_shared<sf::Sound>();
     this->m_gameOverSound->setBuffer(*this->m_gameOverSoundBuffer);
     this->m_gameOverSound->setVolume(70);
 
-    this->m_victoriousSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/Victorious.wav");
+    this->m_victoriousSoundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("Victorious.wav");
     this->m_victoriousSound = std::make_shared<sf::Sound>();
     this->m_victoriousSound->setBuffer(*this->m_victoriousSoundBuffer);
     this->m_victoriousSound->setVolume(40);
 }
 
 void Player::setupAnimations() {
-    const auto& spritesheet = this->getGame()->getTextureResourceHandler().load("./resources/Characters.png");
+    const auto& spritesheet = this->getGame()->getTextureResourceHandler().load("Characters.png");
 
     int posY = this->m_currentCharacter * (int)PLAYER_SIZE.y;
 

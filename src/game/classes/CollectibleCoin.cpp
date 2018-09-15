@@ -10,12 +10,12 @@
 
 #include <SFML/Graphics/Texture.hpp>
 
-CollectibleCoin::CollectibleCoin(IGame *game, const sf::IntRect &spawnArea) : ICollectible(game, spawnArea, "./resources/Coin.wav") {
+CollectibleCoin::CollectibleCoin(IGame *game, const sf::IntRect &spawnArea) : ICollectible(game, spawnArea, "Coin.wav") {
     this->setBoundingBox({ 10, 10, 50, 50 });
 
     this->m_animation = std::make_shared<Animation>();
     this->m_animation->addFrame({70 * 8, 70 * 2, 70, 70});
-    this->m_animation->setSpriteSheet(this->getGame()->getTextureResourceHandler().load("./resources/Misc.png"));
+    this->m_animation->setSpriteSheet(this->getGame()->getTextureResourceHandler().load("Misc.png"));
 }
 
 CollectibleCoin::~CollectibleCoin() = default;

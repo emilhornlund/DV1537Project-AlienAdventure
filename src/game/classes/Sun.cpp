@@ -13,7 +13,7 @@
 
 Sun::Sun(IGame *game) : IGameObject(game, GameScene::DRAW_ORDER_SUN, false) {
     std::shared_ptr<SpriteEntity> entity = std::make_shared<SpriteEntity>();
-    const auto& texture = this->getGame()->getTextureResourceHandler().load("resources/Sun.png");
+    const auto& texture = this->getGame()->getTextureResourceHandler().load("Sun.png");
     entity->setTexture(texture);
     entity->setTextureRect({0, 0, 112, 112});
     entity->setOrigin(56.f, 56.f);

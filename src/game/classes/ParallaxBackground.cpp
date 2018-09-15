@@ -17,17 +17,17 @@
 
 #include <cmath>
 
-const std::string LAYER1_TEXTURE_FILEPATH = "resources/Hill.png";
+const std::string LAYER1_TEXTURE_FILEPATH = "Hill.png";
 const float LAYER1_TEXTURE_WIDTH = 640.f;
 const float LAYER1_TEXTURE_HEIGHT = 256.f;
 const float LAYER1_SPEED = 50.f;
 
-const std::string LAYER2_TEXTURE_FILEPATH = "resources/CloudsBg1.png";
+const std::string LAYER2_TEXTURE_FILEPATH = "CloudsBg1.png";
 const float LAYER2_TEXTURE_WIDTH = 640.f;
 const float LAYER2_TEXTURE_HEIGHT = 350.f;
 const float LAYER2_SPEED = LAYER1_SPEED*0.6f;
 
-const std::string LAYER3_TEXTURE_FILEPATH = "resources/CloudsBg2.png";
+const std::string LAYER3_TEXTURE_FILEPATH = "CloudsBg2.png";
 const float LAYER3_TEXTURE_WIDTH = 640.f;
 const float LAYER3_TEXTURE_HEIGHT = 420.f;
 const float LAYER3_SPEED = LAYER1_SPEED*0.5f;

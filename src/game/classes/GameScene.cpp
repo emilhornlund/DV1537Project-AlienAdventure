@@ -42,7 +42,7 @@ GameScene::~GameScene() = default;
 
 void GameScene::performInit() {
     ///setup the background music
-    this->m_backgroundMusic = &this->getGame()->getMusicResourceHandler().open("./resources/Music.ogg");
+    this->m_backgroundMusic = &this->getGame()->getMusicResourceHandler().open("Music.ogg");
     this->m_backgroundMusic->setLoop(true);
     this->m_backgroundMusic->setVolume(50);
     this->m_backgroundMusic->play();

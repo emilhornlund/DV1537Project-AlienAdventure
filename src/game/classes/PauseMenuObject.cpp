@@ -12,7 +12,7 @@
 #include <SFML/Graphics/Texture.hpp>
 
 PauseMenuObject::PauseMenuObject(IGame *game) : IMenuObject(game) {
-    auto& texture = this->getGame()->getTextureResourceHandler().load("./resources/Menu.png");
+    auto& texture = this->getGame()->getTextureResourceHandler().load("Menu.png");
     this->addItem({0, 64*3, 480, 64}, {0, 64*2, 480, 64}, texture);
     this->addItem({0, 64*5, 480, 64}, {0, 64*4, 480, 64}, texture);
     this->addItem({0, 64*9, 480, 64}, {0, 64*8, 480, 64}, texture);

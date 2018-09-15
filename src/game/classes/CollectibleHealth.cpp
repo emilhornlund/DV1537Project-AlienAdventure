@@ -10,12 +10,12 @@
 
 #include <SFML/Graphics/Texture.hpp>
 
-CollectibleHealth::CollectibleHealth(IGame *game, const sf::IntRect &spawnArea) : ICollectible(game, spawnArea, "./resources/Health.wav") {
+CollectibleHealth::CollectibleHealth(IGame *game, const sf::IntRect &spawnArea) : ICollectible(game, spawnArea, "Health.wav") {
     this->setBoundingBox({ 10, 10, 50, 50 });
 
     this->m_animation = std::make_shared<Animation>();
     this->m_animation->addFrame({0, 48, 52, 48});
-    this->m_animation->setSpriteSheet( this->getGame()->getTextureResourceHandler().load("./resources/Hud.png"));
+    this->m_animation->setSpriteSheet( this->getGame()->getTextureResourceHandler().load("Hud.png"));
 }
 
 CollectibleHealth::~CollectibleHealth() = default;

@@ -20,7 +20,7 @@ IEnemy::IEnemy(IGame *game, const sf::IntRect &spawnArea) : IGameObject(game, Ga
     this->m_spawnArea = spawnArea;
     this->m_direction = EnemyDirection::None;
 
-    this->m_soundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("./resources/Enemy.wav");
+    this->m_soundBuffer = &this->getGame()->getSoundBufferResourceHandler().load("Enemy.wav");
 
     this->m_sound = new sf::Sound;
     this->m_sound->setBuffer(*this->m_soundBuffer);

@@ -21,7 +21,7 @@ WindowHandler::WindowHandler(IGame* game, const unsigned int windowWidth, const 
     this->m_window->setMouseCursorVisible(false);
     this->m_window->setVerticalSyncEnabled(true);
 
-    this->m_icon = &this->getGame()->getImageResourceHandler().load("./resources/Icon.png");
+    this->m_icon = &this->getGame()->getImageResourceHandler().load("Icon.png");
     this->m_window->setIcon(this->m_icon->getSize().x, this->m_icon->getSize().y, this->m_icon->getPixelsPtr());
 
     this->m_camera = std::make_shared<Camera>(sf::FloatRect(0, 0, windowWidth, windowHeight));

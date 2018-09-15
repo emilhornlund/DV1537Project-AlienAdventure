@@ -21,7 +21,7 @@ Cloud::Cloud(IGame *game, const sf::IntRect &spawnArea) : IGameObject(game, Game
     this->setZIndex(newZIndex);
 
     std::shared_ptr<SpriteEntity> entity = std::make_shared<SpriteEntity>();
-    const auto& texture = this->getGame()->getTextureResourceHandler().load("resources/Cloud1.png");
+    const auto& texture = this->getGame()->getTextureResourceHandler().load("Cloud1.png");
     entity->setTexture(texture);
     entity->setTextureRect({ 0, 0, (int)texture.getSize().x, (int)texture.getSize().y });
     entity->setOrigin(texture.getSize().x/2.f, texture.getSize().y/2.f);

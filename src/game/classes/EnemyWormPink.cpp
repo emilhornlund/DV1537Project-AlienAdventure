@@ -18,11 +18,11 @@ EnemyWormPink::EnemyWormPink(IGame *game, const sf::IntRect &spawnArea) : IEnemy
     this->m_movingAnimation = std::make_shared<Animation>();
     this->m_movingAnimation->addFrame({65*0, posY, 65, 65});
     this->m_movingAnimation->addFrame({65*1, posY, 65, 65});
-    this->m_movingAnimation->setSpriteSheet(game->getTextureResourceHandler().load("./resources/Enemies.png"));
+    this->m_movingAnimation->setSpriteSheet(game->getTextureResourceHandler().load("Enemies.png"));
 
     this->m_deadAnimation = std::make_shared<Animation>();
     this->m_deadAnimation->addFrame({65*2, posY, 65, 65});
-    this->m_deadAnimation->setSpriteSheet(game->getTextureResourceHandler().load("./resources/Enemies.png"));
+    this->m_deadAnimation->setSpriteSheet(game->getTextureResourceHandler().load("Enemies.png"));
 }
 
 EnemyWormPink::~EnemyWormPink() = default;

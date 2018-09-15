@@ -35,7 +35,7 @@ void World::clearCollidableMap() {
 }
 
 void World::addTileMap(std::shared_ptr<TileMap> tileMap, int depth) {
-    tileMap->setTexture(this->getGame()->getTextureResourceHandler().load("./resources/" + tileMap->getFilename()));
+    tileMap->setTexture(this->getGame()->getTextureResourceHandler().load(tileMap->getFilename()));
     tileMap->setOrigin(0, 0);
     tileMap->generate();
     if (depth == 0) {

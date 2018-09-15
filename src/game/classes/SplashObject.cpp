@@ -13,7 +13,7 @@
 
 SplashObject::SplashObject(IGame *game) : IGameObject(game, 0, false) {
     std::shared_ptr<SpriteEntity> entity = std::make_shared<SpriteEntity>();
-    const auto& texture = this->getGame()->getTextureResourceHandler().load("resources/Splash.png");
+    const auto& texture = this->getGame()->getTextureResourceHandler().load("Splash.png");
     entity->setTexture(texture);
     entity->setTextureRect({0, 0, 800, 600});
     entity->setOrigin(400, 300);
