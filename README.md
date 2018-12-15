@@ -1,7 +1,7 @@
 # DV1537Project-AlienAdventure
 My ambition was to write a simple side-scrolling game as a project in one of my early c++ courses at Blekinge Institute of Technology back in 2016.
 
-It uses SFML, is solely written in c++11 and builds using cmake.
+It uses SFML and TinyXML2, is solely written in c++11 and builds using cmake.
 
 **Some of the project requirements**
 - The program should be composed of 5-10 custom classes.
@@ -23,6 +23,7 @@ It uses SFML, is solely written in c++11 and builds using cmake.
 
 **Tested on**
 macOS HighSierra (10.13.6), SFML (2.4.2), CMake (3.12.1)
+Ubuntu (18.10), SFML (2.5), CMake (3.12.1)
 
 ## Screenshots
 

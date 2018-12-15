@@ -12,6 +12,7 @@
 #include <SFML/Graphics/Texture.hpp>
 
 #include <random>
+#include <functional>
 
 const unsigned int SPEED_MIN = 20;
 const unsigned int SPEED_MAX = 50;

@@ -173,4 +173,7 @@ Temporary Items
 
 codesign
 
+build/
+.idea/
+
 # End of https://www.gitignore.io/api/c++,cmake,linux,clion,macos

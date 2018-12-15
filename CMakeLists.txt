@@ -33,21 +33,21 @@ file(GLOB SRC
         "${PROJECT_SOURCE_DIR}/src/game/interfaces/*.cpp"
 )
 
-include_directories(dependencies/tinyxml2)
-
 if (APPLE)
-    add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${INC} "dependencies/tinyxml2/tinyxml2.h" "${PROJECT_SOURCE_DIR}/src/main.cpp" ${SRC} "dependencies/tinyxml2/tinyxml2.cpp")
+    add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${INC} "${PROJECT_SOURCE_DIR}/src/main.cpp" ${SRC})
 else()
     add_executable(${EXECUTABLE_NAME} ${INC} "${PROJECT_SOURCE_DIR}/src/main.cpp" ${SRC})
 endif()
 
+find_package(TinyXML2)
 find_package(SFML 2 COMPONENTS audio graphics window system network)
-if (SFML_FOUND)
+if (SFML_FOUND AND TINYXML2_FOUND)
     include_directories(
             "${SFML_INCLUDE_DIR}"
+            "${TINYXML2_INCLUDE_DIR}"
             "${PROJECT_SOURCE_DIR}/include"
     )
-    target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+    target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${TINYXML2_LIBRARIES})
 endif()
 
 if(APPLE)

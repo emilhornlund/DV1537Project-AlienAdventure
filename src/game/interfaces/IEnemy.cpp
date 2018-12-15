@@ -13,6 +13,7 @@
 #include "game/interfaces/IEnemy.hpp"
 
 #include <random>
+#include <functional>
 
 const sf::Vector2f MAX_VELOCITY = {50, 100};
 

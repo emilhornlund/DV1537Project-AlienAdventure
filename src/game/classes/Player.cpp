@@ -26,6 +26,7 @@
 #include <SFML/Graphics/Texture.hpp>
 
 #include <random>
+#include <functional>
 
 const sf::Vector2f GRAVITY = { 0, -1000 };
 const sf::Vector2f MAX_ACCELERATION(400, 0);

@@ -10,6 +10,7 @@
 #include "game/interfaces/ICollectible.hpp"
 
 #include <random>
+#include <functional>
 
 float FLOATING_VELOCITY = 20;
 
