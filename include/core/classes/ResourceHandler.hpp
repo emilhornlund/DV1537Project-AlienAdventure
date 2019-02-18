@@ -13,10 +13,6 @@
 #include <stdexcept>
 #include <cassert>
 
-#ifdef __APPLE__
-#include <CoreFoundation/CoreFoundation.h>
-#endif
-
 #include <iostream>
 
 template <typename Resource>
@@ -27,8 +23,6 @@ private:
     bool hasResource(const std::string &filename);
 
     Resource& get(const std::string &filename) const;
-
-    std::string bundlePath();
 
     std::string resourcePath();
 public:
@@ -90,37 +84,8 @@ Resource &ResourceHandler<Resource>::get(const std::string &filename) const {
 }
 
 template<typename Resource>
-std::string ResourceHandler<Resource>::bundlePath() {
-#ifdef __APPLE__
-    CFBundleRef mainBundle = CFBundleGetMainBundle();
-    CFURLRef resourcesURL = CFBundleCopyBundleURL(mainBundle);
-    CFStringRef str = CFURLCopyFileSystemPath(resourcesURL, kCFURLPOSIXPathStyle );
-    CFRelease(resourcesURL);
-    char path[PATH_MAX];
-    CFStringGetCString(str, path, FILENAME_MAX, kCFStringEncodingASCII);
-    CFRelease(str);
-    std::string myPath(path);
-    return myPath + "/";
-#else
-    return "";
-#endif
-}
-
-template<typename Resource>
 std::string ResourceHandler<Resource>::resourcePath() {
-#ifdef __APPLE__
-    CFBundleRef mainBundle = CFBundleGetMainBundle();
-    CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
-    CFStringRef str = CFURLCopyFileSystemPath(resourcesURL, kCFURLPOSIXPathStyle );
-    CFRelease(resourcesURL);
-    char path[PATH_MAX];
-    CFStringGetCString(str, path, FILENAME_MAX, kCFStringEncodingASCII);
-    CFRelease(str);
-    std::string myPath(path);
-    return bundlePath() + myPath + "/";
-#else
     return "./resources/";
-#endif
 }
 
 #endif //ALIENADVENTURE_RESOURCEHANDLER_HPP
