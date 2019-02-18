@@ -22,7 +22,7 @@ It uses SFML and TinyXML2, is solely written in c++11 and builds using cmake.
     ./AlienAdventure
 
 **Tested on**
-macOS HighSierra (10.13.6), SFML (2.4.2), CMake (3.12.1)
+macOS Mojave (10.14.2), SFML (2.4.2), CMake (3.13.4)
 Ubuntu (18.10), SFML (2.5), CMake (3.12.1)
 
 ## Screenshots
