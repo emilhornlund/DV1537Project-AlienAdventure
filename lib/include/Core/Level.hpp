@@ -5,67 +5,57 @@
 #ifndef COREGAMELIB_LEVEL_HPP
 #define COREGAMELIB_LEVEL_HPP
 
+#include <SFML/System/NonCopyable.hpp>
 #include <SFML/System/Vector2.hpp>
-#include <tinyxml2.h>
 
 #include <string>
 #include <vector>
+#include <memory>
+
+namespace tinyxml2 { //TinyXML2
+    class XMLElement;
+}
 
 namespace CGL { //CoreGameLib
-    class Level {
-    public:
-        struct Tileset {
-            struct Image {
-                std::string source;
-                sf::Vector2i size;
-            };
-            std::string name;
-            int firstgid, tilecount, columns;
-            sf::Vector2i tileSize;
-            Image image;
-        };
+    class Tilelayer;
+    class Tileset;
 
-        struct Layer {
-            std::string name;
-            sf::Vector2i size;
-            std::vector<int> data;
-        };
+    typedef std::shared_ptr<const Tileset> TilesetPtr;
+    typedef std::shared_ptr<const Tilelayer> TilelayerPtr;
+
+    class Level : private sf::NonCopyable {
     private:
-        sf::Vector2i m_tiles;
-
         sf::Vector2i m_tileSize;
 
         sf::Vector2i m_mapSize;
 
-        std::vector<Level::Tileset> m_tilesets;
+        std::vector<TilesetPtr> m_tilesets;
 
-        std::vector<Level::Layer> m_layers;
+        std::vector<TilelayerPtr> m_tilelayers;
 
-        Level(const Level &original);
+        bool parseTilesets(const tinyxml2::XMLElement *node);
 
-        Level &operator=(const Level &original);
+        bool parseTilelayers(const tinyxml2::XMLElement *node);
 
-        void parseMap(const tinyxml2::XMLElement *root);
-
-        void parseTileset(const tinyxml2::XMLElement *element);
-
-        void parseLayer(const tinyxml2::XMLElement *element);
+        bool parseObjects(const tinyxml2::XMLElement *node);
     public:
-        Level();
+        Level() = default;
 
-        ~Level();
+        virtual ~Level() = default;
 
         bool loadFromFile(const std::string &filename);
 
-        const sf::Vector2i &getNumberOfTiles() const;
+        sf::Vector2i getTileSize() const;
 
-        const sf::Vector2i &getTileSize() const;
+        sf::Vector2i getMapSize() const;
 
-        const sf::Vector2i &getMapSize() const;
+        const std::vector<TilesetPtr>& getTilesets() const;
 
-        const std::vector<Level::Tileset> &getTilesets() const;
+        const std::vector<TilelayerPtr>& getTilelayers() const;
 
-        const std::vector<Level::Layer> &getLayers() const;
+        const std::vector<TilesetPtr> getUsedTilesets(TilelayerPtr tilelayerPtr) const;
+
+        const std::vector<int> getTileData(TilelayerPtr tilelayerPtr, TilesetPtr tilesetPtr) const;
     };
 }
 

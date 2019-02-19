@@ -3,100 +3,116 @@
 //
 
 #include <Core/Level.hpp>
+#include <Core/Tileset.hpp>
+#include <Core/Tilelayer.hpp>
 
+#include <tinyxml2.h>
 #include <iostream>
-#include <sstream>
-
-CGL::Level::Level() = default;
-
-CGL::Level::~Level() = default;
 
 bool CGL::Level::loadFromFile(const std::string &filename) {
-    tinyxml2::XMLDocument xmlDoc;
-    auto eResult = xmlDoc.LoadFile(filename.c_str());
-    if (eResult != tinyxml2::XML_SUCCESS) {
+    ///load the xml document from disk
+    tinyxml2::XMLDocument doc;
+    doc.LoadFile(filename.c_str());
+
+    ///parse the first map node
+    const auto mapNode = doc.FirstChildElement("map");
+    if (mapNode == nullptr)
         return false;
-    }
-    auto pRoot = xmlDoc.FirstChildElement("map");
-    if (pRoot == nullptr) {
+
+    ///grab the size of all tiles
+    const auto tileWidth = mapNode->IntAttribute("tilewidth");
+    const auto tileHeight = mapNode->IntAttribute("tileheight");
+    this->m_tileSize = {tileWidth, tileHeight};
+
+    ///grab the number of tiles (x,y) e.g. mapSize
+    const auto mapWidth = mapNode->IntAttribute("width");
+    const auto mapHeight = mapNode->IntAttribute("height");
+    this->m_mapSize = {mapWidth, mapHeight};
+
+    ///parse tilesets
+    if (!this->parseTilesets(mapNode))
         return false;
+
+    ///parse tilelayers
+    if (!this->parseTilelayers(mapNode))
+        return false;
+
+    ///parse objects
+    return this->parseObjects(mapNode);
+}
+
+bool CGL::Level::parseTilesets(const tinyxml2::XMLElement *node) {
+    if (node == nullptr)
+        return false;
+    auto tilesetNode = node->FirstChildElement("tileset");
+    while (tilesetNode != nullptr) {
+        try {
+            const auto tileset = std::make_shared<const Tileset>(tilesetNode);
+            this->m_tilesets.push_back(tileset);
+        } catch (...) {
+            return false;
+        }
+        tilesetNode = tilesetNode->NextSiblingElement("tileset");
     }
-    this->parseMap(pRoot);
     return true;
 }
 
-const sf::Vector2i &CGL::Level::getNumberOfTiles() const {
-    return this->m_tiles;
+bool CGL::Level::parseTilelayers(const tinyxml2::XMLElement *node) {
+    if (node == nullptr)
+        return false;
+    auto layerNode = node->FirstChildElement("layer");
+    while (layerNode != nullptr) {
+        try {
+            const auto tilelayer = std::make_shared<const Tilelayer>(layerNode);
+            this->m_tilelayers.push_back(tilelayer);
+        } catch (...) {
+            return false;
+        }
+        layerNode = layerNode->NextSiblingElement("layer");
+    }
+    return true;
 }
 
-const sf::Vector2i &CGL::Level::getTileSize() const {
+bool CGL::Level::parseObjects(const tinyxml2::XMLElement *node) {
+    return true;
+}
+
+sf::Vector2i CGL::Level::getTileSize() const {
     return this->m_tileSize;
 }
 
-const sf::Vector2i &CGL::Level::getMapSize() const {
+sf::Vector2i CGL::Level::getMapSize() const {
     return this->m_mapSize;
 }
 
-void CGL::Level::parseMap(const tinyxml2::XMLElement *root) {
-    root->FindAttribute("width")->QueryIntValue(&this->m_tiles.x);
-    root->FindAttribute("height")->QueryIntValue(&this->m_tiles.y);
-
-    root->FindAttribute("tilewidth")->QueryIntValue(&this->m_tileSize.x);
-    root->FindAttribute("tileheight")->QueryIntValue(&this->m_tileSize.y);
-
-    this->m_mapSize.x = this->m_tiles.x * this->m_tileSize.x;
-    this->m_mapSize.y = this->m_tiles.y * this->m_tileSize.y;
-
-    const tinyxml2::XMLNode* node = root->FirstChild();
-    while (node != nullptr) {
-        const auto element = node->ToElement();
-        const auto name = std::string(element->Name());
-        if (name == "tileset") {
-            this->parseTileset(element);
-        } else if (name == "layer") {
-            this->parseLayer(element);
-        }
-        node = node->NextSibling();
-    }
-}
-
-void CGL::Level::parseTileset(const tinyxml2::XMLElement *element) {
-    Tileset tileset;
-    tileset.name = element->Attribute("name");
-    element->FindAttribute("firstgid")->QueryIntValue(&tileset.firstgid);
-    element->FindAttribute("tilewidth")->QueryIntValue(&tileset.tileSize.x);
-    element->FindAttribute("tileheight")->QueryIntValue(&tileset.tileSize.y);
-    element->FindAttribute("tilecount")->QueryIntValue(&tileset.tilecount);
-    element->FindAttribute("columns")->QueryIntValue(&tileset.columns);
-    const tinyxml2::XMLElement* imageElement = element->FirstChild()->ToElement();
-    if (imageElement != nullptr && std::string(imageElement->Name()) == "image") {
-        tileset.image.source = imageElement->Attribute("source");
-        imageElement->FindAttribute("width")->QueryIntValue(&tileset.image.size.x);
-        imageElement->FindAttribute("height")->QueryIntValue(&tileset.image.size.y);
-    }
-    this->m_tilesets.push_back(tileset);
-}
-
-void CGL::Level::parseLayer(const tinyxml2::XMLElement *element) {
-    Layer layer;
-    layer.name = element->Attribute("name");
-    element->FindAttribute("width")->QueryIntValue(&layer.size.x);
-    element->FindAttribute("height")->QueryIntValue(&layer.size.y);
-    const std::string data = element->FirstChild()->ToElement()->GetText();
-    std::stringstream ss(data);
-    int i;
-    while (ss >> i) {
-        layer.data.push_back(i);
-        if (ss.peek() == ',')
-            ss.ignore();
-    }
-    this->m_layers.push_back(layer);
-}
-
-const std::vector<CGL::Level::Tileset> &CGL::Level::getTilesets() const {
+const std::vector<CGL::TilesetPtr> &CGL::Level::getTilesets() const {
     return this->m_tilesets;
 }
 
-const std::vector<CGL::Level::Layer> &CGL::Level::getLayers() const {
-    return this->m_layers;
+const std::vector<CGL::TilelayerPtr> &CGL::Level::getTilelayers() const {
+    return this->m_tilelayers;
+}
+
+const std::vector<CGL::TilesetPtr> CGL::Level::getUsedTilesets(CGL::TilelayerPtr tilelayerPtr) const {
+    std::vector<TilesetPtr> usedTilesets;
+    auto maxID = std::numeric_limits<std::uint32_t>::max();
+    for (auto it = this->m_tilesets.rbegin(); it != this->m_tilesets.rend(); ++it) {
+        for (const auto& tile : tilelayerPtr->getTiles()) {
+            if (tile >= (*it)->getFirstGID() && tile < maxID) {
+                usedTilesets.push_back((*it));
+                break;
+            }
+        }
+        maxID = static_cast<unsigned int>((*it)->getFirstGID());
+    }
+    return usedTilesets;
+}
+
+const std::vector<int> CGL::Level::getTileData(CGL::TilelayerPtr tilelayerPtr, CGL::TilesetPtr tilesetPtr) const {
+    std::vector<int> data;
+    for (const auto& tile : tilelayerPtr->getTiles()) {
+        auto id = (tile >= tilesetPtr->getFirstGID()) ? tile - tilesetPtr->getFirstGID() : -1; ///TODO check upperbound
+        data.push_back(id);
+    }
+    return data;
 }
