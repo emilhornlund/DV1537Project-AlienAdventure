@@ -4,10 +4,10 @@
  * @author Emil Hörnlund
  */
 
-#include <Game/classes/Game.hpp>
+#include <Game/Game.hpp>
 
 int main(int, char const**) {
-    Game* game = new Game();
+    AA::Game* game = new AA::Game();
     int exitCode = game->run();
     delete game;
     return exitCode;
