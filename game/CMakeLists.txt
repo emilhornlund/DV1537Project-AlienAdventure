@@ -1,10 +1,20 @@
 set(EXECUTABLE_NAME "AlienAdventure")
 
+set(GAME_VERSION_MAJOR 0)
+set(GAME_VERSION_MINOR 1)
+set(GAME_VERSION_PATCH 0)
+set(GAME_VERSION "${GAME_VERSION_MAJOR}.${GAME_VERSION_MINOR}.${GAME_VERSION_PATCH}")
+
+configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/${EXECUTABLE_NAME}.h.in"
+        "${PROJECT_BINARY_DIR}/${EXECUTABLE_NAME}.h"
+)
+
 # Globaly find source files
 file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/Game/*.cpp)
 file(GLOB_RECURSE HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/Game/*.hpp)
 
-add_executable(${EXECUTABLE_NAME} ${SOURCES} ${HEADERS} include/Game/classes/GameOverMenuObject.hpp include/Game/classes/LevelCompleteMenuObject.hpp include/Game/classes/PauseMenuObject.hpp)
+add_executable(${EXECUTABLE_NAME} ${SOURCES} ${HEADERS})
 target_include_directories(${EXECUTABLE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(${EXECUTABLE_NAME} LINK_PUBLIC CoreGameLib)
