@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_IMENUOBJECT_HPP
 #define ALIENADVENTURE_IMENUOBJECT_HPP
 
-#include "IGameObject.hpp"
+#include <Core/interfaces/IGameObject.hpp>
 
 #include <SFML/System/Clock.hpp>
 

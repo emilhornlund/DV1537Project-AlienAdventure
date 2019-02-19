@@ -4,10 +4,10 @@
  * @author Emil Hörnlund
  */
 
-#include "../../include/classes/ObjectHandler.hpp"
-#include "../../include/classes/WindowHandler.hpp"
-#include "../../include/interfaces/IGame.hpp"
-#include "../../include/interfaces/IGameObject.hpp"
+#include <Core/classes/ObjectHandler.hpp>
+#include <Core/classes/WindowHandler.hpp>
+#include <Core/interfaces/IGame.hpp>
+#include <Core/interfaces/IGameObject.hpp>
 
 ObjectHandler::ObjectHandler(IGame* game) : m_game(game) {}
 

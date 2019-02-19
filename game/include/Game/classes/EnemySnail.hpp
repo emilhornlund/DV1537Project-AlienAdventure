@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_ENEMYSNAIL_HPP
 #define ALIENADVENTURE_ENEMYSNAIL_HPP
 
-#include "../interfaces/IEnemy.hpp"
+#include <Game/interfaces/IEnemy.hpp>
 
 #include <memory>
 

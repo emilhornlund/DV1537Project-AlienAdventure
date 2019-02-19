@@ -7,7 +7,7 @@
 #ifndef COLLECTIBLE_HPP
 #define COLLECTIBLE_HPP
 
-#include "../../../lib/include/interfaces/IGameObject.hpp"
+#include <Core/interfaces/IGameObject.hpp>
 
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>

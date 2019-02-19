@@ -13,4 +13,4 @@ add_library(${LIBRARY_NAME} ${SOURCES} ${HEADERS})
 
 target_link_libraries(${LIBRARY_NAME} LINK_PUBLIC ${SFML_LIBRARIES} ${TINYXML2_LIBRARIES})
 
-target_include_directories(${LIBRARY_NAME} PUBLIC include ${SFML_INCLUDE_DIR} ${TINYXML2_INCLUDE_DIR})
+target_include_directories(${LIBRARY_NAME} PUBLIC include ${SFML_INCLUDE_DIR} ${TINYXML2_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include)

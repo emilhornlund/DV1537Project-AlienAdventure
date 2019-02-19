@@ -2,7 +2,7 @@
 // Created by Emil Hörnlund on 2018-09-08.
 //
 
-#include "../../include/classes/SpriteEntity.hpp"
+#include <Core/classes/SpriteEntity.hpp>
 
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>

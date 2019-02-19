@@ -4,7 +4,7 @@
  * @author Emil Hörnlund
  */
 
-#include "../include/classes/Game.hpp"
+#include <Game/classes/Game.hpp>
 
 int main(int, char const**) {
     Game* game = new Game();

@@ -5,7 +5,7 @@
  */
 
 
-#include "../../include/classes/EventHandler.hpp"
+#include <Core/classes/EventHandler.hpp>
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>

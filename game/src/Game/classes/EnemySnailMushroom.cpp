@@ -2,11 +2,12 @@
 // Created by Emil Hörnlund on 2018-09-05.
 //
 
-#include "../../../lib/include/classes/AnimatedEntity.hpp"
-#include "../../../lib/include/classes/Animation.hpp"
-#include "../../../lib/include/classes/ResourceHandler.hpp"
-#include "../../../lib/include/interfaces/IGame.hpp"
-#include "../../include/classes/EnemySnailMushroom.hpp"
+#include <Core/classes/AnimatedEntity.hpp>
+#include <Core/classes/Animation.hpp>
+#include <Core/classes/ResourceHandler.hpp>
+#include <Core/interfaces/IGame.hpp>
+
+#include <Game/classes/EnemySnailMushroom.hpp>
 
 #include <SFML/Graphics/Texture.hpp>
 

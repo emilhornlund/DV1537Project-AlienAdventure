@@ -4,14 +4,14 @@
  * @author Emil Hörnlund
  */
 
-#include "../../../lib/include/classes/Camera.hpp"
-#include "../../../lib/include/classes/PropertyHandler.hpp"
-#include "../../../lib/include/classes/ResourceHandler.hpp"
-#include "../../../lib/include/classes/SpriteEntity.hpp"
-#include "../../../lib/include/classes/WindowHandler.hpp"
-#include "../../include/classes/Game.hpp"
-#include "../../include/classes/GameScene.hpp"
-#include "../../include/classes/ParallaxBackground.hpp"
+#include <Core/classes/Camera.hpp>
+#include <Core/classes/PropertyHandler.hpp>
+#include <Core/classes/ResourceHandler.hpp>
+#include <Core/classes/SpriteEntity.hpp>
+#include <Core/classes/WindowHandler.hpp>
+#include <Game/classes/Game.hpp>
+#include <Game/classes/GameScene.hpp>
+#include <Game/classes/ParallaxBackground.hpp>
 
 #include <SFML/Graphics/Texture.hpp>
 

@@ -7,7 +7,7 @@
 #ifndef TILEMAP_HPP
 #define TILEMAP_HPP
 
-#include "../../../lib/include/interfaces/IEntity.hpp"
+#include <Core/interfaces/IEntity.hpp>
 
 #include <SFML/Graphics/VertexArray.hpp>
 

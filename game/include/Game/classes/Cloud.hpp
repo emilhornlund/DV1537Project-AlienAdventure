@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_CLOUD_HPP
 #define ALIENADVENTURE_CLOUD_HPP
 
-#include "core/interfaces/IGameObject.hpp"
+#include <Core/interfaces/IGameObject.hpp>
 
 #include <memory>
 

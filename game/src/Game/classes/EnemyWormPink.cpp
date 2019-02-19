@@ -2,11 +2,12 @@
 // Created by Emil Hörnlund on 2018-09-05.
 //
 
-#include "core/classes/AnimatedEntity.hpp"
-#include "core/classes/Animation.hpp"
-#include "core/classes/ResourceHandler.hpp"
-#include "core/interfaces/IGame.hpp"
-#include "game/classes/EnemyWormPink.hpp"
+#include <Core/classes/AnimatedEntity.hpp>
+#include <Core/classes/Animation.hpp>
+#include <Core/classes/ResourceHandler.hpp>
+#include <Core/interfaces/IGame.hpp>
+
+#include <Game/classes/EnemyWormPink.hpp>
 
 #include <SFML/Graphics/Texture.hpp>
 

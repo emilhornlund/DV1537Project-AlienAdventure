@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_ENEMYBEEBLACK_HPP
 #define ALIENADVENTURE_ENEMYBEEBLACK_HPP
 
-#include "../interfaces/IEnemy.hpp"
+#include <Game/interfaces/IEnemy.hpp>
 
 #include <memory>
 

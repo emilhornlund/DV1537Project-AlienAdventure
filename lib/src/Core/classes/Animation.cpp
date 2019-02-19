@@ -2,7 +2,7 @@
 // Created by Emil Hörnlund on 2018-09-08.
 //
 
-#include "../../include/classes/Animation.hpp"
+#include <Core/classes/Animation.hpp>
 
 #include <SFML/Graphics/Texture.hpp>
 

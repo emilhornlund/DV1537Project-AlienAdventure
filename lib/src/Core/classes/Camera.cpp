@@ -2,7 +2,7 @@
 // Created by Emil Hörnlund on 2018-09-06.
 //
 
-#include "core/classes/Camera.hpp"
+#include <Core/classes/Camera.hpp>
 
 #include <cmath>
 

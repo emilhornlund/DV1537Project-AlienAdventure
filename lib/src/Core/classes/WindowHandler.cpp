@@ -4,12 +4,12 @@
  * @author Emil Hörnlund
  */
 
-#include "../../include/classes/Camera.hpp"
-#include "../../include/classes/ResourceHandler.hpp"
-#include "../../include/classes/WindowHandler.hpp"
-#include "../../include/interfaces/IEntity.hpp"
-#include "../../include/interfaces/IGame.hpp"
-#include "../../include/interfaces/IGameObject.hpp"
+#include <Core/classes/Camera.hpp>
+#include <Core/classes/ResourceHandler.hpp>
+#include <Core/classes/WindowHandler.hpp>
+#include <Core/interfaces/IEntity.hpp>
+#include <Core/interfaces/IGame.hpp>
+#include <Core/interfaces/IGameObject.hpp>
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/VideoMode.hpp>

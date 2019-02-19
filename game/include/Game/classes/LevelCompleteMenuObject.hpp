@@ -1,8 +1,23 @@
 //
-// Created by Emil Hörnlund on 2019-02-19.
+// Created by Emil Hörnlund on 2018-09-14.
 //
 
-#ifndef DV1537PROJECT_LEVELCOMPLETEMENUOBJECT_HPP
-#define DV1537PROJECT_LEVELCOMPLETEMENUOBJECT_HPP
+#ifndef ALIENADVENTURE_LEVELCOMPLETEMENUOBJECT_HPP
+#define ALIENADVENTURE_LEVELCOMPLETEMENUOBJECT_HPP
 
-#endif //DV1537PROJECT_LEVELCOMPLETEMENUOBJECT_HPP
+#include <Core/interfaces/IMenuObject.hpp>
+
+class LevelCompleteMenuObject : public IMenuObject {
+private:
+    LevelCompleteMenuObject(const LevelCompleteMenuObject &original);
+
+    LevelCompleteMenuObject& operator=(const LevelCompleteMenuObject &original);
+public:
+    explicit LevelCompleteMenuObject(IGame *game);
+
+    ~LevelCompleteMenuObject() override;
+
+    void update(const float dt) override;
+};
+
+#endif //ALIENADVENTURE_LEVELCOMPLETEMENUOBJECT_HPP

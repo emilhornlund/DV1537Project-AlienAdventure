@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_GAMESCENE_HPP
 #define ALIENADVENTURE_GAMESCENE_HPP
 
-#include "../../../lib/include/interfaces/IScene.hpp"
+#include <Core/interfaces/IScene.hpp>
 
 #include <string>
 

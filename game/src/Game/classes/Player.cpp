@@ -4,24 +4,24 @@
  * @author Emil Hörnlund
  */
 
-#include "../../../lib/include/classes/AnimatedEntity.hpp"
-#include "../../../lib/include/classes/Animation.hpp"
-#include "../../../lib/include/classes/Camera.hpp"
-#include "../../../lib/include/classes/EventHandler.hpp"
-#include "../../../lib/include/classes/ObjectHandler.hpp"
-#include "../../../lib/include/classes/PropertyHandler.hpp"
-#include "../../../lib/include/classes/ResourceHandler.hpp"
-#include "../../../lib/include/classes/SceneHandler.hpp"
-#include "../../../lib/include/classes/WindowHandler.hpp"
-#include "../../../lib/include/interfaces/IGame.hpp"
-#include "../../../lib/include/interfaces/IScene.hpp"
-#include "../../include/classes/CollectibleCoin.hpp"
-#include "../../include/classes/CollectibleHealth.hpp"
-#include "../../include/classes/Game.hpp"
-#include "../../include/classes/GameScene.hpp"
-#include "../../include/classes/Player.hpp"
-#include "../../include/classes/World.hpp"
-#include "../../include/interfaces/IEnemy.hpp"
+#include <Core/classes/AnimatedEntity.hpp>
+#include <Core/classes/Animation.hpp>
+#include <Core/classes/Camera.hpp>
+#include <Core/classes/EventHandler.hpp>
+#include <Core/classes/ObjectHandler.hpp>
+#include <Core/classes/PropertyHandler.hpp>
+#include <Core/classes/ResourceHandler.hpp>
+#include <Core/classes/SceneHandler.hpp>
+#include <Core/classes/WindowHandler.hpp>
+#include <Core/interfaces/IGame.hpp>
+#include <Core/interfaces/IScene.hpp>
+#include <Game/classes/CollectibleCoin.hpp>
+#include <Game/classes/CollectibleHealth.hpp>
+#include <Game/classes/Game.hpp>
+#include <Game/classes/GameScene.hpp>
+#include <Game/classes/Player.hpp>
+#include <Game/classes/World.hpp>
+#include <Game/interfaces/IEnemy.hpp>
 
 #include <SFML/Graphics/Texture.hpp>
 

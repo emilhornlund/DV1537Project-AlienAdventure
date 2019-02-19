@@ -2,13 +2,12 @@
 // Created by Emil Hörnlund on 2018-09-14.
 //
 
-#include "../../include/classes/EventHandler.hpp"
-#include "../../include/classes/ResourceHandler.hpp"
-#include "../../include/classes/SpriteEntity.hpp"
-#include "../../include/classes/WindowHandler.hpp"
-#include "../../include/interfaces/IGame.hpp"
-#include "../../include/interfaces/IMenuObject.hpp"
-#include "../../../game/include/classes/GameScene.hpp"
+#include <Core/classes/EventHandler.hpp>
+#include <Core/classes/ResourceHandler.hpp>
+#include <Core/classes/SpriteEntity.hpp>
+#include <Core/classes/WindowHandler.hpp>
+#include <Core/interfaces/IGame.hpp>
+#include <Core/interfaces/IMenuObject.hpp>
 
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
@@ -17,7 +16,7 @@
 
 const float ITEM_SPACING = 20.f;
 
-IMenuObject::IMenuObject(IGame *game) : IGameObject(game, GameScene::DRAW_ORDER_MENU, false), m_selectedItemIndex(0), m_hasPendingSelection(false) {
+IMenuObject::IMenuObject(IGame *game) : IGameObject(game, 0, false), m_selectedItemIndex(0), m_hasPendingSelection(false) {
     this->m_clickSound = std::make_shared<sf::Sound>();
     this->m_clickSound->setBuffer(game->getSoundBufferResourceHandler().load("Click.wav"));
 

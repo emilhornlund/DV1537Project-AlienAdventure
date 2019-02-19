@@ -4,13 +4,13 @@
  * @author Emil Hörnlund
  */
 
-#include "../../../lib/include/classes/AnimatedEntity.hpp"
-#include "../../../lib/include/classes/ResourceHandler.hpp"
-#include "../../../lib/include/interfaces/IGame.hpp"
-#include "../../include/classes/EnemySlimePurple.hpp"
-#include "../../include/classes/Game.hpp"
-#include "../../include/classes/GameScene.hpp"
-#include "../../include/interfaces/IEnemy.hpp"
+#include <Core/classes/AnimatedEntity.hpp>
+#include <Core/classes/ResourceHandler.hpp>
+#include <Core/interfaces/IGame.hpp>
+#include <Game/classes/EnemySlimePurple.hpp>
+#include <Game/classes/Game.hpp>
+#include <Game/classes/GameScene.hpp>
+#include <Game/interfaces/IEnemy.hpp>
 
 #include <random>
 #include <functional>

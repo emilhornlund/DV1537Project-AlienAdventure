@@ -2,9 +2,9 @@
 // Created by Emil Hörnlund on 2018-09-14.
 //
 
-#include "../../include/classes/ObjectHandler.hpp"
-#include "../../include/interfaces/IGame.hpp"
-#include "../../include/interfaces/IScene.hpp"
+#include <Core/classes/ObjectHandler.hpp>
+#include <Core/interfaces/IGame.hpp>
+#include <Core/interfaces/IScene.hpp>
 
 IScene::IScene(IGame *game) : m_game(game), m_initialized(false), m_paused(false), m_elapsedTime(0), m_pausedTime(0) {
     this->m_objectHandler = std::make_shared<ObjectHandler>(game);

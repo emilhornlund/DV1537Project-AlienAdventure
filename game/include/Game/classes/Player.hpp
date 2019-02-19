@@ -7,7 +7,7 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include "../../../lib/include/interfaces/IGameObject.hpp"
+#include <Core/interfaces/IGameObject.hpp>
 
 #include <memory>
 

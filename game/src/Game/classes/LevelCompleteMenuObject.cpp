@@ -2,13 +2,13 @@
 // Created by Emil Hörnlund on 2018-09-14.
 //
 
-#include "../../../lib/include/classes/ObjectHandler.hpp"
-#include "../../../lib/include/classes/PropertyHandler.hpp"
-#include "../../../lib/include/classes/ResourceHandler.hpp"
-#include "../../../lib/include/classes/SceneHandler.hpp"
-#include "../../../lib/include/interfaces/IGame.hpp"
-#include "../../../lib/include/interfaces/IScene.hpp"
-#include "../../include/classes/LevelCompleteMenuObject.hpp"
+#include <Core/classes/ObjectHandler.hpp>
+#include <Core/classes/PropertyHandler.hpp>
+#include <Core/classes/ResourceHandler.hpp>
+#include <Core/classes/SceneHandler.hpp>
+#include <Core/interfaces/IGame.hpp>
+#include <Core/interfaces/IScene.hpp>
+#include <Game/classes/LevelCompleteMenuObject.hpp>
 
 #include <SFML/Graphics/Texture.hpp>
 

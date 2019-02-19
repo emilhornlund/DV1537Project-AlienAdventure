@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_SPRITEENTITY_HPP
 #define ALIENADVENTURE_SPRITEENTITY_HPP
 
-#include "../interfaces/IEntity.hpp"
+#include <Core/interfaces/IEntity.hpp>
 
 #include <SFML/Graphics/Vertex.hpp>
 

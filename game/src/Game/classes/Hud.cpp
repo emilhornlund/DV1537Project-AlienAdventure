@@ -2,12 +2,13 @@
 // Created by Emil Hörnlund on 2018-09-08.
 //
 
-#include "../../../lib/include/classes/PropertyHandler.hpp"
-#include "../../../lib/include/classes/ResourceHandler.hpp"
-#include "../../../lib/include/classes/SpriteEntity.hpp"
-#include "../../include/classes/Game.hpp"
-#include "../../include/classes/GameScene.hpp"
-#include "../../include/classes/Hud.hpp"
+#include <Core/classes/PropertyHandler.hpp>
+#include <Core/classes/ResourceHandler.hpp>
+#include <Core/classes/SpriteEntity.hpp>
+
+#include <Game/classes/Game.hpp>
+#include <Game/classes/GameScene.hpp>
+#include <Game/classes/Hud.hpp>
 
 #include <SFML/Graphics/Texture.hpp>
 

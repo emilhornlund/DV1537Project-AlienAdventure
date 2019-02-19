@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_SPLASHOBJECT_HPP
 #define ALIENADVENTURE_SPLASHOBJECT_HPP
 
-#include "core/interfaces/IGameObject.hpp"
+#include <Core/interfaces/IGameObject.hpp>
 
 #include <vector>
 #include <memory>

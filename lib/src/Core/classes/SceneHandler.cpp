@@ -2,9 +2,9 @@
 // Created by Emil Hörnlund on 2018-09-14.
 //
 
-#include "../../include/classes/SceneHandler.hpp"
-#include "../../include/interfaces/IGame.hpp"
-#include "../../include/interfaces/IScene.hpp"
+#include <Core/classes/SceneHandler.hpp>
+#include <Core/interfaces/IGame.hpp>
+#include <Core/interfaces/IScene.hpp>
 
 SceneHandler::SceneHandler(IGame *game) : m_game(game) {}
 

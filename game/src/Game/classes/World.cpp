@@ -4,12 +4,12 @@
  * @author Emil Hörnlund
  */
 
-#include "../../../lib/include/classes/PropertyHandler.hpp"
-#include "../../../lib/include/classes/ResourceHandler.hpp"
-#include "../../include/classes/Game.hpp"
-#include "../../include/classes/GameScene.hpp"
-#include "../../include/classes/TileMap.hpp"
-#include "../../include/classes/World.hpp"
+#include <Core/classes/PropertyHandler.hpp>
+#include <Core/classes/ResourceHandler.hpp>
+#include <Game/classes/Game.hpp>
+#include <Game/classes/GameScene.hpp>
+#include <Game/classes/TileMap.hpp>
+#include <Game/classes/World.hpp>
 
 #include <cmath>
 

@@ -2,23 +2,21 @@
 // Created by Emil Hörnlund on 2018-09-07.
 //
 
-#include "../../include/classes/Camera.hpp"
-#include "../../include/classes/EventHandler.hpp"
-#include "../../include/classes/Level.hpp"
-#include "../../include/classes/ObjectHandler.hpp"
-#include "../../include/classes/PropertyHandler.hpp"
-#include "../../include/classes/ResourceHandler.hpp"
-#include "../../include/classes/SceneHandler.hpp"
-#include "../../include/classes/WindowHandler.hpp"
-#include "../../include/interfaces/IGame.hpp"
-#include "../../include/interfaces/IMenuObject.hpp"
-#include "../../include/interfaces/IScene.hpp"
+#include <Core/classes/Camera.hpp>
+#include <Core/classes/EventHandler.hpp>
+#include <Core/classes/Level.hpp>
+#include <Core/classes/ObjectHandler.hpp>
+#include <Core/classes/PropertyHandler.hpp>
+#include <Core/classes/ResourceHandler.hpp>
+#include <Core/classes/SceneHandler.hpp>
+#include <Core/classes/WindowHandler.hpp>
+#include <Core/interfaces/IGame.hpp>
+#include <Core/interfaces/IMenuObject.hpp>
+#include <Core/interfaces/IScene.hpp>
 
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include "../../include/interfaces/IGame.hpp"
-
 
 IGame::IGame(const unsigned int windowWidth, const unsigned int windowHeight, const std::string &title) {
     //initialize resource handlers

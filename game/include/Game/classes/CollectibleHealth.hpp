@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_COLLECTIBLEHEALTH_HPP
 #define ALIENADVENTURE_COLLECTIBLEHEALTH_HPP
 
-#include "game/interfaces/ICollectible.hpp"
+#include <Game/interfaces/ICollectible.hpp>
 
 #include <memory>
 

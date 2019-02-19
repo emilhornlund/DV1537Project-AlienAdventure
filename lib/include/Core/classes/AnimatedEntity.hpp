@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_ANIMATEDENTITY_HPP
 #define ALIENADVENTURE_ANIMATEDENTITY_HPP
 
-#include "../interfaces/IEntity.hpp"
+#include <Core/interfaces/IEntity.hpp>
 
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/System/Time.hpp>

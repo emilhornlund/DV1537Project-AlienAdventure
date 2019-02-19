@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_SPLASHSCENE_HPP
 #define ALIENADVENTURE_SPLASHSCENE_HPP
 
-#include "../../../lib/include/interfaces/IScene.hpp"
+#include <Core/interfaces/IScene.hpp>
 
 class SplashScene : public IScene {
 private:

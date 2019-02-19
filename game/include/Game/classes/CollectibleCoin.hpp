@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_COLLECTIBLECOIN_HPP
 #define ALIENADVENTURE_COLLECTIBLECOIN_HPP
 
-#include "../interfaces/ICollectible.hpp"
+#include <Game/interfaces/ICollectible.hpp>
 
 #include <memory>
 

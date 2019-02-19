@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_SUN_HPP
 #define ALIENADVENTURE_SUN_HPP
 
-#include "../../../lib/include/interfaces/IGameObject.hpp"
+#include <Core/interfaces/IGameObject.hpp>
 
 #include <memory>
 #include <vector>

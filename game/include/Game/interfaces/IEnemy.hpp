@@ -7,7 +7,7 @@
 #ifndef ENEMY_HPP
 #define ENEMY_HPP
 
-#include "../../../lib/include/interfaces/IGameObject.hpp"
+#include <Core/interfaces/IGameObject.hpp>
 
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>

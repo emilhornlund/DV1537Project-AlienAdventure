@@ -4,10 +4,10 @@
  * @author Emil Hörnlund
  */
 
-#include "../../../lib/include/classes/ResourceHandler.hpp"
-#include "../../include/classes/Game.hpp"
-#include "../../include/classes/GameScene.hpp"
-#include "../../include/interfaces/ICollectible.hpp"
+#include <Core/classes/ResourceHandler.hpp>
+#include <Game/classes/Game.hpp>
+#include <Game/classes/GameScene.hpp>
+#include <Game/interfaces/ICollectible.hpp>
 
 #include <random>
 #include <functional>

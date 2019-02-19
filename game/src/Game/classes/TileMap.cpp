@@ -4,7 +4,7 @@
  * @author Emil Hörnlund
  */
 
-#include "../../include/classes/TileMap.hpp"
+#include <Game/classes/TileMap.hpp>
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Texture.hpp>

@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_ENEMYSNAILMUSHROOM_HPP
 #define ALIENADVENTURE_ENEMYSNAILMUSHROOM_HPP
 
-#include "game/interfaces/IEnemy.hpp"
+#include <Game/interfaces/IEnemy.hpp>
 
 #include <memory>
 

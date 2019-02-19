@@ -7,7 +7,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "../../../lib/include/interfaces/IGame.hpp"
+#include <Core/interfaces/IGame.hpp>
 
 #include <memory>
 

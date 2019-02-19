@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_ENEMYWORMGREEN_HPP
 #define ALIENADVENTURE_ENEMYWORMGREEN_HPP
 
-#include "../interfaces/IEnemy.hpp"
+#include <Game/interfaces/IEnemy.hpp>
 
 #include <memory>
 

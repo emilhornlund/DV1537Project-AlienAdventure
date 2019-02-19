@@ -7,7 +7,7 @@
 #ifndef WORLD_HPP
 #define WORLD_HPP
 
-#include "../../../lib/include/interfaces/IGameObject.hpp"
+#include <Core/interfaces/IGameObject.hpp>
 
 class TileMap;
 

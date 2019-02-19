@@ -5,7 +5,7 @@
 #ifndef ALIENADVENTURE_ENEMYSLIMEPURPLE_HPP
 #define ALIENADVENTURE_ENEMYSLIMEPURPLE_HPP
 
-#include "../interfaces/IEnemy.hpp"
+#include <Game/interfaces/IEnemy.hpp>
 
 #include <memory>
 

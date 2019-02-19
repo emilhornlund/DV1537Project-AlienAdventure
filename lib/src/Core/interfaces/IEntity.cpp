@@ -2,7 +2,7 @@
 // Created by Emil Hörnlund on 2018-09-07.
 //
 
-#include "../../include/interfaces/IEntity.hpp"
+#include <Core/interfaces/IEntity.hpp>
 
 IEntity::IEntity() = default;
 

@@ -7,7 +7,7 @@
 #ifndef ALIENADVENTURE_PARALLAXBACKGROUND_HPP
 #define ALIENADVENTURE_PARALLAXBACKGROUND_HPP
 
-#include "../../../lib/include/interfaces/IGameObject.hpp"
+#include <Core/interfaces/IGameObject.hpp>
 
 #include <memory>
 #include <vector>

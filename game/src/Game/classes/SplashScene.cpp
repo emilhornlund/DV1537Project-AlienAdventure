@@ -2,11 +2,11 @@
 // Created by Emil Hörnlund on 2018-09-14.
 //
 
-#include "../../../lib/include/classes/ObjectHandler.hpp"
-#include "../../../lib/include/classes/SceneHandler.hpp"
-#include "../../include/classes/Game.hpp"
-#include "../../include/classes/SplashObject.hpp"
-#include "../../include/classes/SplashScene.hpp"
+#include <Core/classes/ObjectHandler.hpp>
+#include <Core/classes/SceneHandler.hpp>
+#include <Game/classes/Game.hpp>
+#include <Game/classes/SplashObject.hpp>
+#include <Game/classes/SplashScene.hpp>
 
 #include <iostream>
 
