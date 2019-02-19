@@ -1,0 +1,16 @@
+set(LIBRARY_NAME "CoreGameLib")
+
+# Globaly find source files
+file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/*.cpp)
+file(GLOB_RECURSE HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/Core/*.hpp)
+
+# Detect and add SFML
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+find_package(SFML 2 COMPONENTS audio graphics window system network)
+find_package(TinyXML2)
+
+add_library(${LIBRARY_NAME} ${SOURCES} ${HEADERS})
+
+target_link_libraries(${LIBRARY_NAME} LINK_PUBLIC ${SFML_LIBRARIES} ${TINYXML2_LIBRARIES})
+
+target_include_directories(${LIBRARY_NAME} PUBLIC include ${SFML_INCLUDE_DIR} ${TINYXML2_INCLUDE_DIR})
