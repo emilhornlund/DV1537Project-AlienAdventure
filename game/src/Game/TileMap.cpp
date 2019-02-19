@@ -96,8 +96,8 @@ void AA::TileMap::generate() {
         for (unsigned int j = 0; j < this->rows; ++j) {
             int dataNr = this->data[i + j * this->columns];
 
-            if (dataNr > 0) {
-                int index = dataNr - 1;
+            if (dataNr >= 0) {
+                int index = dataNr;
 
                 int tu = index % (this->getTexture().getSize().x / tileSize.x);
                 int tv = index / (this->getTexture().getSize().x / tileSize.x);

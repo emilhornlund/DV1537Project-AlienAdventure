@@ -10,6 +10,8 @@
 #include <Core/ResourceHandler.hpp>
 #include <Core/SceneHandler.hpp>
 #include <Core/WindowHandler.hpp>
+#include <Core/Tilelayer.hpp>
+#include <Core/Tileset.hpp>
 
 #include <Game/Cloud.hpp>
 #include <Game/CollectibleCoin.hpp>
@@ -57,7 +59,7 @@ void AA::GameScene::performInit() {
     this->m_levelCompleteMenu = std::make_shared<LevelCompleteMenuObject>(this->getGame());
 
     ///determine the world size
-    auto worldSize = sf::Vector2i(6160, 840);
+    auto worldSize = sf::Vector2i((level.getMapSize().x * level.getTileSize().x), (level.getMapSize().y * level.getTileSize().y));
     this->getGame()->getPropertyHandler().set<sf::Vector2i>("worldSize", worldSize);
     this->getGame()->getWindowHandler().getCamera().setGlobalBounds({0, 0, (float)worldSize.x, (float)worldSize.y});
 
@@ -74,36 +76,30 @@ void AA::GameScene::performInit() {
     this->getObjectHandler().addObject(parallaxBackground);
 
     ///setup the world object
-    const auto tileSize = sf::Vector2i(70, 70);
-    const auto tiles = sf::Vector2i(worldSize.x/tileSize.x, worldSize.y/tileSize.y);
-    auto world = std::make_shared<World>(this->getGame(), tiles, tileSize);
+    const auto tiles = sf::Vector2i(worldSize.x/level.getTileSize().x, worldSize.y/level.getTileSize().y);
+    auto world = std::make_shared<World>(this->getGame(), tiles, level.getTileSize());
     this->getObjectHandler().addObject(world);
 
-    ///setup the ground tilemap
-    auto groundTileMap = std::make_shared<TileMap>(this->getGame());
-    groundTileMap->setName("Ground");
-    groundTileMap->setColumns(88);
-    groundTileMap->setRows(12);
-    groundTileMap->setTileWidth(70);
-    groundTileMap->setTileHeight(70);
-    groundTileMap->setTilesetColumns(9);
-    groundTileMap->setTilesetRows(12);
-    groundTileMap->setFilename("Grounds.png");
-    groundTileMap->setData({0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,37,0,0,0,37,0,0,0,0,0,38,39,39,40,0,0,37,0,0,0,0,0,38,39,39,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,38,40,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,0,0,38,39,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,2,3,4,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,38,39,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,48,39,39,49,0,0,0,0,0,0,39,39,39,49,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,41,0,0,0,46,39,39,39,41,41,41,0,0,0,0,0,0,0,0,0,0,39,39,47,0,0,0,0,0,0,0,0,0,39,39,39,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,3,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,3,3,3,3,3,3,3,3,3,3,3,0,0,0,41,41,0,0,0,0,41,41,41,41,41,41,0,0,0,0,39,39,39,39,39,39,41,41,0,0,0,0,0,0,39,39,39,39,41,41,41,0,0,0,3,3,3,3,3,0,0,0,3,3,0,0,0,0,5,5,5,5,5,0,0,0,0,3,3,0,0,0,3,3,0,0,0,0,5,5,5,5,5,5,5,5,5,5,5});
-    world->addTileMap(groundTileMap, 0);
-
-    ///setup the misc tilemap
-    auto miscTileMap = std::make_shared<TileMap>(this->getGame());
-    miscTileMap->setName("Misc");
-    miscTileMap->setColumns(88);
-    miscTileMap->setRows(12);
-    miscTileMap->setTileWidth(70);
-    miscTileMap->setTileHeight(70);
-    miscTileMap->setTilesetColumns(9);
-    miscTileMap->setTilesetRows(12);
-    miscTileMap->setFilename("Misc.png");
-    miscTileMap->setData({0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,36,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,36,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,78,8,0,0,0,0,0,0,0,0,28,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,36,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,35,0,0,36,76,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,28,28,0,0,0,0,0,0,0,0,0,8,28,29,0,0,0,0,0,0,0,0,28,28,29,0,0,0,0,36,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,2,2,2,2,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,4,4,4,0,0,0,0,0,4,4,4,0,0,4,4,4,4,0,0,0,0,0,4,4,4,4,0,0,4,4,4,0,0,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0});
-    world->addTileMap(miscTileMap, 1);
+    int tilemapIdx = 0;
+    const auto &tilelayers = level.getTilelayers();
+    for (const auto &tilelayer : tilelayers) {
+        const auto usedTilesets = level.getUsedTilesets(tilelayer);
+        for (const auto &tileset : usedTilesets) {
+            const auto data = level.getTileData(tilelayer, tileset);
+            auto tilemap = std::make_shared<TileMap>(this->getGame());
+            tilemap->setName(tilelayer->getName());
+            tilemap->setColumns(static_cast<const unsigned int>(tilelayer->getLayerSize().x));
+            tilemap->setRows(static_cast<const unsigned int>(tilelayer->getLayerSize().y));
+            tilemap->setTileWidth(static_cast<const unsigned int>(tileset->getTileSize().x));
+            tilemap->setTileHeight(static_cast<const unsigned int>(tileset->getTileSize().y));
+            tilemap->setTilesetColumns(tileset->getColumns());
+            tilemap->setTilesetRows(tileset->getRows());
+            tilemap->setFilename(tileset->getSource());
+            tilemap->setData(data);
+            world->addTileMap(tilemap, tilemapIdx);
+            tilemapIdx++;
+        }
+    }
 
     ///setup sun
     auto sun = std::make_shared<Sun>(this->getGame());
@@ -125,10 +121,7 @@ void AA::GameScene::performInit() {
     }
 
     ///set the possible player spawn areas
-    std::vector<sf::IntRect> playerSpawnAreas = {
-            {280, 0, 70, 630},
-            {2660, 70, 70, 630}
-    };
+    std::vector<sf::IntRect> playerSpawnAreas = {{280, 0, 70, 630}, {2660, 70, 70, 630}};
 
     ///set the player exit area
     auto playerExitArea = sf::IntRect({6020, 0, 70, 700});
