@@ -12,6 +12,7 @@
 #include <Core/WindowHandler.hpp>
 #include <Core/Tilelayer.hpp>
 #include <Core/Tileset.hpp>
+#include <Core/IGameObject.hpp>
 
 #include <Game/Cloud.hpp>
 #include <Game/CollectibleCoin.hpp>
@@ -120,65 +121,56 @@ void AA::GameScene::performInit() {
         }
     }
 
-    ///set the possible player spawn areas
-    std::vector<sf::IntRect> playerSpawnAreas = {{280, 0, 70, 630}, {2660, 70, 70, 630}};
+    std::vector<sf::IntRect> playerSpawns = {};
+    sf::IntRect playerExit = {};
 
-    ///set the player exit area
-    auto playerExitArea = sf::IntRect({6020, 0, 70, 700});
+    const auto& objectGroups = level.getObjectGroups();
+    for (const auto &objectGroup : objectGroups) {
+        for (const auto &object : objectGroup->objects) {
+            const auto rect = sf::IntRect(object->position.x, object->position.y, object->size.x, object->size.y);
+            if (objectGroup->name == "Player") {
+                if (object->type == "Spawn" && object->name == "Spawn") {
+                    playerSpawns.push_back(rect);
+                } else if (object->type == "Exit" && object->name == "Exit") {
+                    playerExit = rect;
+                }
+            } else if (objectGroup->name == "Objects") {
+                if (object->type == "Enemy") {
+                    if (object->name == "Bee") {
+                        this->getObjectHandler().addObject(std::make_shared<EnemyBee>(this->getGame(), rect));
+                    } else if (object->name == "BeeBlack") {
+                        this->getObjectHandler().addObject(std::make_shared<EnemyBeeBlack>(this->getGame(), rect));
+                    } else if (object->name == "SlimeBlue") {
+                        this->getObjectHandler().addObject(std::make_shared<EnemySlimeBlue>(this->getGame(), rect));
+                    } else if (object->name == "SlimeGreen") {
+                        this->getObjectHandler().addObject(std::make_shared<EnemySlimeGreen>(this->getGame(), rect));
+                    } else if (object->name == "SlimePurple") {
+                        this->getObjectHandler().addObject(std::make_shared<EnemySlimePurple>(this->getGame(), rect));
+                    } else if (object->name == "Snail") {
+                        this->getObjectHandler().addObject(std::make_shared<EnemySnail>(this->getGame(), rect));
+                    } else if (object->name == "SnailMushroom") {
+                        this->getObjectHandler().addObject(std::make_shared<EnemySnailMushroom>(this->getGame(), rect));
+                    } else if (object->name == "WormGreen") {
+                        this->getObjectHandler().addObject(std::make_shared<EnemyWormGreen>(this->getGame(), rect));
+                    } else if (object->name == "WormPink") {
+                        this->getObjectHandler().addObject(std::make_shared<EnemyWormPink>(this->getGame(), rect));
+                    }
+                } else if (object->type == "Collectible") {
+                    if (object->name == "CoinGold") {
+                        this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), rect));
+                    } else if (object->name == "Life") {
+                        this->getObjectHandler().addObject(std::make_shared<CollectibleHealth>(this->getGame(), rect));
+                    }
+                }
+            }
+        }
+    }
+
+    ///TODO: sort the player spawn points by horizontal x values
 
     ///setup the player
-    auto player = std::make_shared<Player>(this->getGame(), playerSpawnAreas, playerExitArea);
+    auto player = std::make_shared<Player>(this->getGame(), playerSpawns, playerExit);
     this->getObjectHandler().addObject(player);
-
-    ///setup enemies
-    this->getObjectHandler().addObject(std::make_shared<EnemySnail>(this->getGame(), sf::IntRect(1330, 700, 420, 70)));
-    this->getObjectHandler().addObject(std::make_shared<EnemySlimeGreen>(this->getGame(), sf::IntRect(1120, 210, 280, 70)));
-    this->getObjectHandler().addObject(std::make_shared<EnemyWormGreen>(this->getGame(), sf::IntRect(1960, 210, 280, 70)));
-    this->getObjectHandler().addObject(std::make_shared<EnemyWormPink>(this->getGame(), sf::IntRect(560, 630, 280, 70)));
-    this->getObjectHandler().addObject(std::make_shared<EnemyBee>(this->getGame(), sf::IntRect(1260, 420, 70, 280)));
-    this->getObjectHandler().addObject(std::make_shared<EnemyBee>(this->getGame(), sf::IntRect(560, 70, 70, 280)));
-    this->getObjectHandler().addObject(std::make_shared<EnemyBee>(this->getGame(), sf::IntRect(1680, 280, 70, 280)));
-    this->getObjectHandler().addObject(std::make_shared<EnemyBee>(this->getGame(), sf::IntRect(2240, 490, 70, 280)));
-    this->getObjectHandler().addObject(std::make_shared<EnemyBeeBlack>(this->getGame(), sf::IntRect(3430, 490, 70, 280)));
-    this->getObjectHandler().addObject(std::make_shared<EnemyBeeBlack>(this->getGame(), sf::IntRect(3780, 490, 70, 280)));
-    this->getObjectHandler().addObject(std::make_shared<EnemyBeeBlack>(this->getGame(), sf::IntRect(5180, 490, 70, 280)));
-    this->getObjectHandler().addObject(std::make_shared<EnemyBeeBlack>(this->getGame(), sf::IntRect(4830, 490, 70, 280)));
-    this->getObjectHandler().addObject(std::make_shared<EnemySnailMushroom>(this->getGame(), sf::IntRect(3010, 700, 350, 70)));
-    this->getObjectHandler().addObject(std::make_shared<EnemySnailMushroom>(this->getGame(), sf::IntRect(3220, 210, 280, 70)));
-    this->getObjectHandler().addObject(std::make_shared<EnemySnailMushroom>(this->getGame(), sf::IntRect(4060, 560, 350, 70)));
-    this->getObjectHandler().addObject(std::make_shared<EnemySnailMushroom>(this->getGame(), sf::IntRect(4760, 350, 210, 70)));
-    this->getObjectHandler().addObject(std::make_shared<EnemySnailMushroom>(this->getGame(), sf::IntRect(5390, 630, 280, 70)));
-    this->getObjectHandler().addObject(std::make_shared<EnemySnailMushroom>(this->getGame(), sf::IntRect(5670, 630, 280, 70)));
-
-    ///setup coin collectibles
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(910, 560, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(490, 490, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(2450, 350, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(980, 350, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(700, 210, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(420, 210, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(140, 210, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(1680, 70, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(2030, 210, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(1470, 490, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(2870, 280, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(3150, 420, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(3640, 350, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(3780, 630, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(3430, 630, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(5180, 630, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(4480, 210, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(4130, 280, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(4830, 630, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(5180, 280, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(5180, 210, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(4830, 560, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(4200, 490, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleCoin>(this->getGame(), sf::IntRect(4200, 560, 70, 70)));
-
-    ///setup health collectibles
-    this->getObjectHandler().addObject(std::make_shared<CollectibleHealth>(this->getGame(), sf::IntRect(1260, 210, 70, 70)));
-    this->getObjectHandler().addObject(std::make_shared<CollectibleHealth>(this->getGame(), sf::IntRect(3080, 210, 70, 70)));
 
     this->getObjectHandler().restoreObjects(false);
 }

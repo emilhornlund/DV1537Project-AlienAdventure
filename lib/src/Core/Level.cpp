@@ -38,7 +38,7 @@ bool CGL::Level::loadFromFile(const std::string &filename) {
         return false;
 
     ///parse objects
-    return this->parseObjects(mapNode);
+    return this->parseObjectGroups(mapNode);
 }
 
 bool CGL::Level::parseTilesets(const tinyxml2::XMLElement *node) {
@@ -73,8 +73,50 @@ bool CGL::Level::parseTilelayers(const tinyxml2::XMLElement *node) {
     return true;
 }
 
-bool CGL::Level::parseObjects(const tinyxml2::XMLElement *node) {
+bool CGL::Level::parseObjectGroups(const tinyxml2::XMLElement *node) {
+    if (node == nullptr)
+        return false;
+    auto objectGroupNode = node->FirstChildElement("objectgroup");
+    while (objectGroupNode != nullptr) {
+        auto id = objectGroupNode->UnsignedAttribute("id");
+
+        auto name = objectGroupNode->Attribute("name");
+
+        const auto objects = this->parseObjects(objectGroupNode);
+
+        const auto objectGroup = std::make_shared<const ObjectGroup>(id, name, objects);
+        this->m_objectGroups.push_back(objectGroup);
+
+        objectGroupNode = objectGroupNode->NextSiblingElement("objectgroup");
+    }
     return true;
+}
+
+const std::vector<std::shared_ptr<const CGL::Object>> CGL::Level::parseObjects(const tinyxml2::XMLElement *node) {
+    std::vector<std::shared_ptr<const Object>> objects;
+    if (node != nullptr) {
+        auto objectNode = node->FirstChildElement("object");
+        while (objectNode != nullptr) {
+            auto id = objectNode->UnsignedAttribute("id");
+
+            auto name = objectNode->Attribute("name");
+
+            auto type = objectNode->Attribute("type");
+
+            auto posX = objectNode->IntAttribute("x");
+            auto posY = objectNode->IntAttribute("y");
+            auto position = sf::Vector2i(posX, posY);
+
+            auto sizeX = objectNode->IntAttribute("width");
+            auto sizeY = objectNode->IntAttribute("height");
+            auto size = sf::Vector2i(sizeX, sizeY);
+
+            auto object = std::make_shared<const Object>(id, name, type, position, size);
+            objects.push_back(object);
+            objectNode = objectNode->NextSiblingElement("object");
+        }
+    }
+    return objects;
 }
 
 sf::Vector2i CGL::Level::getTileSize() const {
@@ -91,6 +133,10 @@ const std::vector<CGL::TilesetPtr> &CGL::Level::getTilesets() const {
 
 const std::vector<CGL::TilelayerPtr> &CGL::Level::getTilelayers() const {
     return this->m_tilelayers;
+}
+
+const std::vector<CGL::ObjectGroupPtr> &CGL::Level::getObjectGroups() const {
+    return this->m_objectGroups;
 }
 
 const std::vector<CGL::TilesetPtr> CGL::Level::getUsedTilesets(CGL::TilelayerPtr tilelayerPtr) const {
