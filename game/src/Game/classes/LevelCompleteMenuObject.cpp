@@ -8,11 +8,13 @@
 #include <Core/classes/SceneHandler.hpp>
 #include <Core/interfaces/IGame.hpp>
 #include <Core/interfaces/IScene.hpp>
+
 #include <Game/classes/LevelCompleteMenuObject.hpp>
+#include <Game/classes/GameScene.hpp>
 
 #include <SFML/Graphics/Texture.hpp>
 
-LevelCompleteMenuObject::LevelCompleteMenuObject(IGame *game) : IMenuObject(game) {
+LevelCompleteMenuObject::LevelCompleteMenuObject(IGame *game) : IMenuObject(game, GameScene::DRAW_ORDER_MENU) {
     auto& texture = this->getGame()->getTextureResourceHandler().load("Menu.png");
     this->addItem({0, 64*1, 480, 64}, {0, 64*0, 480, 64}, texture);
     this->addItem({0, 64*9, 480, 64}, {0, 64*8, 480, 64}, texture);

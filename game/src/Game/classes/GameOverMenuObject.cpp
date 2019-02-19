@@ -10,10 +10,11 @@
 #include <Core/interfaces/IScene.hpp>
 
 #include <Game/classes/GameOverMenuObject.hpp>
+#include <Game/classes/GameScene.hpp>
 
 #include <SFML/Graphics/Texture.hpp>
 
-GameOverMenuObject::GameOverMenuObject(IGame *game) : IMenuObject(game) {
+GameOverMenuObject::GameOverMenuObject(IGame *game) : IMenuObject(game, GameScene::DRAW_ORDER_MENU) {
     auto& texture = this->getGame()->getTextureResourceHandler().load("Menu.png");
     this->addItem({0, 64*7, 480, 64}, {0, 64*6, 480, 64}, texture);
     this->addItem({0, 64*5, 480, 64}, {0, 64*4, 480, 64}, texture);

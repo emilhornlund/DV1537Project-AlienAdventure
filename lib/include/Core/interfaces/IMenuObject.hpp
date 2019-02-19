@@ -42,7 +42,7 @@ private:
 
     void updateOffsets();
 public:
-    explicit IMenuObject(IGame *game);
+    IMenuObject(IGame *game, const int zIndex);
 
     ~IMenuObject() override = 0;
 

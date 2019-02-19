@@ -16,7 +16,7 @@
 
 const float ITEM_SPACING = 20.f;
 
-IMenuObject::IMenuObject(IGame *game) : IGameObject(game, 0, false), m_selectedItemIndex(0), m_hasPendingSelection(false) {
+IMenuObject::IMenuObject(IGame *game, const int zIndex) : IGameObject(game, zIndex, false), m_selectedItemIndex(0), m_hasPendingSelection(false) {
     this->m_clickSound = std::make_shared<sf::Sound>();
     this->m_clickSound->setBuffer(game->getSoundBufferResourceHandler().load("Click.wav"));
 
