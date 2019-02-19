@@ -14,7 +14,7 @@ AA::Game::Game() : IGame(800, 600, "Alien Adventure") {
     auto splashScene = std::make_shared<SplashScene>(this);
     this->getSceneHandler().addActiveScene(splashScene);
 
-    auto gameScene = std::make_shared<GameScene>(this, "Level.txt");
+    auto gameScene = std::make_shared<GameScene>(this, "Level1.tmx");
     this->getSceneHandler().addInactiveScene(gameScene);
 }
 

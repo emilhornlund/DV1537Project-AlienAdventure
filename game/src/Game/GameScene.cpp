@@ -43,8 +43,7 @@ AA::GameScene::GameScene(CGL::IGame *game, const std::string &levelFilePath) : I
 AA::GameScene::~GameScene() = default;
 
 void AA::GameScene::performInit() {
-
-    auto& level = this->getGame()->getLevelResourceHandler().load("level_test.tmx");
+    auto& level = this->getGame()->getLevelResourceHandler().load(this->m_levelFilePath);
 
     ///setup the background music
     this->m_backgroundMusic = &this->getGame()->getMusicResourceHandler().open("Music.ogg");
