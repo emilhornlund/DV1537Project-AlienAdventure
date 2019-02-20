@@ -1,0 +1,6 @@
+[submodule "dependencies/SFML"]
+	path = dependencies/SFML
+	url = https://github.com/SFML/SFML.git
+[submodule "dependencies/tinyxml2"]
+	path = dependencies/tinyxml2
+	url = https://github.com/leethomason/tinyxml2
