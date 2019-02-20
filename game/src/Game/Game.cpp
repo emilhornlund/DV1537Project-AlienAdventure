@@ -10,7 +10,7 @@
 #include <Game/GameScene.hpp>
 #include <Game/SplashScene.hpp>
 
-AA::Game::Game() : IGame(800, 600, "Alien Adventure") {
+AA::Game::Game() : IGame("Alien Adventure") {
     auto splashScene = std::make_shared<SplashScene>(this);
     this->getSceneHandler().addActiveScene(splashScene);
 

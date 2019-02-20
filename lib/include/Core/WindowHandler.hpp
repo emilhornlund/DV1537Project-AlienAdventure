@@ -71,8 +71,7 @@ namespace CGL { //CoreGameLib
 
         void sortQueue();
     public:
-        WindowHandler(IGame *game, const unsigned int windowWidth, const unsigned int windowHeight,
-                      const std::string &title);
+        WindowHandler(CGL::IGame *game, const std::string &title);
 
         ~WindowHandler();
 

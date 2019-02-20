@@ -24,6 +24,7 @@ namespace CGL { //CoreGameLib
     class SceneHandler;
     class IMenuObject;
     class Level;
+    class ConfigParser;
 
     template <typename Resource>
     class ResourceHandler;
@@ -50,6 +51,8 @@ namespace CGL { //CoreGameLib
 
         std::shared_ptr<IMenuObject> m_menu;
 
+        std::shared_ptr<ConfigParser> m_configParser;
+
         bool m_running;
 
         int m_exitCode;
@@ -60,7 +63,7 @@ namespace CGL { //CoreGameLib
 
         IGame &operator=(const IGame &original);
     public:
-        IGame(const unsigned int windowWidth, const unsigned int windowHeight, const std::string &title);
+        IGame(const std::string &title);
 
         virtual ~IGame() = 0;
 
@@ -93,6 +96,8 @@ namespace CGL { //CoreGameLib
         EventHandler &getEventHandler() const;
 
         SceneHandler &getSceneHandler() const;
+
+        ConfigParser &getConfigParser() const;
     };
 }
 

@@ -10,16 +10,26 @@
 #include <Core/IEntity.hpp>
 #include <Core/IGame.hpp>
 #include <Core/IGameObject.hpp>
+#include <Core/ConfigParser.hpp>
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 
-CGL::WindowHandler::WindowHandler(CGL::IGame* game, const unsigned int windowWidth, const unsigned int windowHeight, const std::string &title) : m_game(game) {
+CGL::WindowHandler::WindowHandler(CGL::IGame *game, const std::string &title) : m_game(game) {
+    auto windowWidth = static_cast<unsigned int>(this->m_game->getConfigParser().get<int>("WindowWidth", 800));
+    auto windowHeight = static_cast<unsigned int>(this->m_game->getConfigParser().get<int>("WindowHeight", 600));
+
     this->m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(windowWidth, windowHeight, 32), title, sf::Style::Titlebar | sf::Style::Close);
-    this->m_window->setKeyRepeatEnabled(true);
-    this->m_window->setMouseCursorVisible(false);
-    this->m_window->setVerticalSyncEnabled(true);
+
+    auto keyRepeatEnabled = this->m_game->getConfigParser().get<bool>("KeyRepeatEnabled", true);
+    this->m_window->setKeyRepeatEnabled(keyRepeatEnabled);
+
+    auto mouseCursorVisible = this->m_game->getConfigParser().get<bool>("MouseCursorVisible", false);
+    this->m_window->setMouseCursorVisible(mouseCursorVisible);
+
+    auto verticalSyncEnabled = this->m_game->getConfigParser().get<bool>("VerticalSyncEnabled", true);
+    this->m_window->setVerticalSyncEnabled(verticalSyncEnabled);
 
     this->m_icon = &this->getGame()->getImageResourceHandler().load("Icon.png");
     this->m_window->setIcon(this->m_icon->getSize().x, this->m_icon->getSize().y, this->m_icon->getPixelsPtr());

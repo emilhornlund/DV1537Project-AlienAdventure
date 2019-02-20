@@ -13,12 +13,13 @@
 #include <Core/IGame.hpp>
 #include <Core/IMenuObject.hpp>
 #include <Core/IScene.hpp>
+#include <Core/ConfigParser.hpp>
 
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
-CGL::IGame::IGame(const unsigned int windowWidth, const unsigned int windowHeight, const std::string &title) {
+CGL::IGame::IGame(const std::string &title) {
     //initialize resource handlers
     this->m_imageResourceHandler = std::make_shared<ResourceHandler<sf::Image>>();
     this->m_musicResourceHandler = std::make_shared<ResourceHandler<sf::Music>>();
@@ -26,9 +27,15 @@ CGL::IGame::IGame(const unsigned int windowWidth, const unsigned int windowHeigh
     this->m_textureResourceHandler = std::make_shared<ResourceHandler<sf::Texture>>();
     this->m_levelResourceHandler = std::make_shared<ResourceHandler<Level>>();
 
+    //initialize and parse configs
+    this->m_configParser = std::make_shared<ConfigParser>();
+    if (!this->m_configParser->loadFromFile("defaults.cfg")) {
+        throw std::runtime_error("Error opening config file");
+    }
+
     //initialize other handlers
     this->m_propertyHandler = std::make_shared<PropertyHandler>();
-    this->m_windowHandler = std::make_shared<WindowHandler>(this, windowWidth, windowHeight, title);
+    this->m_windowHandler = std::make_shared<WindowHandler>(this, title);
     this->m_eventHandler = std::make_shared<EventHandler>(this->m_windowHandler->getRenderWindow());
     this->m_sceneHandler = std::make_shared<SceneHandler>(this);
 
@@ -134,4 +141,8 @@ CGL::EventHandler &CGL::IGame::getEventHandler() const {
 
 CGL::SceneHandler &CGL::IGame::getSceneHandler() const {
     return *this->m_sceneHandler;
+}
+
+CGL::ConfigParser &CGL::IGame::getConfigParser() const {
+    return *this->m_configParser;
 }
