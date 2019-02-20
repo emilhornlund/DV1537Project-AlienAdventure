@@ -18,8 +18,8 @@ It uses SFML and TinyXML2, is solely written in c++11 and builds using cmake.
     mkdir DV1537Project-AlienAdventure/build
     cd DV1537Project-AlienAdventure/build
     cmake ..
-    make && make install
-    cd game
+    make
+    cp -r ../game/resources/ resources/
     ./AlienAdventure
 
 **Tested on**
