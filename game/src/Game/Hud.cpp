@@ -5,6 +5,7 @@
 #include <Core/PropertyHandler.hpp>
 #include <Core/ResourceHandler.hpp>
 #include <Core/SpriteEntity.hpp>
+#include <Core/WindowHandler.hpp>
 
 #include <Game/Game.hpp>
 #include <Game/GameScene.hpp>
@@ -123,7 +124,8 @@ void AA::Hud::updateCoins(const unsigned coins) {
             auto entity = this->m_coinDigitSprites.at(i);
             int digit = std::to_string(coins)[n-i-1] - '0';
             entity->setTextureRect({ (int)SPRITE_WIDTH*(digit+1), (int)SPRITE_HEIGHT*3, (int)SPRITE_WIDTH, (int)SPRITE_HEIGHT });
-            entity->setOffset(800 - (SPRITE_WIDTH/2)*3 - SPACING - (SPRITE_WIDTH*FACTOR*i), SPRITE_HEIGHT/2+SPACING);
+            auto windowSize = this->getGame()->getWindowHandler().getWindowSize();
+            entity->setOffset(windowSize.x - (SPRITE_WIDTH/2)*3 - SPACING - (SPRITE_WIDTH*FACTOR*i), SPRITE_HEIGHT/2+SPACING);
         }
     }
 
@@ -138,7 +140,8 @@ void AA::Hud::setupCoin() {
     entity->setTexture(texture);
     entity->setTextureRect({ (int)SPRITE_WIDTH*3, (int)SPRITE_HEIGHT, (int)SPRITE_WIDTH, (int)SPRITE_HEIGHT });
     entity->setOrigin(SPRITE_WIDTH/2, SPRITE_HEIGHT/2);
-    entity->setOffset(800 - (SPRITE_WIDTH/2) - SPACING, SPRITE_HEIGHT/2+SPACING);
+    auto windowSize = this->getGame()->getWindowHandler().getWindowSize();
+    entity->setOffset(windowSize.x - (SPRITE_WIDTH/2) - SPACING, SPRITE_HEIGHT/2+SPACING);
     this->addEntity(entity);
     this->m_coinSprite = entity;
 }
@@ -149,7 +152,8 @@ void AA::Hud::setupCoinInitialDigit() {
     entity->setTexture(texture);
     entity->setTextureRect({ (int)SPRITE_WIDTH, (int)SPRITE_HEIGHT*3, (int)SPRITE_WIDTH, (int)SPRITE_HEIGHT });
     entity->setOrigin(SPRITE_WIDTH/2, SPRITE_HEIGHT/2);
-    entity->setOffset(800 - (SPRITE_WIDTH/2)*3 - SPACING, SPRITE_HEIGHT/2+SPACING);
+    auto windowSize = this->getGame()->getWindowHandler().getWindowSize();
+    entity->setOffset(windowSize.x - (SPRITE_WIDTH/2)*3 - SPACING, SPRITE_HEIGHT/2+SPACING);
     this->addEntity(entity);
     this->m_coinDigitSprites.push_back(entity);
 }

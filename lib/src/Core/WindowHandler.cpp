@@ -16,9 +16,18 @@
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 
-CGL::WindowHandler::WindowHandler(CGL::IGame *game, const std::string &title) : m_game(game) {
+CGL::WindowHandler::WindowHandler(CGL::IGame *game, const std::string &title)
+        : m_game(game) {
     auto windowWidth = static_cast<unsigned int>(this->m_game->getConfigParser().get<int>("WindowWidth", 800));
     auto windowHeight = static_cast<unsigned int>(this->m_game->getConfigParser().get<int>("WindowHeight", 600));
+
+    auto videoModes = sf::VideoMode::getFullscreenModes();
+    auto it = std::find_if(videoModes.begin(), videoModes.end(), [windowWidth,windowHeight](const sf::VideoMode & m) -> bool {
+        return m.width == windowWidth && m.height == windowHeight;
+    });
+    if (it == videoModes.end()) {
+        throw std::runtime_error("Unsupported resolution");
+    }
 
     this->m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(windowWidth, windowHeight, 32), title, sf::Style::Titlebar | sf::Style::Close);
 
